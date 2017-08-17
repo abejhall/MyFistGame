@@ -22,6 +22,7 @@ public class WorldManager : MonoBehaviour {
     public Sprite plant;
     public Sprite blimish;
 
+    public World world;
 
     //Used to store a map for what sprite is displayed on each tile
     public Dictionary<Tile, Sprite> TileToSpriteMap;
@@ -48,26 +49,7 @@ public class WorldManager : MonoBehaviour {
     //creates the tiles for the first time 
     void CreateWorld()
     {
-        for (int x = 0; x < WorldHeight; x++)
-        {
-            for (int y = 0; y < WorldWidth; y++)
-            {
-                
-                var go = new GameObject().AddComponent < Tile > ();
-                go.name = "tile_" +x+"_"+y;
-                TileToNameMap.Add(go.name, go);
-                go.gameObject.AddComponent<SpriteRenderer>();
-             
-                go.transform.position = new Vector3(x, y, 0);
-
-                go.transform.SetParent(this.transform);
-               
-                
-            }
-        }
-
-        AssignTileTypeFirstTime();
-
+        world.CreateWorld(100, 100);
     }
 
     public Tile GetTileAT(int x, int y)
@@ -86,23 +68,6 @@ public class WorldManager : MonoBehaviour {
     }
 
     // This assigns the type of tile when the world is created for the first time.
-    void AssignTileTypeFirstTime()
-    {
-        foreach(Tile t in TileToNameMap.Values)
-        {
-            int rm = Random.Range(0, 100);
-            Sprite tmpSprite;
-            if (rm > 98)
-                tmpSprite = blimish;
-            else if (rm < 10)
-                tmpSprite = plant;
-            else
-                tmpSprite = grass;
-
-            t.GetComponent<SpriteRenderer>().sprite = tmpSprite;
-            TileToSpriteMap.Add(t, tmpSprite);
-        }
-          
-    }
+ 
 
 }
