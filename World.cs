@@ -8,8 +8,10 @@ public class World : MonoBehaviour
 
     Tile[,] tiles;
 
+    // The pathfinding graph used to navigate our world map.
+    public Path_TileGraph tileGraph;
 
-        public int Width{ get; protected set; }
+    public int Width{ get; protected set; }
         public int Height { get; protected set; }
 
     public World(int width = 100, int height = 100)

@@ -34,6 +34,7 @@ public class WorldManager : MonoBehaviour {
         //singleton of WorldManager
         Instance = this;
 
+        world = new World();
 
         //Initalize our map of tiles to sprites
         TileToSpriteMap = new Dictionary<Tile, Sprite>();
@@ -49,6 +50,8 @@ public class WorldManager : MonoBehaviour {
     //creates the tiles for the first time 
     void CreateWorld()
     {
+        
+
         world.CreateWorld(100, 100);
     }
 

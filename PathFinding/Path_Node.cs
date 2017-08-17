@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿//=======================================================================
+// Copyright Martin "quill18" Glaude 2015.
+//		http://quill18.com
+//=======================================================================
+
 using UnityEngine;
+using System.Collections;
 
-public class Path_Node<T>  {
+public class Path_Node<T> {
 
-    public T data;  // Probably a tile but can be used for something else later
+	public T data;
 
-    public Path_Edge<T>[] edges;  // Nodes leading OUT from this node
-
-    
-
-
+	public Path_Edge<T>[] edges;	// Nodes leading OUT from this node.
 
 
 }
