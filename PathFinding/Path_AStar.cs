@@ -9,8 +9,13 @@ public class Path_AStar {
 
 	public Path_AStar(World world, Tile tileStart, Tile tileEnd) {
 
-		// Check to see if we have a valid tile graph
-		if(world.tileGraph == null) {
+        //For Debugging only
+       // Debug.Log("tileEnd is x:" + tileEnd.x);
+       // Debug.Log("tileEnd is x:" + tileEnd.y);
+       
+
+        // Check to see if we have a valid tile graph
+        if (world.tileGraph == null) {
 			world.tileGraph = new Path_TileGraph(world);
 		}
 

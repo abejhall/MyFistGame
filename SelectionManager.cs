@@ -67,7 +67,9 @@ public class SelectionManager : MonoBehaviour {
         {
             DestroyHighlight();
 
-            Vector3 CurTilelocation = SelectTile(curFramePosition).transform.position;
+
+            GameObject go = WorldManager.Instance.TileToGameObjectMap[SelectTile(curFramePosition)];
+            Vector3 CurTilelocation = go.transform.position;
             startDragPosition = CurTilelocation;
         }
 

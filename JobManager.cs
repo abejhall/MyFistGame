@@ -18,7 +18,7 @@ public class JobManager : MonoBehaviour {
 
     public List<Job> JobQueList;
 
-    
+    public int JobsInQue= 0;
 
 	// Use this for initialization
 	void Awake () {
@@ -38,6 +38,7 @@ public class JobManager : MonoBehaviour {
     private void Update()
     {
         //Debug.Log("greenHighlights list count:" + GreenHighlightsList.Count );
+        JobsInQue = JobQueList.Count;
     }
 
 
@@ -58,32 +59,35 @@ public class JobManager : MonoBehaviour {
             return;
         }
 
-        if(j.jobTile.GetComponent<SpriteRenderer>().sprite != WorldManager.Instance.plant)
+        GameObject Go1 = WorldManager.Instance.TileToGameObjectMap[j.jobTile];
+        if(Go1.GetComponent<SpriteRenderer>().sprite != WorldManager.Instance.plant)
         {
-            GameObject go =(GameObject) SimplePool.Spawn(GreenSelectHighlight, new Vector3(t.transform.position.x, t.transform.position.y, 0),Quaternion.identity);
+            GameObject go =(GameObject) SimplePool.Spawn(GreenSelectHighlight, new Vector3(t.x, t.y, 0),Quaternion.identity);
             go.transform.SetParent(SelectionManager.Instance.PoolManager.transform);
             GreenHighlightsList.Add(go);
             SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
             sr.sortingLayerName = "HighLights";
 
             JobQueList.Add(j);
+
+            
             
             DespawnYellowHighlight(t);
 
         }
-        else if (j.jobTile.GetComponent<SpriteRenderer>().sprite == WorldManager.Instance.plant)
+        else if (Go1.GetComponent<SpriteRenderer>().sprite == WorldManager.Instance.plant)
         {
             if (!CheckIfJobExist(j))
             {
                 Debug.Log("I am returning");
                 return;
             }
-            GameObject go = (GameObject)SimplePool.Spawn(RedSelectHighLight, new Vector3(t.transform.position.x, t.transform.position.y, 0), Quaternion.identity);
+            GameObject go = (GameObject)SimplePool.Spawn(RedSelectHighLight, new Vector3(t.x, t.y, 0), Quaternion.identity);
             go.transform.SetParent(SelectionManager.Instance.PoolManager.transform);
             SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
             sr.sortingLayerName = "HighLights";
             RedHighlightsList.Add(go);
-            string tmp = "H_" + t.transform.position.x + "_" + t.transform.position.y;
+            string tmp = "H_" + t.x + "_" + t.y;
             foreach (GameObject Hgo in SelectionManager.Instance.YellowGOList)
                 {
                     if (Hgo.name == tmp)
@@ -101,8 +105,10 @@ public class JobManager : MonoBehaviour {
     {
         foreach(Job jqj in JobQueList)
         {
-           // Debug.Log(jqj.jobTile +"is the name of the tile ");
-            if (j.jobTile.transform.position == jqj.jobTile.transform.position)
+            GameObject Go2 = WorldManager.Instance.TileToGameObjectMap[jqj.jobTile];
+            GameObject Go3 = WorldManager.Instance.TileToGameObjectMap[j.jobTile];
+            // Debug.Log(jqj.jobTile +"is the name of the tile ");
+            if (Go3.transform.position == Go2.transform.position)
                 return false;
         }
         
@@ -119,7 +125,7 @@ public class JobManager : MonoBehaviour {
 
     void DespawnYellowHighlight(Tile t)
     {
-        string tmp = "H_" + t.transform.position.x + "_" + t.transform.position.y;
+        string tmp = "H_" + t.x + "_" + t.y;
         foreach (GameObject Hgo in SelectionManager.Instance.YellowGOList)
         {
             if (Hgo.name == tmp)
@@ -131,7 +137,8 @@ public class JobManager : MonoBehaviour {
     {
         foreach(Job j in JobQueList)
         {
-            if (loc == j.jobTile.transform.position)
+            GameObject Go = WorldManager.Instance.TileToGameObjectMap[j.jobTile];
+            if (loc == Go.transform.position)
                 JobQueList.Remove(j);
         }
     }

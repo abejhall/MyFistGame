@@ -17,7 +17,7 @@ public class Path_TileGraph {
 
 	public Path_TileGraph(World world) {
 
-		Debug.Log("Path_TileGraph");
+		//Debug.Log("Path_TileGraph");
 
 		// Loop through all tiles of the world
 		// For each tile, create a node

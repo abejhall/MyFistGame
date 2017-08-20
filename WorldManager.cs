@@ -25,11 +25,12 @@ public class WorldManager : MonoBehaviour {
     public World world;
 
     //Used to store a map for what sprite is displayed on each tile
-    public Dictionary<Tile, Sprite> TileToSpriteMap;
+   // public Dictionary<Tile, Sprite> TileToSpriteMap;
     public Dictionary<string, Tile> TileToNameMap;
+    public Dictionary<Tile, GameObject> TileToGameObjectMap;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 
         //singleton of WorldManager
         Instance = this;
@@ -37,10 +38,13 @@ public class WorldManager : MonoBehaviour {
         world = new World();
 
         //Initalize our map of tiles to sprites
-        TileToSpriteMap = new Dictionary<Tile, Sprite>();
+        //TileToSpriteMap = new Dictionary<Tile, Sprite>();
         
         //Initalize our map of tiles to tile names
         TileToNameMap = new Dictionary<string, Tile>();
+
+        //initalize our tile to gameobject map
+        TileToGameObjectMap = new Dictionary<Tile, GameObject>();
 
         //creates the tiles for the first time
         CreateWorld();
@@ -59,7 +63,8 @@ public class WorldManager : MonoBehaviour {
     {
         if( x > WorldWidth || x < 0 || y > WorldHeight || y < 0)
         {
-            Debug.LogError("Tile (" + x + "," + y + ") is out of range.");
+            //FIXME: 
+           // Debug.Log("Tile (" + x + "," + y + ") is out of range.");
             return null;
         }
         if (TileToNameMap.ContainsKey("tile_" + x + "_" + y))
