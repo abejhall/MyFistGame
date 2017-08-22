@@ -67,21 +67,44 @@ public class World
     {
         foreach (Tile t in WorldManager.Instance.TileToNameMap.Values)
         {
-            int rm = Random.Range(0, 100);
+            //int rm = Random.Range(0, 100);
             Sprite tmpSprite;
-            if (rm > 98)
-                tmpSprite = WorldManager.Instance.blimish;
-            else if (rm < 10)
-            {
-                tmpSprite = WorldManager.Instance.plant;
-                t.MovementSpeedAdjustment = 0f;
-            }
-              else
+           // if (rm > 98)
+          //      tmpSprite = WorldManager.Instance.blimish;
+          //  else if (rm < 10)
+          //  {
+          //      tmpSprite = WorldManager.Instance.plant;
+          //      t.MovementSpeedAdjustment = 0f;
+          //  }
+            //  else
                 tmpSprite = WorldManager.Instance.grass;
+            //44_51 - 54_51 make plants
 
+            if(t.x > 44 && t.x < 54 && t.y == 51)
+            {
+                tmpSprite = WorldManager.Instance.blimish;
+                t.MovementSpeedAdjustment = 0;
+                tileGraph = null;
+            }
+
+            if (t.x > 44 && t.x < 54 && t.y == 46)
+            {
+                tmpSprite = WorldManager.Instance.blimish;
+                t.MovementSpeedAdjustment = 0;
+                tileGraph = null;
+            }
+                    /*
+                    if (t.y > 45 && t.y < 52 && t.x == 44)
+                    {
+                        tmpSprite = WorldManager.Instance.blimish;
+                        t.MovementSpeedAdjustment = 0;
+                        tileGraph = null;
+                    }
+
+                    */
 
             //FIXME: removed cause not used yet.
-           
+
             GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
             go.GetComponent<SpriteRenderer>().sprite = tmpSprite;
            // WorldManager.Instance.TileToSpriteMap.Add(t, tmpSprite);

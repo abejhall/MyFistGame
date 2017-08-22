@@ -77,8 +77,8 @@ public class WorldManager : MonoBehaviour {
 
     public Tile GetTileAT(float fx, float fy)
     {
-        int x = Mathf.FloorToInt(fx);
-        int y = Mathf.FloorToInt(fy);
+        int x = Mathf.RoundToInt(fx);
+        int y = Mathf.RoundToInt(fy);
 
         if (x > WorldWidth || x < 0 || y > WorldHeight || y < 0)
         {

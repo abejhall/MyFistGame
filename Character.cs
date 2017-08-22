@@ -10,15 +10,23 @@ public class Character : MonoBehaviour
     public Tile DestTile = null;
     public Tile NextTile;
 
-    public float JobDistComplete = .2f;
+    
 
 
     List<Job> jobQueList;
     List<GameObject> GreenHighlightsList;
     List<GameObject> RedHighlightsList;
-
+   
     Path_AStar pathAStar;
 
+    Tile currentTile; 
+   public Vector3 NextTileV3; 
+   public Vector3 CurrTileV3;
+   public Vector3 TempCurTile;
+          float step;
+    float startTime;
+
+     public  bool islerping = false;
 
     //for debugging only 
     public bool MyJobIsNull;
@@ -33,13 +41,16 @@ public class Character : MonoBehaviour
         jobQueList = JobManager.Instance.JobQueList;
         GreenHighlightsList = JobManager.Instance.GreenHighlightsList;
         RedHighlightsList = JobManager.Instance.RedHighlightsList;
+        startTime = Time.time;
     }
-    
+   
+
     // Update is called once per frame
     void Update()
     {
-            //for debugging
-            if (MyJob == null)
+     
+        //for debugging
+        if (MyJob == null)
                 MyJobIsNull = true;
         //for debugging
             if (MyJob != null)
@@ -53,6 +64,17 @@ public class Character : MonoBehaviour
 
         // If job is all done,,  Clean up any extra highlights from being displayed
         CleanUpAfterMyself();
+
+
+        step = (Time.time - startTime) * MoveSpeed;
+        if (islerping)
+        {
+
+            transform.position = Vector3.Lerp(TempCurTile,NextTileV3,step);
+            Debug.Log("tc:" + TempCurTile + "NT:" + NextTileV3 + "step:" + step);
+            Debug.Log("lerping between:" + CurrTileV3 + "and:" + NextTileV3);
+        }
+            
     }
 
 
@@ -76,29 +98,28 @@ public class Character : MonoBehaviour
         return;
     }
 
-    float startTime;
+    
 
     void GotoWork()
     {
         if (MyJob == null)
             return;
 
-        Tile currentTile = WorldManager.Instance.GetTileAT(this.transform.position.x,this.transform.position.y);
-        Vector3 NextTileV3 = new Vector3(NextTile.x, NextTile.y, 0);
-        Vector3 CurrTileV3 = new Vector3(currentTile.x, currentTile.y, 0);
-
-        float journeyLength = Vector3.Distance(CurrTileV3, Dest);
-
-
-        float distCovered = (Time.time - startTime) * MoveSpeed;
-        float fracJourney = distCovered / journeyLength;
-
-        transform.position = Vector3.Lerp(CurrTileV3, NextTileV3, fracJourney);
-
-        Debug.Log("lerping between:" + CurrTileV3 + "and:" + NextTileV3);
+       currentTile = WorldManager.Instance.GetTileAT(this.transform.position.x, this.transform.position.y);
+       NextTileV3 = new Vector3(NextTile.x, NextTile.y, 0);
+       CurrTileV3 = new Vector3(currentTile.x, currentTile.y, 0);
+       step = Time.time - Time.deltaTime * MoveSpeed;
 
 
-        if (MyJob != null || currentTile != DestTile )//&& Dest != new Vector3(0,0,0))
+        // I am at my destination and can complete job
+        if (currentTile == DestTile)
+        {
+            islerping = false;
+            CompleteJob();
+            return;
+        }
+
+        if (MyJob != null || currentTile != DestTile )
         {
             //I do have a job and i am not at my destination and i a not at 0,0,0
            //Check if i have an A* Navigation already if not create it
@@ -121,47 +142,40 @@ public class Character : MonoBehaviour
            
             
             //set my nextTile if i dont have one.
-            if(NextTileV3 == CurrTileV3 && pathAStar != null && currentTile != DestTile)
+            if(NextTileV3 == CurrTileV3 && pathAStar != null && CurrTileV3 != Dest)
             {
-                startTime = Time.time;
-                    NextTile = pathAStar.Dequeue();
-
-            }
-
-           
-            
                
+                    NextTile = pathAStar.Dequeue();
+                    TempCurTile = this.transform.position;
 
-            if (currentTile == DestTile)
-            {
-                
-                CompleteJob();
+              
+
+                    islerping = true;
+                   
+
+
             }
+
+
+
+
+
+          
                
 
 
             //just for Debugging
             if (NextTile != currentTile && NextTile != null) 
-            Debug.Log("Next tile in Q coords are"+NextTile.x + NextTile.y);
-
-
-           
+            Debug.Log("Next tile in Q coords are"+NextTile.x +" "+ NextTile.y+ "and i am at:"+currentTile.x +" "+currentTile.y );
 
 
 
-           
 
-          
 
-            if (Vector3.Distance(transform.position, NextTileV3) < JobDistComplete)
-            {
-                if(MyJob != null && DestTile == MyJob.jobTile)
-                {
-                   // if (MyJob != null)
-                     // CompleteJob();
-                }
-                return;
-            }
+
+
+
+        
         }
         return;
     }
