@@ -73,8 +73,8 @@ public class Character : MonoBehaviour
 
             transform.position = Vector3.Lerp(_tempCurTile,NextTileV3,_step);
 
-            Debug.Log("tc:" + _tempCurTile + "NT:" + NextTileV3 + "step:" + _step);
-            Debug.Log("lerping between:" + CurrTileV3 + "and:" + NextTileV3);
+            //Debug.Log("tc:" + _tempCurTile + "NT:" + NextTileV3 + "step:" + _step);
+           // Debug.Log("lerping between:" + CurrTileV3 + "and:" + NextTileV3);
         }
             
     }
@@ -132,12 +132,12 @@ public class Character : MonoBehaviour
                                             _currentTile,  //Start tile
                                             DestTile); //Destination tile
 
-                Debug.Log("Called pathAStart with this showing as my dest tile:"+ DestTile.x +DestTile.y);
+               // Debug.Log("Called pathAStart with this showing as my dest tile:"+ DestTile.x +DestTile.y);
             }
 
             
 
-            Debug.Log("This is where i see myself at"+ _currentTile.x + _currentTile.y);
+           // Debug.Log("This is where i see myself at"+ _currentTile.x + _currentTile.y);
            // Debug.Log("length of path in PathAStar; "+pathAStar.Length());
 
            
@@ -168,8 +168,8 @@ public class Character : MonoBehaviour
 
 
             //just for Debugging
-            if (NextTile != _currentTile && NextTile != null) 
-            Debug.Log("Next tile in Q coords are"+NextTile.x +" "+ NextTile.y+ "and i am at:"+_currentTile.x +" "+_currentTile.y );
+           // if (NextTile != _currentTile && NextTile != null) 
+           // Debug.Log("Next tile in Q coords are"+NextTile.x +" "+ NextTile.y+ "and i am at:"+_currentTile.x +" "+_currentTile.y );
 
 
 

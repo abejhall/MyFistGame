@@ -52,13 +52,15 @@ public class JobManager : MonoBehaviour {
         Job j = new Job(t, s);
 
 
-        
+        // if a job already exist at cords bail out
         if(!CheckIfJobExist(j))
         {
             
             return;
         }
 
+
+        //create a temp var for the tile at specific job and spawn a green highlight over it
         GameObject Go1 = WorldManager.Instance.TileToGameObjectMap[j.jobTile];
         if(Go1.GetComponent<SpriteRenderer>().sprite != WorldManager.Instance.plant)
         {
