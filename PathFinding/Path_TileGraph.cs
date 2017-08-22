@@ -31,7 +31,7 @@ public class Path_TileGraph {
 
 				Tile t = WorldManager.Instance.GetTileAT(x,y);
 
-				if(t.MovementSpeedAdjustment > 0) {	// Tiles with a move cost of 0 are unwalkable
+				if(t.MovementSpeedAdjustment >= 0) {	// Tiles with a move cost of 0 are unwalkable
 					Path_Node<Tile> n = new Path_Node<Tile>();
 					n.data = t;
 					nodes.Add(t, n);

@@ -10,38 +10,39 @@ public class Character : MonoBehaviour
     public Tile DestTile = null;
     public Tile NextTile;
 
-    
 
 
-    List<Job> jobQueList;
-    List<GameObject> GreenHighlightsList;
-    List<GameObject> RedHighlightsList;
+
+    private List<Job> _jobQueList;
+    private List<GameObject> _greenHighlightsList;
+    private List<GameObject> _redHighlightsList;
    
-    Path_AStar pathAStar;
+    public Path_AStar MyPathAStar;
+    private Vector3 _tempCurTile;
+    private Tile _currentTile; 
+    public Vector3 NextTileV3; 
+    public Vector3 CurrTileV3;
+  
 
-    Tile currentTile; 
-   public Vector3 NextTileV3; 
-   public Vector3 CurrTileV3;
-   public Vector3 TempCurTile;
-          float step;
-    float startTime;
+   private float _step;
+   private float _startTime;
 
-     public  bool islerping = false;
+   public  bool Islerping = false;
 
     //for debugging only 
     public bool MyJobIsNull;
 
-    public AudioClip pop;
+    public AudioClip Pop;
 
     
     // Use this for initialization
     void Start()
     {
         NextTile = new Tile(Mathf.FloorToInt(this.transform.position.x), Mathf.FloorToInt(this.transform.position.y));
-        jobQueList = JobManager.Instance.JobQueList;
-        GreenHighlightsList = JobManager.Instance.GreenHighlightsList;
-        RedHighlightsList = JobManager.Instance.RedHighlightsList;
-        startTime = Time.time;
+        _jobQueList = JobManager.Instance.JobQueList;
+        _greenHighlightsList = JobManager.Instance.GreenHighlightsList;
+        _redHighlightsList = JobManager.Instance.RedHighlightsList;
+        _startTime = Time.time;
     }
    
 
@@ -66,13 +67,13 @@ public class Character : MonoBehaviour
         CleanUpAfterMyself();
 
 
-        step = (Time.time - startTime) * MoveSpeed;
-        if (islerping)
+        _step = (Time.time - _startTime) * MoveSpeed;
+        if (Islerping)
         {
 
-            transform.position = Vector3.Lerp(TempCurTile,NextTileV3,step);
+            transform.position = Vector3.Lerp(_tempCurTile,NextTileV3,_step);
 
-            Debug.Log("tc:" + TempCurTile + "NT:" + NextTileV3 + "step:" + step);
+            Debug.Log("tc:" + _tempCurTile + "NT:" + NextTileV3 + "step:" + _step);
             Debug.Log("lerping between:" + CurrTileV3 + "and:" + NextTileV3);
         }
             
@@ -106,29 +107,29 @@ public class Character : MonoBehaviour
         if (MyJob == null)
             return;
 
-       currentTile = WorldManager.Instance.GetTileAT(this.transform.position.x, this.transform.position.y);
+       _currentTile = WorldManager.Instance.GetTileAT(this.transform.position.x, this.transform.position.y);
        NextTileV3 = new Vector3(NextTile.x, NextTile.y, 0);
-       CurrTileV3 = new Vector3(currentTile.x, currentTile.y, 0);
-       step = Time.time - Time.deltaTime * MoveSpeed;
+       CurrTileV3 = new Vector3(_currentTile.x, _currentTile.y, 0);
+       _step = Time.time - Time.deltaTime * MoveSpeed;
 
 
         // I am at my destination and can complete job
-        if (currentTile == DestTile)
+        if (_currentTile == DestTile)
         {
-            islerping = false;
+            Islerping = false;
             CompleteJob();
             return;
         }
 
-        if (MyJob != null || currentTile != DestTile )
+        if (MyJob != null || _currentTile != DestTile )
         {
             //I do have a job and i am not at my destination and i a not at 0,0,0
            //Check if i have an A* Navigation already if not create it
-            if(pathAStar == null)
+            if(MyPathAStar == null)
             {
               
-                pathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
-                                            currentTile,  //Start tile
+                MyPathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
+                                            _currentTile,  //Start tile
                                             DestTile); //Destination tile
 
                 Debug.Log("Called pathAStart with this showing as my dest tile:"+ DestTile.x +DestTile.y);
@@ -136,23 +137,23 @@ public class Character : MonoBehaviour
 
             
 
-            Debug.Log("This is where i see myself at"+ currentTile.x + currentTile.y);
+            Debug.Log("This is where i see myself at"+ _currentTile.x + _currentTile.y);
            // Debug.Log("length of path in PathAStar; "+pathAStar.Length());
 
            
            
             
             //set my nextTile if i dont have one.
-            if(NextTileV3 == CurrTileV3 && pathAStar != null && CurrTileV3 != Dest)
+            if(NextTileV3 == CurrTileV3 && MyPathAStar != null && CurrTileV3 != Dest)
             {
                
-                    NextTile = pathAStar.Dequeue();
-                    TempCurTile = this.transform.position;
-                startTime = Time.time;
+                    NextTile = MyPathAStar.Dequeue();
+                    _tempCurTile = this.transform.position;
+                _startTime = Time.time;
 
               
 
-                    islerping = true;
+                    Islerping = true;
                    
 
 
@@ -167,8 +168,8 @@ public class Character : MonoBehaviour
 
 
             //just for Debugging
-            if (NextTile != currentTile && NextTile != null) 
-            Debug.Log("Next tile in Q coords are"+NextTile.x +" "+ NextTile.y+ "and i am at:"+currentTile.x +" "+currentTile.y );
+            if (NextTile != _currentTile && NextTile != null) 
+            Debug.Log("Next tile in Q coords are"+NextTile.x +" "+ NextTile.y+ "and i am at:"+_currentTile.x +" "+_currentTile.y );
 
 
 
@@ -185,11 +186,11 @@ public class Character : MonoBehaviour
 
     void CleanUpAfterMyself()
     {
-        if (jobQueList != null && jobQueList.Count == 0)
+        if (_jobQueList != null && _jobQueList.Count == 0)
         {
-            GreenHighlightsList.Clear();
+            _greenHighlightsList.Clear();
 
-            foreach (GameObject r in RedHighlightsList)
+            foreach (GameObject r in _redHighlightsList)
             {
 
                 SimplePool.Despawn(r);
@@ -210,9 +211,10 @@ public class Character : MonoBehaviour
         
         //FIXME: this is for testing only... place a blimish tile where once was grass.
         Tile t = MyJob.jobTile;
-        GameObject go = WorldManager.Instance.TileToGameObjectMap[t]; 
+        GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
+        t.MovementSpeedAdjustment = 0f;
         go.GetComponent<SpriteRenderer>().sprite = WorldManager.Instance.blimish;
-
+        WorldManager.Instance.world.tileGraph = null;
 
         //look up and remove Green Highlight
         for (int i = 0; i < JobManager.Instance.GreenHighlightsList.Count; i++)
@@ -226,10 +228,10 @@ public class Character : MonoBehaviour
         }
 
         //Play sound effect when done
-        AudioSource.PlayClipAtPoint(pop, this.transform.position);
+        AudioSource.PlayClipAtPoint(Pop, this.transform.position);
         MyJob = null;
         Dest = new Vector3(this.transform.position.x, this.transform.position.y, 0);
-        pathAStar = null;
+        MyPathAStar = null;
 
         //FIX ME: Not sure why I had to make this work around.... Cant find the logic error but i know i must of made one here.
         //This works for now but would rather do it right.
