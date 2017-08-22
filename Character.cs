@@ -213,7 +213,8 @@ public class Character : MonoBehaviour
         Tile t = MyJob.jobTile;
         GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
         t.MovementSpeedAdjustment = 0f;
-        go.GetComponent<SpriteRenderer>().sprite = WorldManager.Instance.blimish;
+        go.GetComponent<SpriteRenderer>().sprite = MyJob.jobSprite;//WorldManager.Instance.blimish;
+        Debug.Log(MyJob.jobSprite);
         WorldManager.Instance.world.tileGraph = null;
 
         //look up and remove Green Highlight

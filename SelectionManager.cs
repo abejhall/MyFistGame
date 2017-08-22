@@ -10,7 +10,7 @@ public class SelectionManager : MonoBehaviour {
     //Empty Object for pooled items to parent to.  Only to keep inspector clean.
     public GameObject PoolManager;
 
-
+    bool _mouseOverButton;
 
     //prefab for highlighted area
     public GameObject SelectedHighLight;
@@ -32,6 +32,8 @@ public class SelectionManager : MonoBehaviour {
         //making sure this is the only selection manager;
         Instance = this;
 
+        _mouseOverButton = false;
+
 
         YellowGOList = new List<GameObject>();
         SelectedTileList = new List<Tile>();
@@ -46,18 +48,33 @@ public class SelectionManager : MonoBehaviour {
 
         //FIXME:
         //for testing only
-        ConvertTileToBlimish();
+        //ConvertTileToBlimish();
+
+
+        if (!_mouseOverButton)
+        {
+            DragStart();
+            DragPreview();
+            DragEnd();
+        }
        
-
-
-        DragStart();
-        DragPreview();
-        DragEnd();
 
         //if you click the right mouse button clear highlighted objects
         if (Input.GetMouseButtonDown(1))
             DestroyHighlight();
     }
+
+
+    public void MouseOverButton()
+    {
+        _mouseOverButton = true;
+    }
+
+    public void MouseOFfButton()
+    {
+        _mouseOverButton = false;
+    }
+
 
     // if left mouse button is pushed down clear the list of highlighed objects. Get the selected tile under
     // mouse position. Then store that position to be used when the drag is released
@@ -223,7 +240,7 @@ public class SelectionManager : MonoBehaviour {
 
     // Destroy any prefabs of SelectedHighLight found in the list of Highlights
     // clear the list of Highlight tiles.
-   void DestroyHighlight()
+    public void DestroyHighlight()
     {
         foreach (GameObject go in YellowGOList)
             SimplePool.Despawn(go);
@@ -249,26 +266,27 @@ public class SelectionManager : MonoBehaviour {
 
     //FIXME:
     // This function is for testing only will be removed!!!
-    
-    void ConvertTileToBlimish()
-    {
-        
-      
-        if(Input.GetKeyDown(KeyCode.T))
-        {
-            
-            foreach(Tile t in SelectedTileList)
-            {
-               JobManager.Instance.CreateJob(t, WorldManager.Instance.blimish);
-            }
-            DestroyHighlight();
-           
-         
+    /*  
+      void ConvertTileToBlimish()
+      {
 
-        }
-    }
 
-  
-        
+          if(Input.GetKeyDown(KeyCode.T))
+          {
+
+              foreach(Tile t in SelectedTileList)
+              {
+                 JobManager.Instance.CreateJob(t, WorldManager.Instance.blimish);
+              }
+              DestroyHighlight();
+
+
+
+          }
+
+      }
+  */
+
+
 
 }
