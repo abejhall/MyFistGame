@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
     public float MoveSpeed = 3f;
     public Job MyJob = null;
     public Vector3 Dest;
+    public Tile DestTile = null;
     public Tile NextTile;
 
     public float JobDistComplete = .2f;
@@ -18,6 +19,8 @@ public class Character : MonoBehaviour
 
     Path_AStar pathAStar;
 
+
+    //for debugging only 
     public bool MyJobIsNull;
 
     public AudioClip pop;
@@ -35,11 +38,12 @@ public class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (MyJob == null)
-            MyJobIsNull = true;
-
-        if (MyJob != null)
-            MyJobIsNull = false;
+            //for debugging
+            if (MyJob == null)
+                MyJobIsNull = true;
+        //for debugging
+            if (MyJob != null)
+                MyJobIsNull = false;
 
         //get a job from job Que.
         GetAJobHippy();
@@ -54,13 +58,16 @@ public class Character : MonoBehaviour
 
     void GetAJobHippy()
     {
+       
+
         if (JobManager.Instance.JobQueList.Count != 0 && MyJob == null)
         {
             Job j = JobManager.Instance.GetJob();
             MyJob = j;
-
+        
             
             Tile t = j.jobTile;
+            DestTile = j.jobTile;
             Dest = new Vector3(t.x, t.y, 0);
 
           
@@ -69,13 +76,29 @@ public class Character : MonoBehaviour
         return;
     }
 
+    float startTime;
 
     void GotoWork()
     {
         if (MyJob == null)
             return;
 
-        if (MyJob != null || this.transform.position != new Vector3(Dest.x,Dest.y,0) && Dest != new Vector3(0,0,0))
+        Tile currentTile = WorldManager.Instance.GetTileAT(this.transform.position.x,this.transform.position.y);
+        Vector3 NextTileV3 = new Vector3(NextTile.x, NextTile.y, 0);
+        Vector3 CurrTileV3 = new Vector3(currentTile.x, currentTile.y, 0);
+
+        float journeyLength = Vector3.Distance(CurrTileV3, Dest);
+
+
+        float distCovered = (Time.time - startTime) * MoveSpeed;
+        float fracJourney = distCovered / journeyLength;
+
+        transform.position = Vector3.Lerp(CurrTileV3, NextTileV3, fracJourney);
+
+        Debug.Log("lerping between:" + CurrTileV3 + "and:" + NextTileV3);
+
+
+        if (MyJob != null || currentTile != DestTile )//&& Dest != new Vector3(0,0,0))
         {
             //I do have a job and i am not at my destination and i a not at 0,0,0
            //Check if i have an A* Navigation already if not create it
@@ -83,54 +106,59 @@ public class Character : MonoBehaviour
             {
               
                 pathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
-                    WorldManager.Instance.GetTileAT(Mathf.CeilToInt(this.transform.position.x),Mathf.CeilToInt(this.transform.position.y)),  //Start tile
-                    WorldManager.Instance.GetTileAT(Mathf.CeilToInt(Dest.x),Mathf.CeilToInt(Dest.y))); //Destination tile
+                                            currentTile,  //Start tile
+                                            DestTile); //Destination tile
 
-                Debug.Log("Called pathAStart with this showing as my dest tile:"+ Dest.x +Dest.y);
+                Debug.Log("Called pathAStart with this showing as my dest tile:"+ DestTile.x +DestTile.y);
             }
 
-            Tile t = WorldManager.Instance.GetTileAT(Mathf.CeilToInt(this.transform.position.x),Mathf.CeilToInt(this.transform.position.y));
+            
 
-            Debug.Log("This is what i am commpairing to as t to NextTile"+ t.x + t.y);
-            Debug.Log("length of path in PathAStar; "+pathAStar.Length());
+            Debug.Log("This is where i see myself at"+ currentTile.x + currentTile.y);
+           // Debug.Log("length of path in PathAStar; "+pathAStar.Length());
 
-            if (pathAStar.Length() == 0 && pathAStar != null)
+           
+           
+            
+            //set my nextTile if i dont have one.
+            if(NextTileV3 == CurrTileV3 && pathAStar != null && currentTile != DestTile)
             {
-                CompleteJob();
-                pathAStar = null;
-
-            }
-
-            Vector3 tempNextileVector = new Vector3(NextTile.x, NextTile.y, 0);
-
-            if(tempNextileVector != null && pathAStar != null)
-            {
-                if (Vector3.Distance(tempNextileVector, this.transform.position) < .3f)
+                startTime = Time.time;
                     NextTile = pathAStar.Dequeue();
 
             }
 
+           
+            
+               
+
+            if (currentTile == DestTile)
+            {
+                
+                CompleteJob();
+            }
+               
 
 
             //just for Debugging
-            if (NextTile != WorldManager.Instance.GetTileAT(Mathf.CeilToInt(this.transform.position.x), Mathf.CeilToInt(this.transform.position.y))) ;
+            if (NextTile != currentTile && NextTile != null) 
             Debug.Log("Next tile in Q coords are"+NextTile.x + NextTile.y);
 
 
-            Vector3 NextTileV3 = new Vector3(NextTile.x, NextTile.y, 0);
+           
 
 
 
-            transform.position = Vector3.Lerp(transform.position, NextTileV3, MoveSpeed * Time.deltaTime);
+           
+
+          
+
             if (Vector3.Distance(transform.position, NextTileV3) < JobDistComplete)
             {
-                Tile curTile = WorldManager.Instance.GetTileAT(Mathf.FloorToInt( transform.position.x), Mathf.FloorToInt(transform.position.y));
-                
-
-                if(MyJob != null && NextTile != null && curTile == MyJob.jobTile  )
+                if(MyJob != null && DestTile == MyJob.jobTile)
                 {
                    // if (MyJob != null)
-                      CompleteJob();
+                     // CompleteJob();
                 }
                 return;
             }
@@ -141,7 +169,7 @@ public class Character : MonoBehaviour
 
     void CleanUpAfterMyself()
     {
-        if (jobQueList.Count == 0)
+        if (jobQueList != null && jobQueList.Count == 0)
         {
             GreenHighlightsList.Clear();
 
@@ -185,7 +213,7 @@ public class Character : MonoBehaviour
         AudioSource.PlayClipAtPoint(pop, this.transform.position);
         MyJob = null;
         Dest = new Vector3(this.transform.position.x, this.transform.position.y, 0);
-       
+        pathAStar = null;
 
         //FIX ME: Not sure why I had to make this work around.... Cant find the logic error but i know i must of made one here.
         //This works for now but would rather do it right.

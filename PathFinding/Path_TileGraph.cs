@@ -40,7 +40,7 @@ public class Path_TileGraph {
 			}
 		}
 
-		Debug.Log("Path_TileGraph: Created "+nodes.Count+" nodes.");
+		//Debug.Log("Path_TileGraph: Created "+nodes.Count+" nodes.");
 
 
 		// Now loop through all nodes again
@@ -74,7 +74,7 @@ public class Path_TileGraph {
 			n.edges = edges.ToArray();
 		}
 
-		Debug.Log("Path_TileGraph: Created "+edgeCount+" edges.");
+	//	Debug.Log("Path_TileGraph: Created "+edgeCount+" edges.");
 
 	}
 

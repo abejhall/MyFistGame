@@ -75,7 +75,26 @@ public class WorldManager : MonoBehaviour {
         return null;
     }
 
+    public Tile GetTileAT(float fx, float fy)
+    {
+        int x = Mathf.FloorToInt(fx);
+        int y = Mathf.FloorToInt(fy);
+
+        if (x > WorldWidth || x < 0 || y > WorldHeight || y < 0)
+        {
+            //FIXME: 
+            // Debug.Log("Tile (" + x + "," + y + ") is out of range.");
+            return null;
+        }
+        if (TileToNameMap.ContainsKey("tile_" + x + "_" + y))
+        {
+            Tile t = TileToNameMap["tile_" + x + "_" + y];
+            return t;
+        }
+        return null;
+    }
+
     // This assigns the type of tile when the world is created for the first time.
- 
+
 
 }

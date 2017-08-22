@@ -72,12 +72,16 @@ public class World
             if (rm > 98)
                 tmpSprite = WorldManager.Instance.blimish;
             else if (rm < 10)
+            {
                 tmpSprite = WorldManager.Instance.plant;
-            else
+                t.MovementSpeedAdjustment = 0f;
+            }
+              else
                 tmpSprite = WorldManager.Instance.grass;
 
 
             //FIXME: removed cause not used yet.
+           
             GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
             go.GetComponent<SpriteRenderer>().sprite = tmpSprite;
            // WorldManager.Instance.TileToSpriteMap.Add(t, tmpSprite);
