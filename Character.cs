@@ -71,6 +71,7 @@ public class Character : MonoBehaviour
         {
 
             transform.position = Vector3.Lerp(TempCurTile,NextTileV3,step);
+
             Debug.Log("tc:" + TempCurTile + "NT:" + NextTileV3 + "step:" + step);
             Debug.Log("lerping between:" + CurrTileV3 + "and:" + NextTileV3);
         }
@@ -147,6 +148,7 @@ public class Character : MonoBehaviour
                
                     NextTile = pathAStar.Dequeue();
                     TempCurTile = this.transform.position;
+                startTime = Time.time;
 
               
 
