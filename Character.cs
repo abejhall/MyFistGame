@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 public class Character : MonoBehaviour
 {
@@ -100,7 +101,12 @@ public class Character : MonoBehaviour
         return;
     }
 
-    
+    void getPathFinding()
+    {
+        MyPathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
+                                           _currentTile,  //Start tile
+                                           DestTile); //Destination tile
+    }
 
     void GotoWork()
     {
@@ -127,35 +133,43 @@ public class Character : MonoBehaviour
             //I do have a job and i am not at my destination and i a not at 0,0,0
            //Check if i have an A* Navigation already if not create it
             if(MyPathAStar == null)
-            {
-              
-                MyPathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
-                                            _currentTile,  //Start tile
-                                            DestTile); //Destination tile
+            {  getPathFinding();
 
-               // Debug.Log("Called pathAStart with this showing as my dest tile:"+ DestTile.x +DestTile.y);
+               
+                    
             }
-            /*
-            if (MyPathAStar.Length() == 0 && MyJob != null)
+
+           
+           
+            if (NextTileV3 == CurrTileV3 && MyPathAStar != null && CurrTileV3 != Dest && MyPathAStar.Length() == 0)
             {
                 Debug.LogError("no path to destination");
-
-                JobManager.Instance.ReturnJobToQue(MyJob);
-                MyJob = null;
+                Vector3 _JobTileV = new Vector3(MyJob.jobTile.x, MyJob.jobTile.y,0);
+                JobManager.Instance.CancelJob(MyJob);
+               
                 MyPathAStar = null;
+                Islerping = false;
+                MyJob = null;
+
+                
+                foreach(GameObject g in _greenHighlightsList)
+                {
+                    if (g.transform.position == _JobTileV)
+                        SimplePool.Despawn(g);
+                }
+
+
                 return;
-
             }
-             */
+             
 
-           // Debug.Log("This is where i see myself at"+ _currentTile.x + _currentTile.y);
-           // Debug.Log("length of path in PathAStar; "+pathAStar.Length());
+          
 
            
            
             
             //set my nextTile if i dont have one.
-            if(NextTileV3 == CurrTileV3 && MyPathAStar != null && CurrTileV3 != Dest)
+            if(NextTileV3 == CurrTileV3 && MyPathAStar != null && CurrTileV3 != Dest && MyPathAStar.Length() != 0)
             {
                
                     NextTile = MyPathAStar.Dequeue();
@@ -169,24 +183,6 @@ public class Character : MonoBehaviour
 
 
             }
-
-
-
-
-
-          
-               
-
-
-            //just for Debugging
-           // if (NextTile != _currentTile && NextTile != null) 
-           // Debug.Log("Next tile in Q coords are"+NextTile.x +" "+ NextTile.y+ "and i am at:"+_currentTile.x +" "+_currentTile.y );
-
-
-
-
-
-
 
 
         
@@ -222,7 +218,7 @@ public class Character : MonoBehaviour
         
         
         Tile t = MyJob.jobTile;
-        Debug.Log("myJob's tile info is MovementSpeed:" + t.MovementSpeedAdjustment+", sprite:"+t.sprite + "X Y:" + t.x+t.y);
+      //  Debug.Log("myJob's tile info is MovementSpeed:" + t.MovementSpeedAdjustment+", sprite:"+t.sprite + "X Y:" + t.x+t.y);
         GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
         t.MovementSpeedAdjustment = MyJob.movementSpeedAdjustment;
         go.GetComponent<SpriteRenderer>().sprite = MyJob.jobSprite;
@@ -258,9 +254,6 @@ public class Character : MonoBehaviour
         }
     }
 
-    public void CompleteJobUnWalkable()
-    {
-
-    }
+   
 
 }

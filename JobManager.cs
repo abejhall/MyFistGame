@@ -178,6 +178,14 @@ public class JobManager : MonoBehaviour {
         }
     }
 
+
+    public void CancelJob(Job j)
+    {
+        DespawnYellowHighlight(j.jobTile);
+        JobQueList.Remove(j);
+    }
+
+
     public void ReturnJobToQue(Job j)
     {
         JobQueList.Add(j);

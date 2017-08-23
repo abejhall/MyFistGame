@@ -20,17 +20,7 @@ public class World
             Width = width;
             Height = height;
 
-        /*
-            tiles = new Tile[Width, Height];
-
-            for (int x = 0; x < Width; x++)
-            {for (int y = 0; y < Height; y++)
-                {
-                    tiles[x, y] = new Tile(x, y);
-                }
-            }
-            */
-          //  Debug.Log("World created with " + (Width * Height) + " tiles.");
+        
 
         }
 
@@ -67,18 +57,11 @@ public class World
     {
         foreach (Tile t in WorldManager.Instance.TileToNameMap.Values)
         {
-            //int rm = Random.Range(0, 100);
+           
             Sprite tmpSprite;
-           // if (rm > 98)
-          //      tmpSprite = WorldManager.Instance.blimish;
-          //  else if (rm < 10)
-          //  {
-          //      tmpSprite = WorldManager.Instance.plant;
-          //      t.MovementSpeedAdjustment = 0f;
-          //  }
-            //  else
+          
                 tmpSprite = WorldManager.Instance.grass;
-            //44_51 - 54_51 make plants
+           
 
             if(t.x > 44 && t.x < 54 && t.y == 51)
             {
@@ -93,7 +76,7 @@ public class World
                 t.MovementSpeedAdjustment = 0;
                 tileGraph = null;
             }
-                    /*
+                    
                     if (t.y > 45 && t.y < 52 && t.x == 44)
                     {
                         tmpSprite = WorldManager.Instance.blimish;
@@ -101,7 +84,14 @@ public class World
                         tileGraph = null;
                     }
 
-                    */
+
+            if (t.y > 45 && t.y < 52 && t.x == 47)
+            {
+                tmpSprite = WorldManager.Instance.blimish;
+                t.MovementSpeedAdjustment = 0;
+                tileGraph = null;
+            }
+
 
             //FIXME: removed cause not used yet.
 
