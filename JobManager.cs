@@ -45,6 +45,38 @@ public class JobManager : MonoBehaviour {
 
     //FIXME:  TODO:
 
+    public void CreateJob(Tile t, Sprite s, float movment, float time)
+    {
+        Job j = new Job(t, s, movment,time);
+
+
+        // if a job already exist at cords bail out
+        if (!CheckIfJobExist(j))
+        {
+
+            return;
+        }
+
+
+        //create a temp var for the tile at specific job and spawn a green highlight over it
+        GameObject Go1 = WorldManager.Instance.TileToGameObjectMap[j.jobTile];
+        if (Go1.GetComponent<SpriteRenderer>().sprite != null)
+        {
+            GameObject go = (GameObject)SimplePool.Spawn(GreenSelectHighlight, new Vector3(t.x, t.y, 0), Quaternion.identity);
+            go.transform.SetParent(SelectionManager.Instance.PoolManager.transform);
+            GreenHighlightsList.Add(go);
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+            sr.sortingLayerName = "HighLights";
+
+            JobQueList.Add(j);
+
+
+
+            DespawnYellowHighlight(t);
+
+        }
+    }
+
     public void CreateJob(Tile t, Sprite s)
     {
      

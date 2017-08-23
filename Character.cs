@@ -135,8 +135,18 @@ public class Character : MonoBehaviour
 
                // Debug.Log("Called pathAStart with this showing as my dest tile:"+ DestTile.x +DestTile.y);
             }
+            /*
+            if (MyPathAStar.Length() == 0 && MyJob != null)
+            {
+                Debug.LogError("no path to destination");
 
-            
+                JobManager.Instance.ReturnJobToQue(MyJob);
+                MyJob = null;
+                MyPathAStar = null;
+                return;
+
+            }
+             */
 
            // Debug.Log("This is where i see myself at"+ _currentTile.x + _currentTile.y);
            // Debug.Log("length of path in PathAStar; "+pathAStar.Length());
@@ -210,11 +220,12 @@ public class Character : MonoBehaviour
            return;
 
         
-        //FIXME: this is for testing only... place a blimish tile where once was grass.
+        
         Tile t = MyJob.jobTile;
+        Debug.Log("myJob's tile info is MovementSpeed:" + t.MovementSpeedAdjustment+", sprite:"+t.sprite + "X Y:" + t.x+t.y);
         GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
-        t.MovementSpeedAdjustment = 0f;
-        go.GetComponent<SpriteRenderer>().sprite = MyJob.jobSprite;//WorldManager.Instance.blimish;
+        t.MovementSpeedAdjustment = MyJob.movementSpeedAdjustment;
+        go.GetComponent<SpriteRenderer>().sprite = MyJob.jobSprite;
         Debug.Log(MyJob.jobSprite);
         WorldManager.Instance.world.tileGraph = null;
 
