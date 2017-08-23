@@ -62,7 +62,7 @@ public class JobManager : MonoBehaviour {
 
         //create a temp var for the tile at specific job and spawn a green highlight over it
         GameObject Go1 = WorldManager.Instance.TileToGameObjectMap[j.jobTile];
-        if(Go1.GetComponent<SpriteRenderer>().sprite != WorldManager.Instance.plant)
+        if(Go1.GetComponent<SpriteRenderer>().sprite != null)
         {
             GameObject go =(GameObject) SimplePool.Spawn(GreenSelectHighlight, new Vector3(t.x, t.y, 0),Quaternion.identity);
             go.transform.SetParent(SelectionManager.Instance.PoolManager.transform);
@@ -77,6 +77,7 @@ public class JobManager : MonoBehaviour {
             DespawnYellowHighlight(t);
 
         }
+        /*
         else if (Go1.GetComponent<SpriteRenderer>().sprite == WorldManager.Instance.plant)
         {
             if (!CheckIfJobExist(j))
@@ -98,7 +99,7 @@ public class JobManager : MonoBehaviour {
 
         }
 
-
+        */
 
     }
 

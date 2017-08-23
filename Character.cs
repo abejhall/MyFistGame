@@ -112,6 +112,7 @@ public class Character : MonoBehaviour
        CurrTileV3 = new Vector3(_currentTile.x, _currentTile.y, 0);
        _step = Time.time - Time.deltaTime * MoveSpeed;
 
+       
 
         // I am at my destination and can complete job
         if (_currentTile == DestTile)
@@ -246,6 +247,9 @@ public class Character : MonoBehaviour
         }
     }
 
+    public void CompleteJobUnWalkable()
+    {
 
+    }
 
 }
