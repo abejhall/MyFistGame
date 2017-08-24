@@ -62,7 +62,13 @@ public class Path_AStar {
 
 		while( OpenSet.Count > 0 ) {
 			Path_Node<Tile> current = OpenSet.Dequeue();
-
+            //Debug.Log("OpenSet Count: " + OpenSet.Count);
+            if (OpenSet.Count > 150)
+            {
+                JobManager.Instance.JobToHard(tileEnd);
+               // Debug.LogError("searched too long");
+                return;
+            }
 			if(current == goal) {
 				// We have reached our goal!
 				// Let's convert this into an actual sequene of

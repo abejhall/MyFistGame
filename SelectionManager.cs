@@ -10,7 +10,7 @@ public class SelectionManager : MonoBehaviour {
     //Empty Object for pooled items to parent to.  Only to keep inspector clean.
     public GameObject PoolManager;
 
-    bool _mouseOverButton;
+    public bool mouseOverButton;
 
     //prefab for highlighted area
     public GameObject SelectedHighLight;
@@ -32,7 +32,7 @@ public class SelectionManager : MonoBehaviour {
         //making sure this is the only selection manager;
         Instance = this;
 
-        _mouseOverButton = false;
+        mouseOverButton = false;
 
 
         YellowGOList = new List<GameObject>();
@@ -51,7 +51,7 @@ public class SelectionManager : MonoBehaviour {
         //ConvertTileToBlimish();
 
 
-        if (!_mouseOverButton)
+        if (!mouseOverButton)
         {
             DragStart();
             DragPreview();
@@ -67,12 +67,12 @@ public class SelectionManager : MonoBehaviour {
 
     public void MouseOverButton()
     {
-        _mouseOverButton = true;
+        mouseOverButton = true;
     }
 
     public void MouseOFfButton()
     {
-        _mouseOverButton = false;
+        mouseOverButton = false;
     }
 
 

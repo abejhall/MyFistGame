@@ -143,7 +143,7 @@ public class Character : MonoBehaviour
            
             if (NextTileV3 == CurrTileV3 && MyPathAStar != null && CurrTileV3 != Dest && MyPathAStar.Length() == 0)
             {
-                Debug.LogError("no path to destination");
+               // Debug.LogError("no path to destination");
                 Vector3 _JobTileV = new Vector3(MyJob.jobTile.x, MyJob.jobTile.y,0);
                 JobManager.Instance.CancelJob(MyJob);
                
@@ -237,7 +237,9 @@ public class Character : MonoBehaviour
         }
 
         //Play sound effect when done
-        AudioSource.PlayClipAtPoint(Pop, this.transform.position);
+        //AudioSource.PlayClipAtPoint(Pop, this.transform.position);
+        SoundManager.Instance.PlayPopSound();
+
         MyJob = null;
         Dest = new Vector3(this.transform.position.x, this.transform.position.y, 0);
         MyPathAStar = null;

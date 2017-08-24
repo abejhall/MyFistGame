@@ -33,12 +33,12 @@ public class CameraManager : MonoBehaviour {
         void ClampCamera()
          {
 
-        if (Camera.main.orthographicSize > 44f)
-            Camera.main.orthographicSize = 44f;
+        if (Camera.main.orthographicSize > 15f)
+            Camera.main.orthographicSize = 15f;
 
 
-        if (Camera.main.orthographicSize < 2.5f)
-            Camera.main.orthographicSize = 2.5f;
+        if (Camera.main.orthographicSize < 3.5f)
+            Camera.main.orthographicSize = 3.5f;
          }
 
 

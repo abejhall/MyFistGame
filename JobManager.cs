@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JobManager : MonoBehaviour {
 
@@ -10,7 +11,8 @@ public class JobManager : MonoBehaviour {
     //these GameObjects are the prefabs of the 2 selection colors
     public GameObject GreenSelectHighlight;
     public GameObject RedSelectHighLight;
-
+    public GameObject RedTileMarker;
+    public GameObject DisplayPanel;
 
     //these list will keep track of the red and green highlights to be removed later by a function
     public List<GameObject> GreenHighlightsList;
@@ -199,5 +201,17 @@ public class JobManager : MonoBehaviour {
        
         return j;
     }
+
+
+    public void JobToHard(Tile t)
+    {
+        Vector3 tmpV = new Vector3(t.x, t.y, 0);
+        SimplePool.Spawn(RedTileMarker, tmpV, Quaternion.identity);
+        SoundManager.Instance.PlayUhOhSound();
+        WorldManager.Instance.world.tileGraph = null;
+    }
+
+
+
 
 }
