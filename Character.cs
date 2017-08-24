@@ -87,7 +87,7 @@ public class Character : MonoBehaviour
 
         if (JobManager.Instance.JobQueList.Count != 0 && MyJob == null)
         {
-            Job j = JobManager.Instance.GetJob();
+            Job j = JobManager.Instance.GetJob();//transform.position
             MyJob = j;
         
             

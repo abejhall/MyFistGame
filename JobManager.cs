@@ -194,12 +194,39 @@ public class JobManager : MonoBehaviour {
     }
     
 
-    public Job GetJob()
+    public Job GetJob()//Vector3 vec
     {
+
         Job j = JobQueList[0];
         JobQueList.Remove(JobQueList[0]);
-       
+
         return j;
+
+        /*
+        if (JobQueList.Count == 0)
+            return null;
+
+        Job tmpJ =JobQueList[0];
+        float tmpDis = 1000000f;
+        foreach (Job j in JobQueList)
+        {
+            float thisDis = Vector3.Distance(vec, WorldManager.Instance.TileToGameObjectMap[j.jobTile].transform.position);
+
+            if (tmpDis > thisDis)
+            { 
+                tmpJ = j;
+                tmpDis = thisDis;
+                JobQueList.Remove(j);
+
+            }
+
+        }
+
+        */
+        // return tmpJ;
+
+
+
     }
 
 
