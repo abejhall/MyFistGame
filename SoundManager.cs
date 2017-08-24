@@ -9,7 +9,27 @@ public  class SoundManager : MonoBehaviour {
 
     private void OnEnable()
     {
+        Debug.Log("oneEnable");
         Instance = this;
+        if(!PlayerPrefs.HasKey("music"))
+        {
+            PlayerPrefs.SetFloat("music", SliderMusic.value);
+        }
+        if (!PlayerPrefs.HasKey("soundFX"))
+        {
+            PlayerPrefs.SetFloat("soundFX", SliderSoundEffects.value);
+        }
+
+        SoundEffects.volume = PlayerPrefs.GetFloat("soundFX");
+        Music.volume = PlayerPrefs.GetFloat("music");
+
+    }
+
+    private void OnDisable()
+    {
+        Debug.Log("oneDisable");
+        PlayerPrefs.SetFloat("music", SliderMusic.value);
+        PlayerPrefs.SetFloat("soundFx", SliderSoundEffects.value);
     }
 
     public Slider SliderMusic;

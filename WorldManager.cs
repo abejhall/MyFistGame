@@ -21,6 +21,7 @@ public class WorldManager : MonoBehaviour {
     public Sprite grass;
     public Sprite plant;
     public Sprite blimish;
+    public Sprite floor;
 
     public World world;
 

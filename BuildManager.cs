@@ -49,18 +49,34 @@ public class BuildManager : MonoBehaviour {
 
     }
 
+    public void BuildFloor()
+    {
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+            if (t.MovementSpeedAdjustment == 0f)
+                continue;
+            t.type = "floor";
+            JobManager.Instance.CreateJob(t, WorldManager.Instance.floor, 1f, false, .5f);
+
+        }
+        SelectionManager.Instance.DestroyHighlight();
+
+    }
+
     public void DestoryTile()
     {
       //  Debug.Log("Destroy tile");
 
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
         {
-            if (t.MovementSpeedAdjustment == 1f)
+            GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+            if (sr.sprite == WorldManager.Instance.grass)
                 continue;
-
+            Debug.Log(sr.sprite+":is the sprite");
             t.MovementSpeedAdjustment = 1f;
-            t.type = "grass";
-            JobManager.Instance.CreateJob(t, WorldManager.Instance.grass, 1f, false, .5f);
+            t.type = "NewGrass";
+            JobManager.Instance.CreateJob(t, WorldManager.Instance.grass, 1f, true, .5f);
 
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -85,10 +101,44 @@ public class BuildManager : MonoBehaviour {
     }
 
 
+    public void CheckNeighborsDestory(Tile t)
+    {
+        List<Tile> tiles = new List<Tile>();
+
+        tiles.Add( WorldManager.Instance.GetTileAT(t.x, t.y+1)); //top
+        tiles.Add(WorldManager.Instance.GetTileAT(t.x + 1, t.y));//right
+        tiles.Add(WorldManager.Instance.GetTileAT(t.x-1, t.y));//left
+        tiles.Add(WorldManager.Instance.GetTileAT(t.x, t.y - 1));//bottom
+      
+        foreach(Tile tt in tiles)
+        {
+            GameObject go = WorldManager.Instance.TileToGameObjectMap[tt];
+            if(tt.type == "wall")
+            {
+                CheckNeighbors(tt, false);
+            }
+
+        }
+        
+
+
+
+
+    }
+
+
 
     public void CheckNeighbors(Tile t, bool fc)
     {
-        if (t.type != "wall")
+        if (t.type == "NewGrass")
+        {
+            CheckNeighborsDestory(t);
+            t.type = "grass";
+        }
+            
+
+
+        if (t.type != "wall" )
             return;
         
         string wall = "wall_";
@@ -134,9 +184,16 @@ public class BuildManager : MonoBehaviour {
         SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
         foreach(Sprite s in walls)
         {
+            if (t.type == "grass")
+            {
+                t.type = "grass";
+                continue;
+            }
+                
+
             if (s.name == wall)
                 sr.sprite = s;
-            Debug.Log("changing neighbor"+wall);
+         //   Debug.Log("changing neighbor"+wall);
         }
         
 
