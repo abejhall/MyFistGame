@@ -47,9 +47,9 @@ public class JobManager : MonoBehaviour {
 
     //FIXME:  TODO:
 
-    public void CreateJob(Tile t, Sprite s, float movment, float time)
+    public void CreateJob(Tile t, Sprite s, float movment, bool attachToOthers, float time)
     {
-        Job j = new Job(t, s, movment,time);
+        Job j = new Job(t, s, movment, attachToOthers, time);
 
 
         // if a job already exist at cords bail out

@@ -15,6 +15,8 @@ public class Tile
 
     public float MovementSpeedAdjustment;
 
+    public string type;
+
     public World world;
 
     public Tile(int x, int y,  bool iswalkable = true )

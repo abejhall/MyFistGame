@@ -222,7 +222,10 @@ public class Character : MonoBehaviour
         GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
         t.MovementSpeedAdjustment = MyJob.movementSpeedAdjustment;
         go.GetComponent<SpriteRenderer>().sprite = MyJob.jobSprite;
-        Debug.Log(MyJob.jobSprite);
+
+        BuildManager.Instance.CheckNeighbors(t,true);
+
+
         WorldManager.Instance.world.tileGraph = null;
 
         //look up and remove Green Highlight
@@ -257,5 +260,9 @@ public class Character : MonoBehaviour
     }
 
    
+
+
+   
+
 
 }

@@ -18,7 +18,7 @@ public class MouseOverScript : MonoBehaviour {
     public void CloseButton()
     {
         SimplePool.Despawn(this.gameObject);
-        Debug.Log("despawning red marker");
+     //   Debug.Log("despawning red marker");
         JobManager.Instance.DisplayPanel.SetActive(false);
         SelectionManager.Instance.mouseOverButton = false;
     }
