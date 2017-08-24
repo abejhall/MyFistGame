@@ -7,42 +7,69 @@ public  class SoundManager : MonoBehaviour {
 
     public static SoundManager Instance;
 
-    private void OnEnable()
+    public Slider SliderMusic;
+    public Slider SliderSoundFX;
+
+
+    public AudioSource Music;
+    public AudioSource SoundEffects;
+
+    public AudioClip pop;
+    public AudioClip click;
+    public AudioClip uhoh;
+
+
+
+
+    private void Start()
     {
-        Debug.Log("oneEnable");
+       
         Instance = this;
-        if(!PlayerPrefs.HasKey("music"))
+
+        //Debug.Log(PlayerPrefs.GetFloat("soundFX") +"player prefs");
+        //Debug.Log(SoundEffects.volume+" sFX volume");
+
+        if (!PlayerPrefs.HasKey("music"))
         {
             PlayerPrefs.SetFloat("music", SliderMusic.value);
         }
-        if (!PlayerPrefs.HasKey("soundFX"))
+        if (!PlayerPrefs.HasKey("sfx"))
         {
-            PlayerPrefs.SetFloat("soundFX", SliderSoundEffects.value);
+            PlayerPrefs.SetFloat("sfx", SliderSoundFX.value);
         }
 
-        SoundEffects.volume = PlayerPrefs.GetFloat("soundFX");
-        Music.volume = PlayerPrefs.GetFloat("music");
+       
+
+             SliderSoundFX.value = PlayerPrefs.GetFloat("sfx");
+               SliderMusic.value = PlayerPrefs.GetFloat("music");
+
+               SliderMusic.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
+        SliderSoundFX.onValueChanged.AddListener(delegate { ValueChangeCheck2(); });
 
     }
+    public void ValueChangeCheck()
+    {
+        PlayerPrefs.SetFloat("music", SliderMusic.value);
+        PlayerPrefs.SetFloat("soundFx", SliderSoundFX.value);
+     
+    }
 
-    private void OnDisable()
+    public void ValueChangeCheck2()
+    {
+        PlayerPrefs.SetFloat("music", SliderMusic.value);
+        PlayerPrefs.SetFloat("sfx", SliderSoundFX.value);
+      
+    }
+
+
+
+    void OnValueChange()
     {
         Debug.Log("oneDisable");
-        PlayerPrefs.SetFloat("music", SliderMusic.value);
-        PlayerPrefs.SetFloat("soundFx", SliderSoundEffects.value);
+       
     }
 
-    public Slider SliderMusic;
-    public Slider SliderSoundEffects;
-
-
-    public  AudioSource Music;
-    public AudioSource SoundEffects;
-
-    public  AudioClip pop;
-    public  AudioClip click;
-    public AudioClip uhoh;
-
+   
 
 
     public  void PlayPopSound()
@@ -58,6 +85,6 @@ public  class SoundManager : MonoBehaviour {
     void Update()
     {
         Music.volume = SliderMusic.value;
-        SoundEffects.volume = SliderSoundEffects.value ;
+        SoundEffects.volume = SliderSoundFX.value ;
     }
 }
