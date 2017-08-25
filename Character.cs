@@ -13,10 +13,11 @@ public class Character : MonoBehaviour
 
 
     //door Stuff will be moved eventually
-    public float DoorWait = 4f;
-    float waitingTime;
-    bool waitingForDoor = false;
-    bool startedTimer = false;
+    public float DoorWait = 0.01f;
+    
+   
+
+
 
     private List<Job> _jobQueList;
     private List<GameObject> _greenHighlightsList;
@@ -72,8 +73,7 @@ public class Character : MonoBehaviour
         CleanUpAfterMyself();
 
 
-        if (waitingForDoor)
-            Waiting();
+        
 
 
         _step = (Time.time - _startTime) * MoveSpeed;
@@ -89,25 +89,7 @@ public class Character : MonoBehaviour
     }
 
 
-    void Waiting()
-    {
-        
-        
-        if(!startedTimer)
-        {
-            waitingTime = Time.time + DoorWait;
-            startedTimer = true;
-        }
-        Debug.Log("waitingTime; "+waitingTime);
-        Debug.Log("Time"+Time.time);
-        if (waitingTime <= Time.time)
-        {
-            Islerping = true;
-            waitingForDoor = false;
-            startedTimer = false;
-        }
-
-    }
+    
 
 
 
@@ -207,18 +189,26 @@ public class Character : MonoBehaviour
                     _tempCurTile = this.transform.position;
                 _startTime = Time.time;
 
-              
-                if(NextTile.type != "door")
+
+                
+               
+                  if(NextTile.type != "door")
                     Islerping = true;
+
                 else if(NextTile.type == "door")
-                {
-                    Islerping = false;
-                    Debug.Log("choose waiting for door");
-                    waitingForDoor = true;
+                  {
+                      Islerping = false;
+                      Debug.Log("choose waiting for door");
 
-                }
-                   
+                    Invoke("WillPauseForDoor", DoorWait);
+                    GameObject go = WorldManager.Instance.DoorTileDict[NextTile];
+                    go.GetComponent<AnimationScriptDoor>().Open();
+                      //waitingForDoor = true;
+                    //  DoorGoPointer = WorldManager.Instance.TileToGameObjectMap[NextTile];
+                     // TriggerDoor.instance.Waiting(this, WorldManager.Instance.TileToGameObjectMap[NextTile]);
+                  }
 
+                  
 
             }
 
@@ -228,8 +218,11 @@ public class Character : MonoBehaviour
         return;
     }
 
-   
 
+    void WillPauseForDoor()
+    {
+        Islerping = true;
+    }
 
 
     void CleanUpAfterMyself()

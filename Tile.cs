@@ -17,6 +17,8 @@ public class Tile
 
     public string type;
 
+    public GameObject door;
+
     public World world;
 
     public Tile(int x, int y,  bool iswalkable = true )

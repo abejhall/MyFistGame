@@ -32,6 +32,10 @@ public class WorldManager : MonoBehaviour {
     public Dictionary<string, Tile> TileToNameMap;
     public Dictionary<Tile, GameObject> TileToGameObjectMap;
 
+
+    public Dictionary<Tile, GameObject> DoorTileDict;
+    
+
     // Use this for initialization
     void Start () {
 
@@ -48,6 +52,11 @@ public class WorldManager : MonoBehaviour {
 
         //initalize our tile to gameobject map
         TileToGameObjectMap = new Dictionary<Tile, GameObject>();
+
+        //initalize our tile to gameobject map for the doors only
+        DoorTileDict = new Dictionary<Tile, GameObject>();
+
+
 
         //creates the tiles for the first time
         CreateWorld();

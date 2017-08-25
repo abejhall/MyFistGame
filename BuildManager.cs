@@ -6,13 +6,21 @@ public class BuildManager : MonoBehaviour {
 
     public static BuildManager Instance;
 
-
+    public GameObject Vdoor;
+    public GameObject Hdoor;
 
     public Sprite[] walls;
+
+    public Sprite[] doors;
+
+   
 
 	// Use this for initialization
 	void Start () {
         Instance = this;
+
+        
+
 	}
 	
 	
@@ -41,6 +49,9 @@ public class BuildManager : MonoBehaviour {
         {
             if (t.MovementSpeedAdjustment == 0f)
                 continue;
+
+           
+
             t.type = "plant";
             JobManager.Instance.CreateJob(t, WorldManager.Instance.plant, 0f, false, .5f);
 
@@ -55,6 +66,9 @@ public class BuildManager : MonoBehaviour {
         {
             if (t.MovementSpeedAdjustment == 0f)
                 continue;
+            if (t.type == "floor")
+                continue;
+
             t.type = "floor";
             JobManager.Instance.CreateJob(t, WorldManager.Instance.floor, 1f, false, .5f);
 
@@ -75,8 +89,12 @@ public class BuildManager : MonoBehaviour {
             if (!CheckNeighborsBuildDoor(t))
                 continue;
 
+            if (t.type == "door")
+                continue;
+
+
             t.type = "door";
-           // JobManager.Instance.CreateJob(t, WorldManager.Instance.door, 1f, false, .5f);
+           JobManager.Instance.CreateJob(t, WorldManager.Instance.door, 1f, false, .5f);
 
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -97,10 +115,18 @@ public class BuildManager : MonoBehaviour {
             if (sr.sprite == WorldManager.Instance.grass)
                 continue;
             Debug.Log(sr.sprite+":is the sprite");
+          
+           
+            JobManager.Instance.CreateJob(t, WorldManager.Instance.grass, 1f, true, .5f);
+            if(t.type == "door")
+            {
+                GameObject go2 = WorldManager.Instance.DoorTileDict[t];
+                Debug.Log("door gameobject" + go2);
+                WorldManager.Instance.DoorTileDict.Remove(t);
+                Destroy(go2);
+            }
             t.MovementSpeedAdjustment = 1f;
             t.type = "NewGrass";
-            JobManager.Instance.CreateJob(t, WorldManager.Instance.grass, 1f, true, .5f);
-
         }
         SelectionManager.Instance.DestroyHighlight();
 
@@ -237,14 +263,21 @@ public class BuildManager : MonoBehaviour {
         {
             t.type = "door";
             JobManager.Instance.CreateJob(t, WorldManager.Instance.door, 1f, false, .5f);
+            Vector3 place = new Vector3(t.x, t.y, 0);
+            GameObject go = Instantiate(Hdoor, place, Quaternion.identity);
+             WorldManager.Instance.DoorTileDict.Add(t, go);
             return true;
         }
          
 
-        if(T.type == "wall"|| B.type == "wall")
+        if(T.type == "wall" && B.type == "wall")
         {
+            Debug.Log("make Door Verticle");
             t.type = "door";
             JobManager.Instance.CreateJob(t, WorldManager.Instance.door1, 1f, false, .5f);
+            Vector3 place = new Vector3(t.x, t.y, 0);
+            GameObject go = Instantiate(Vdoor, place, Quaternion.identity);
+            WorldManager.Instance.DoorTileDict.Add(t, go);
             return true;
         }
 
