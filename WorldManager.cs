@@ -22,6 +22,8 @@ public class WorldManager : MonoBehaviour {
     public Sprite plant;
     public Sprite blimish;
     public Sprite floor;
+    public Sprite door;
+    public Sprite door1;
 
     public World world;
 

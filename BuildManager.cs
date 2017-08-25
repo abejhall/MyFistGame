@@ -63,6 +63,29 @@ public class BuildManager : MonoBehaviour {
 
     }
 
+
+
+    public void BuildDoor()
+    {
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+            if (t.MovementSpeedAdjustment == 0f)
+                continue;
+
+            if (!CheckNeighborsBuildDoor(t))
+                continue;
+
+            t.type = "door";
+           // JobManager.Instance.CreateJob(t, WorldManager.Instance.door, 1f, false, .5f);
+
+        }
+        SelectionManager.Instance.DestroyHighlight();
+
+    }
+
+
+
+
     public void DestoryTile()
     {
       //  Debug.Log("Destroy tile");
@@ -115,7 +138,7 @@ public class BuildManager : MonoBehaviour {
             GameObject go = WorldManager.Instance.TileToGameObjectMap[tt];
             if(tt.type == "wall")
             {
-                CheckNeighbors(tt, false);
+                 CheckNeighbors(tt, false);
             }
 
         }
@@ -202,5 +225,30 @@ public class BuildManager : MonoBehaviour {
     }
 
 
+    bool CheckNeighborsBuildDoor(Tile t)
+    {
 
+        Tile R = WorldManager.Instance.GetTileAT(t.x + 1, t.y);//right
+        Tile L = WorldManager.Instance.GetTileAT(t.x - 1, t.y);//left
+
+        Tile T = WorldManager.Instance.GetTileAT(t.x, t.y + 1); //top
+        Tile B = WorldManager.Instance.GetTileAT(t.x, t.y - 1);//bottom
+        if (R.type == "wall" && L.type == "wall")
+        {
+            t.type = "door";
+            JobManager.Instance.CreateJob(t, WorldManager.Instance.door, 1f, false, .5f);
+            return true;
+        }
+         
+
+        if(T.type == "wall"|| B.type == "wall")
+        {
+            t.type = "door";
+            JobManager.Instance.CreateJob(t, WorldManager.Instance.door1, 1f, false, .5f);
+            return true;
+        }
+
+        else
+          return false;
+    }
 }
