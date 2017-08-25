@@ -12,7 +12,11 @@ public class Character : MonoBehaviour
     public Tile NextTile;
 
 
-
+    //door Stuff will be moved eventually
+    public float DoorWait = 4f;
+    float waitingTime;
+    bool waitingForDoor = false;
+    bool startedTimer = false;
 
     private List<Job> _jobQueList;
     private List<GameObject> _greenHighlightsList;
@@ -68,6 +72,10 @@ public class Character : MonoBehaviour
         CleanUpAfterMyself();
 
 
+        if (waitingForDoor)
+            Waiting();
+
+
         _step = (Time.time - _startTime) * MoveSpeed;
         if (Islerping)
         {
@@ -79,6 +87,30 @@ public class Character : MonoBehaviour
         }
             
     }
+
+
+    void Waiting()
+    {
+        
+        
+        if(!startedTimer)
+        {
+            waitingTime = Time.time + DoorWait;
+            startedTimer = true;
+        }
+        Debug.Log("waitingTime; "+waitingTime);
+        Debug.Log("Time"+Time.time);
+        if (waitingTime <= Time.time)
+        {
+            Islerping = true;
+            waitingForDoor = false;
+            startedTimer = false;
+        }
+
+    }
+
+
+
 
 
     void GetAJobHippy()
@@ -133,10 +165,9 @@ public class Character : MonoBehaviour
             //I do have a job and i am not at my destination and i a not at 0,0,0
            //Check if i have an A* Navigation already if not create it
             if(MyPathAStar == null)
-            {  getPathFinding();
+            {
+                getPathFinding();
 
-               
-                    
             }
 
            
@@ -177,8 +208,15 @@ public class Character : MonoBehaviour
                 _startTime = Time.time;
 
               
-
+                if(NextTile.type != "door")
                     Islerping = true;
+                else if(NextTile.type == "door")
+                {
+                    Islerping = false;
+                    Debug.Log("choose waiting for door");
+                    waitingForDoor = true;
+
+                }
                    
 
 
@@ -189,6 +227,9 @@ public class Character : MonoBehaviour
         }
         return;
     }
+
+   
+
 
 
     void CleanUpAfterMyself()
