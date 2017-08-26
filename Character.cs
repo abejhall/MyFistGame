@@ -264,7 +264,7 @@ public class Character : MonoBehaviour
         GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
         t.MovementSpeedAdjustment = MyJob.movementSpeedAdjustment;
         go.GetComponent<SpriteRenderer>().sprite = MyJob.jobSprite;
-
+        t.type = MyJob.Type;
         BuildManager.Instance.CheckNeighbors(t,true);
 
 

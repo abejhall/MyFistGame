@@ -9,9 +9,11 @@ public class Job {
     public float timeToWait;
     public float movementSpeedAdjustment;
     public bool attachToOthers;
+    public string Type;
 
-    public Job(Tile t, Sprite s, float time = .5f)
+    public Job(Tile t, Sprite s,string type, float time = .5f)
     {
+        this.Type = type;
         this.jobTile = t;
         this.jobSprite = s;
         this.timeToWait = time;
