@@ -180,6 +180,29 @@ public class JobManager : MonoBehaviour {
         }
     }
 
+    public void CancelSelectedJobs(Tile t)
+    {
+        
+
+        for (int i = 0; i < JobQueList.Count; i++)
+        {
+            if(JobQueList[i].jobTile == t)
+            {
+                for (int g = 0; g < GreenHighlightsList.Count; g++)
+                {
+                    if(GreenHighlightsList[g].transform.position == WorldManager.Instance.TileToGameObjectMap[t].transform.position)
+                    {
+                        SimplePool.Despawn(GreenHighlightsList[g]);
+                    }
+                }
+                
+                JobQueList.Remove(JobQueList[i]);
+            }
+        }
+        
+    }
+
+
 
     public void CancelJob(Job j)
     {

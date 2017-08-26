@@ -21,7 +21,14 @@ public class BuildManager : MonoBehaviour {
 
 	}
 	
-    
+    public void CancelJobsAtPoint()
+    {
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+            JobManager.Instance.CancelSelectedJobs(t);
+        }
+            
+    }
 
 
     public void BuildTilledLand()
