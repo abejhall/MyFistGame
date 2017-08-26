@@ -31,6 +31,11 @@ public class BuildManager : MonoBehaviour {
     }
 
 
+    public void DisplayCancelJobsTT()
+    {
+        ToolTipManager.Instance.MouseOver("Cancel all yellow highlighted jobs", "Jobs already started will not be canceled!");
+    }
+
     public void BuildTilledLand()
     {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
