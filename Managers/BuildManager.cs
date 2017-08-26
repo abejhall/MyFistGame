@@ -19,14 +19,9 @@ public class BuildManager : MonoBehaviour {
 	void Start () {
         Instance = this;
 
-        
-
 	}
 	
-	
-
-
-
+    
 
 
     public void BuildTilledLand()
@@ -42,6 +37,12 @@ public class BuildManager : MonoBehaviour {
         SelectionManager.Instance.DestroyHighlight();
 
     }
+
+            public void DisplayTillLandTT()
+    {
+        ToolTipManager.Instance.MouseOver("This will till the ground for planting.", "Can only be used on grass!");
+    }
+
 
     public void PlantFlower()
     {
@@ -60,6 +61,12 @@ public class BuildManager : MonoBehaviour {
 
     }
 
+            public void DisplayPlantFlowerTT()
+    {
+        ToolTipManager.Instance.MouseOver("Plant a flower to be used for food.","Can only be planted on tilled land!");
+    }
+
+
     public void BuildFloor()
     {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
@@ -77,7 +84,10 @@ public class BuildManager : MonoBehaviour {
 
     }
 
-
+            public void DisplayBuildFloorTT()
+                {
+                    ToolTipManager.Instance.MouseOver("Buid a floor that walls and furniture can be placed on.", "Can only be built on Dirt!");
+                }
 
     public void BuildDoor()
     {
@@ -101,7 +111,10 @@ public class BuildManager : MonoBehaviour {
 
     }
 
-
+            public void DisplayBuildDoorTT()
+            {
+                ToolTipManager.Instance.MouseOver("Build a door to protect your homes!", "Must have 2 walls to connect to!");
+            }
 
 
     public void DestoryTile()
@@ -133,6 +146,12 @@ public class BuildManager : MonoBehaviour {
     }
 
 
+            public void DisplayDestroyTileTT()
+            {
+                ToolTipManager.Instance.MouseOver("Destroy anything you have built!", "Will return that area to grass!");
+            }
+
+
     public void BuildWall ()
     {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
@@ -148,6 +167,15 @@ public class BuildManager : MonoBehaviour {
         }
         SelectionManager.Instance.DestroyHighlight();
     }
+
+            public void DisplayBuildWallTT()
+            {
+                ToolTipManager.Instance.MouseOver("Build walls and create a home!", "Walls can only be placed on floors!");
+            }
+
+
+
+    //.................................................................................
 
 
     public void CheckNeighborsDestory(Tile t)
@@ -169,10 +197,6 @@ public class BuildManager : MonoBehaviour {
 
         }
         
-
-
-
-
     }
 
 
@@ -184,9 +208,7 @@ public class BuildManager : MonoBehaviour {
             CheckNeighborsDestory(t);
             t.type = "grass";
         }
-            
-
-
+        
         if (t.type != "wall" )
             return;
         
@@ -221,14 +243,7 @@ public class BuildManager : MonoBehaviour {
             if (fc)
                 CheckNeighbors(NN, false);
         }
-           
-
-
-        //Tile BRN = WorldManager.Instance.GetTileAT(t.x + 1, t.y-1);
-        // Tile BLN = WorldManager.Instance.GetTileAT(t.x - 1, t.y -1);
-        // Tile TRN = WorldManager.Instance.GetTileAT(t.x + 1, t.y +1);
-        // Tile TLN = WorldManager.Instance.GetTileAT(t.x + 1, t.y -1);
-
+    
         GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
         SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
         foreach(Sprite s in walls)
@@ -242,12 +257,8 @@ public class BuildManager : MonoBehaviour {
 
             if (s.name == wall)
                 sr.sprite = s;
-         //   Debug.Log("changing neighbor"+wall);
+         
         }
-        
-
-
-
     }
 
 

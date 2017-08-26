@@ -36,11 +36,12 @@ public class MouseOverScript : MonoBehaviour {
     private void OnMouseEnter()
     {
         MouseOverButton();
-        JobManager.Instance.DisplayPanel.SetActive( true);
+        ToolTipManager.Instance.MouseOver("It is too difficult to reach this job at this time", "Click on Red Box TO CLOSE");
+       // JobManager.Instance.DisplayPanel.SetActive( true);
     }
     private void OnMouseExit()
     {
-        JobManager.Instance.DisplayPanel.SetActive(false);
+        ToolTipManager.Instance.MouseLeavesTTZ();
         MouseOFfButton();
     }
     private void OnMouseDown()
