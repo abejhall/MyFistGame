@@ -61,34 +61,39 @@ public class World
             Sprite tmpSprite;
           
                 tmpSprite = WorldManager.Instance.grass;
+                 t.type = "grass";
            
 
             if(t.x > 44 && t.x < 54 && t.y == 51)
             {
-                tmpSprite = WorldManager.Instance.blimish;
-                t.MovementSpeedAdjustment = 0;
+                tmpSprite = WorldManager.Instance.Dirt;
+                t.MovementSpeedAdjustment = 1;
+                t.type = "dirt";
                 tileGraph = null;
             }
 
             if (t.x > 44 && t.x < 54 && t.y == 46)
             {
-                tmpSprite = WorldManager.Instance.blimish;
-                t.MovementSpeedAdjustment = 0;
+                tmpSprite = WorldManager.Instance.Dirt;
+                t.MovementSpeedAdjustment = 1;
+                t.type = "dirt";
                 tileGraph = null;
             }
                     
                     if (t.y > 45 && t.y < 52 && t.x == 44)
                     {
-                        tmpSprite = WorldManager.Instance.blimish;
-                        t.MovementSpeedAdjustment = 0;
+                        tmpSprite = WorldManager.Instance.Dirt;
+                        t.MovementSpeedAdjustment = 1;
+                        t.type = "dirt";
                         tileGraph = null;
                     }
 
 
             if (t.y > 45 && t.y < 52 && t.x == 47)
             {
-                tmpSprite = WorldManager.Instance.blimish;
-                t.MovementSpeedAdjustment = 0;
+                tmpSprite = WorldManager.Instance.Dirt;
+                t.MovementSpeedAdjustment = 1;
+                t.type = "dirt";
                 tileGraph = null;
             }
 

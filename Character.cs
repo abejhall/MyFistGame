@@ -79,6 +79,8 @@ public class Character : MonoBehaviour
         _step = (Time.time - _startTime) * MoveSpeed;
         if (Islerping)
         {
+            //switched the rotation of character sprite to face the way he is walking
+            ChangeDirectionOfSpirte();
 
             transform.position = Vector3.Lerp(_tempCurTile,NextTileV3,_step);
 
@@ -90,8 +92,14 @@ public class Character : MonoBehaviour
 
 
     
-
-
+    //switched the rotation of character sprite to face the way he is walking
+    void ChangeDirectionOfSpirte()
+    {
+        if (_tempCurTile.x > NextTileV3.x)
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        else
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
 
 
 

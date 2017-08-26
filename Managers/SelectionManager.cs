@@ -92,6 +92,13 @@ public class SelectionManager : MonoBehaviour {
 
     }
 
+    public Tile GetTileUnderMouse()
+    {
+        Tile t = SelectTile(curFramePosition);
+        return t;
+    }
+
+
 
     void DragPreview()
     {
@@ -264,28 +271,7 @@ public class SelectionManager : MonoBehaviour {
 
 
 
-    //FIXME:
-    // This function is for testing only will be removed!!!
-    /*  
-      void ConvertTileToBlimish()
-      {
-
-
-          if(Input.GetKeyDown(KeyCode.T))
-          {
-
-              foreach(Tile t in SelectedTileList)
-              {
-                 JobManager.Instance.CreateJob(t, WorldManager.Instance.blimish);
-              }
-              DestroyHighlight();
-
-
-
-          }
-
-      }
-  */
+ 
 
 
 

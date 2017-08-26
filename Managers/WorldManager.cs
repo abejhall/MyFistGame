@@ -20,7 +20,7 @@ public class WorldManager : MonoBehaviour {
     //Just hardcoding for prototype
     public Sprite grass;
     public Sprite plant;
-    public Sprite blimish;
+    public Sprite Dirt;
     public Sprite floor;
     public Sprite door;
     public Sprite door1;

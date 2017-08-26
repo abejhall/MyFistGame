@@ -28,10 +28,12 @@ public class BuildManager : MonoBehaviour {
     {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
         {
+            if (t.type != "grass")
+                continue;
             if (t.MovementSpeedAdjustment == 0f  )
                 continue;
             t.type = "dirt";
-            JobManager.Instance.CreateJob(t, WorldManager.Instance.blimish, 0f, false, .5f);
+            JobManager.Instance.CreateJob(t, WorldManager.Instance.Dirt, 0f, false, .5f);
             
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -50,8 +52,9 @@ public class BuildManager : MonoBehaviour {
         {
             if (t.MovementSpeedAdjustment == 0f)
                 continue;
+            if (t.type != "dirt")
+                continue;
 
-           
 
             t.type = "plant";
             JobManager.Instance.CreateJob(t, WorldManager.Instance.plant, 0f, false, .5f);
@@ -73,8 +76,9 @@ public class BuildManager : MonoBehaviour {
         {
             if (t.MovementSpeedAdjustment == 0f)
                 continue;
-            if (t.type == "floor")
+            if (t.type != "grass")
                 continue;
+
 
             t.type = "floor";
             JobManager.Instance.CreateJob(t, WorldManager.Instance.floor, 1f, false, .5f);
@@ -157,6 +161,9 @@ public class BuildManager : MonoBehaviour {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
         {
             if (t.MovementSpeedAdjustment == 0f)
+                continue;
+
+            if (t.type != "floor")
                 continue;
 
             Sprite wall = walls[0];

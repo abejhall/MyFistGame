@@ -64,6 +64,7 @@ public class TogglePannel : MonoBehaviour {
     {
         BuildPanel.SetActive(false);
         SoundPanel.SetActive(false);
+        ExamineManager.Instance.StopeExaming();
     }
 
 }
