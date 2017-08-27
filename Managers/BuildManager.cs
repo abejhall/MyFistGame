@@ -13,7 +13,7 @@ public class BuildManager : MonoBehaviour {
 
     public Sprite[] doors;
 
-   
+    GrowthManager gm;
 
 	// Use this for initialization
 	void Start () {
@@ -45,7 +45,7 @@ public class BuildManager : MonoBehaviour {
             if (t.MovementSpeedAdjustment == 0f  )
                 continue;
            // t.type = "dirt";
-            JobManager.Instance.CreateJob(t, WorldManager.Instance.Dirt,"dirt", 0f, false, .5f);
+            JobManager.Instance.CreateJob(t, WorldManager.Instance.Dirt,"dirt", 1f, false, .5f);
             
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -69,7 +69,17 @@ public class BuildManager : MonoBehaviour {
 
 
            // t.type = "plant";
-            JobManager.Instance.CreateJob(t, WorldManager.Instance.plant,"plant", 0f, false, .5f);
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("Plant_0"),"plant", 1f, false, .5f);
+
+            GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
+            gm = go.AddComponent<GrowthManager>();
+            gm.t = t;
+            gm.timer = 50f;
+            gm.stage1 = SpriteManager.Instance.GS("Plant_0");
+            gm.stage2 = SpriteManager.Instance.GS("Plant_1");
+            gm.stage3 = SpriteManager.Instance.GS("Plant_2");
+            gm.finalStage = SpriteManager.Instance.GS("plant2");
+            gm.Go(10f,"plant");
 
         }
         SelectionManager.Instance.DestroyHighlight();

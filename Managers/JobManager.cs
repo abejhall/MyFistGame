@@ -47,10 +47,10 @@ public class JobManager : MonoBehaviour {
 
     //FIXME:  TODO:
 
-    public void CreateJob(Tile t, Sprite s, string type, float movment, bool attachToOthers, float time)
+    public void CreateJob(Tile t, Sprite s, string type, float movement, bool attachToOthers, float time)
     {
         
-        Job j = new Job(t, s, movment, attachToOthers, time);
+        Job j = new Job(t, s, movement, attachToOthers, time);
 
 
         // if a job already exist at cords bail out
@@ -71,6 +71,10 @@ public class JobManager : MonoBehaviour {
             SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
             sr.sortingLayerName = "HighLights";
 
+            j.jobTile.type = type;
+            j.Type = type;
+            j.jobTile.MovementSpeedAdjustment = movement;
+            j.movementSpeedAdjustment = movement;
             JobQueList.Add(j);
 
 
@@ -79,14 +83,14 @@ public class JobManager : MonoBehaviour {
 
         }
     }
-
+ 
     public void CreateJob(Tile t, Sprite s, string type)
     {
      
 
         Job j = new Job(t, s, type);
 
-
+        
         // if a job already exist at cords bail out
         if(!CheckIfJobExist(j))
         {
@@ -104,7 +108,7 @@ public class JobManager : MonoBehaviour {
             GreenHighlightsList.Add(go);
             SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
             sr.sortingLayerName = "HighLights";
-
+            j.jobTile.type = type;
             JobQueList.Add(j);
 
             
