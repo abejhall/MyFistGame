@@ -109,9 +109,11 @@ public class Character : MonoBehaviour
 
         if (JobManager.Instance.JobQueList.Count != 0 && MyJob == null)
         {
+            WorldManager.Instance.world.tileGraph = null;
             Job j = JobManager.Instance.GetJob();//transform.position
             MyJob = j;
-        
+            Debug.Log("Assigned job to character");
+            Debug.Log("Showing Tile Des as: "+j.jobTile.x+" "+j.jobTile.y);
             
             Tile t = j.jobTile;
             DestTile = j.jobTile;
@@ -125,6 +127,7 @@ public class Character : MonoBehaviour
 
     void getPathFinding()
     {
+       // _currentTile = WorldManager.Instance.GetTileAT((int)this.transform.position.x, (int)this.transform.position.y);
         MyPathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
                                            _currentTile,  //Start tile
                                            DestTile); //Destination tile
@@ -282,13 +285,13 @@ public class Character : MonoBehaviour
           
         }
 
-        //Play sound effect when done
-        //AudioSource.PlayClipAtPoint(Pop, this.transform.position);
+       
         SoundManager.Instance.PlayPopSound();
-
+       
         MyJob = null;
         Dest = new Vector3(this.transform.position.x, this.transform.position.y, 0);
         MyPathAStar = null;
+        
 
         //FIX ME: Not sure why I had to make this work around.... Cant find the logic error but i know i must of made one here.
         //This works for now but would rather do it right.

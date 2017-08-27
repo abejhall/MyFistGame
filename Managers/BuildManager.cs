@@ -191,7 +191,7 @@ public class BuildManager : MonoBehaviour {
             Sprite wall = walls[0];
           //  t.type = "wall";
             JobManager.Instance.CreateJob(t, wall,"wall", 0f,true, .5f);
-
+            Debug.Log("created job for wall");
 
         }
         SelectionManager.Instance.DestroyHighlight();

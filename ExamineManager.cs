@@ -24,7 +24,7 @@ public class ExamineManager : MonoBehaviour {
         {
 
             Tile t = SelectionManager.Instance.GetTileUnderMouse();
-            TextToShow = "Type: " + t.type + " " + "MovementSpeed: " + t.MovementSpeedAdjustment;
+            TextToShow = "Type: " + t.type + " " + "MovementSpeed: " + t.MovementSpeedAdjustment+"  X:"+t.x + "Y:" + t.y;
             ToolTipManager.Instance.MouseOver(TextToShow);
         }
 
@@ -44,6 +44,6 @@ public class ExamineManager : MonoBehaviour {
     {
         //isExamining = false;
         ToolTipManager.Instance.MouseLeavesTTZ();
-        Debug.Log("stop exame");
+     //   Debug.Log("stop exame");
     }
 }

@@ -19,7 +19,7 @@ public class ToolTipManager : MonoBehaviour {
 
     public void MouseOver(string mainText, string bottomText = "")
     {
-        Debug.Log("trying to display");
+       // Debug.Log("trying to display");
         ToolTipPanel.SetActive(true);
         MainText.text = mainText;
         BottomText.text = bottomText;
