@@ -59,11 +59,11 @@ public class World
         {
            
             Sprite tmpSprite;
-          
-                tmpSprite = WorldManager.Instance.grass;
+
+            tmpSprite = SpriteManager.Instance.GS("grass");// WorldManager.Instance.grass;
                  t.type = "grass";
            
-
+/*
             if(t.x > 44 && t.x < 54 && t.y == 51)
             {
                 tmpSprite = WorldManager.Instance.Dirt;
@@ -97,7 +97,7 @@ public class World
                 tileGraph = null;
             }
 
-
+    */
             //FIXME: removed cause not used yet.
 
             GameObject go = WorldManager.Instance.TileToGameObjectMap[t];

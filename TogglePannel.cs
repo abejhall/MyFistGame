@@ -12,6 +12,8 @@ public class TogglePannel : MonoBehaviour {
 
     public GameObject SoundPanel;
     public GameObject BuildPanel;
+
+  
     
     
     // Use this for initialization

@@ -13,11 +13,17 @@ public class Tile
 
     public bool IsWalkable = true;
 
+    public bool RoomDevider = false;
+
+    public bool RoomFloor = false;
+
     public float MovementSpeedAdjustment;
 
     public string type;
 
     public GameObject door;
+
+  //  public Room room = null;
 
     public World world;
 

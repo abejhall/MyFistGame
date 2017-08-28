@@ -73,7 +73,7 @@ public class JobManager : MonoBehaviour {
 
             j.jobTile.type = type;
             j.Type = type;
-            j.jobTile.MovementSpeedAdjustment = movement;
+           // j.jobTile.MovementSpeedAdjustment = movement;
             j.movementSpeedAdjustment = movement;
             JobQueList.Add(j);
 

@@ -13,40 +13,36 @@ public class WorldManager : MonoBehaviour {
     public int WorldWidth = 100;
 
 
-  
-
-    //FIXME:
-    //This will not be a permanate solution
-    //Just hardcoding for prototype
-    public Sprite grass;
-    public Sprite plant;
-    public Sprite Dirt;
-    public Sprite floor;
-    public Sprite door;
-    public Sprite door1;
 
     public World world;
 
-    //Used to store a map for what sprite is displayed on each tile
-   // public Dictionary<Tile, Sprite> TileToSpriteMap;
+    //used to keep track of the each room;
+   // public List<Room> Rooms;
+
+  // used to store a dictionary from tiles to the tile name
     public Dictionary<string, Tile> TileToNameMap;
+
+    //used to store a dictionary give a tile and get the gameobject at that point in the game
     public Dictionary<Tile, GameObject> TileToGameObjectMap;
 
-
+    //this is to keep track of door objects currently placed in the world this may be
+    // replaced with one that keeps track of all things above the main tile
     public Dictionary<Tile, GameObject> DoorTileDict;
     
 
     // Use this for initialization
     void Start () {
 
+        
+
         //singleton of WorldManager
         Instance = this;
 
         world = new World();
 
-        //Initalize our map of tiles to sprites
-        //TileToSpriteMap = new Dictionary<Tile, Sprite>();
-        
+
+       // Rooms = new List<Room>();
+
         //Initalize our map of tiles to tile names
         TileToNameMap = new Dictionary<string, Tile>();
 

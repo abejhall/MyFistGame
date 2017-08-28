@@ -112,8 +112,8 @@ public class Character : MonoBehaviour
             WorldManager.Instance.world.tileGraph = null;
             Job j = JobManager.Instance.GetJob();//transform.position
             MyJob = j;
-            Debug.Log("Assigned job to character");
-            Debug.Log("Showing Tile Des as: "+j.jobTile.x+" "+j.jobTile.y);
+           // Debug.Log("Assigned job to character");
+           // Debug.Log("Showing Tile Des as: "+j.jobTile.x+" "+j.jobTile.y);
             
             Tile t = j.jobTile;
             DestTile = j.jobTile;
@@ -209,14 +209,12 @@ public class Character : MonoBehaviour
                 else if(NextTile.type == "door")
                   {
                       Islerping = false;
-                      Debug.Log("choose waiting for door");
+                      
 
                     Invoke("WillPauseForDoor", DoorWait);
                     GameObject go = WorldManager.Instance.DoorTileDict[NextTile];
                     go.GetComponent<AnimationScriptDoor>().Open();
-                      //waitingForDoor = true;
-                    //  DoorGoPointer = WorldManager.Instance.TileToGameObjectMap[NextTile];
-                     // TriggerDoor.instance.Waiting(this, WorldManager.Instance.TileToGameObjectMap[NextTile]);
+                    
                   }
 
                   
@@ -263,7 +261,7 @@ public class Character : MonoBehaviour
         
         
         Tile t = MyJob.jobTile;
-      //  Debug.Log("myJob's tile info is MovementSpeed:" + t.MovementSpeedAdjustment+", sprite:"+t.sprite + "X Y:" + t.x+t.y);
+     
         GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
         t.MovementSpeedAdjustment = MyJob.movementSpeedAdjustment;
         go.GetComponent<SpriteRenderer>().sprite = MyJob.jobSprite;
@@ -287,7 +285,7 @@ public class Character : MonoBehaviour
 
        
         SoundManager.Instance.PlayPopSound();
-       
+        RoomTypeSetter(t);
         MyJob = null;
         Dest = new Vector3(this.transform.position.x, this.transform.position.y, 0);
         MyPathAStar = null;
@@ -306,7 +304,20 @@ public class Character : MonoBehaviour
     }
 
    
+    //For testing will come up with a better way later
 
+    void RoomTypeSetter(Tile t)
+    {
+        if(t.type == "wall" || t.type == "door")
+        {
+            t.RoomFloor = false;
+            t.RoomDevider = true; }
+
+        if(t.type == "floor")
+        {
+            t.RoomFloor = true;
+        }
+    }
 
    
 

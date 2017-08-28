@@ -24,7 +24,7 @@ public class ExamineManager : MonoBehaviour {
         {
 
             Tile t = SelectionManager.Instance.GetTileUnderMouse();
-            TextToShow = "Type: " + t.type + " " + "MovementSpeed: " + t.MovementSpeedAdjustment+"  X:"+t.x + "Y:" + t.y;
+            TextToShow = "Type: " + t.type + " " + "MovementSpeed: " + t.MovementSpeedAdjustment+"  X:"+t.x + "Y:" + t.y+"RoomDevider:"+t.RoomDevider+"RoomFloor:"+t.RoomFloor;
             ToolTipManager.Instance.MouseOver(TextToShow);
         }
 
