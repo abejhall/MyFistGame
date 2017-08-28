@@ -40,7 +40,7 @@ public class ToolTipManager : MonoBehaviour {
         if (!ToolTipToggle.isOn)
         {
             PlayerPrefs.SetInt("ToolTips", 2);
-            Debug.Log("toggle value" + PlayerPrefs.GetInt("ToolTips"));
+          //  Debug.Log("toggle value" + PlayerPrefs.GetInt("ToolTips"));
         }
     }
 
