@@ -47,9 +47,10 @@ public class JobManager : MonoBehaviour {
 
     //FIXME:  TODO:
 
-    public void CreateJob(Tile t, Sprite s, string type, float movement, bool attachToOthers, float time)
+    public void CreateJob(Tile t, Sprite s, string type, float movement, bool attachToOthers, float time,bool disableMovementblock = false)
     {
-        
+        if (disableMovementblock)
+            t.MovementSpeedAdjustment = 1;
         Job j = new Job(t, s, movement, attachToOthers, time);
 
 
@@ -71,7 +72,11 @@ public class JobManager : MonoBehaviour {
             SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
             sr.sortingLayerName = "HighLights";
 
-            j.jobTile.type = type;
+
+
+
+            //FIXME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+           // j.jobTile.type = type;
             j.Type = type;
            // j.jobTile.MovementSpeedAdjustment = movement;
             j.movementSpeedAdjustment = movement;
@@ -83,7 +88,7 @@ public class JobManager : MonoBehaviour {
 
         }
     }
- 
+ /*
     public void CreateJob(Tile t, Sprite s, string type)
     {
      
@@ -116,31 +121,12 @@ public class JobManager : MonoBehaviour {
             DespawnYellowHighlight(t);
 
         }
-        /*
-        else if (Go1.GetComponent<SpriteRenderer>().sprite == WorldManager.Instance.plant)
-        {
-            if (!CheckIfJobExist(j))
-            {
-                Debug.Log("I am returning");
-                return;
-            }
-            GameObject go = (GameObject)SimplePool.Spawn(RedSelectHighLight, new Vector3(t.x, t.y, 0), Quaternion.identity);
-            go.transform.SetParent(SelectionManager.Instance.PoolManager.transform);
-            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-            sr.sortingLayerName = "HighLights";
-            RedHighlightsList.Add(go);
-            string tmp = "H_" + t.x + "_" + t.y;
-            foreach (GameObject Hgo in SelectionManager.Instance.YellowGOList)
-                {
-                    if (Hgo.name == tmp)
-                        SimplePool.Despawn(Hgo);
-                }
-
-        }
-
-        */
-
+     
     }
+  
+    */
+
+
 
 
     bool CheckIfJobExist(Job j)
@@ -230,29 +216,7 @@ public class JobManager : MonoBehaviour {
 
         return j;
 
-        /*
-        if (JobQueList.Count == 0)
-            return null;
-
-        Job tmpJ =JobQueList[0];
-        float tmpDis = 1000000f;
-        foreach (Job j in JobQueList)
-        {
-            float thisDis = Vector3.Distance(vec, WorldManager.Instance.TileToGameObjectMap[j.jobTile].transform.position);
-
-            if (tmpDis > thisDis)
-            { 
-                tmpJ = j;
-                tmpDis = thisDis;
-                JobQueList.Remove(j);
-
-            }
-
-        }
-
-        */
-        // return tmpJ;
-
+      
 
 
     }

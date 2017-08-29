@@ -28,7 +28,16 @@ public class WorldManager : MonoBehaviour {
     //this is to keep track of door objects currently placed in the world this may be
     // replaced with one that keeps track of all things above the main tile
     public Dictionary<Tile, GameObject> DoorTileDict;
-    
+
+    //this keeps track of rocks on top of tiles
+    public Dictionary<Tile, GameObject> RockTileDict;
+
+    //this keeps track of plants on top of tiles
+    public Dictionary<Tile, GameObject> PlantTileDict;
+
+    //this keeps track of plants on top of tiles
+    public Dictionary<Tile, GameObject> TreeTileDict;
+
 
     // Use this for initialization
     void Start () {
@@ -52,7 +61,14 @@ public class WorldManager : MonoBehaviour {
         //initalize our tile to gameobject map for the doors only
         DoorTileDict = new Dictionary<Tile, GameObject>();
 
+        //initalize our tile to gameobject map for the Rocks only
+        RockTileDict = new Dictionary<Tile, GameObject>();
 
+        //initalize our tile to gameobject map for the Plants only
+        PlantTileDict = new Dictionary<Tile, GameObject>();
+
+        //initalize our tile to gameobject map for the Plants only
+        TreeTileDict = new Dictionary<Tile, GameObject>();
 
         //creates the tiles for the first time
         CreateWorld();

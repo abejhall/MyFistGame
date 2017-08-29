@@ -13,7 +13,7 @@ public class Character : MonoBehaviour
 
 
     //door Stuff will be moved eventually
-    public float DoorWait = 0.01f;
+    public float DoorWait = 0.5f;
     
    
 
@@ -38,7 +38,7 @@ public class Character : MonoBehaviour
     //for debugging only 
     public bool MyJobIsNull;
 
-    public AudioClip Pop;
+  
 
     
     // Use this for initialization
@@ -73,7 +73,13 @@ public class Character : MonoBehaviour
         CleanUpAfterMyself();
 
 
-        
+        if (NextTile.type == "rock")
+        {
+            Islerping = false;
+            Debug.Log("waiting");
+            Invoke("WillPauseForRocks", DoorWait);
+
+        }
 
 
         _step = (Time.time - _startTime) * MoveSpeed;
@@ -112,8 +118,7 @@ public class Character : MonoBehaviour
             WorldManager.Instance.world.tileGraph = null;
             Job j = JobManager.Instance.GetJob();//transform.position
             MyJob = j;
-           // Debug.Log("Assigned job to character");
-           // Debug.Log("Showing Tile Des as: "+j.jobTile.x+" "+j.jobTile.y);
+           
             
             Tile t = j.jobTile;
             DestTile = j.jobTile;
@@ -197,25 +202,31 @@ public class Character : MonoBehaviour
             {
                
                     NextTile = MyPathAStar.Dequeue();
+                Debug.Log(NextTile.type);
                     _tempCurTile = this.transform.position;
                 _startTime = Time.time;
 
 
-                
-               
-                  if(NextTile.type != "door")
+
+
+                if (NextTile.type != "door" || NextTile.type != "rock")
                     Islerping = true;
 
-                else if(NextTile.type == "door")
-                  {
-                      Islerping = false;
-                      
+                else if (NextTile.type == "door")
+                {
+                   
+                    Islerping = false;
+
 
                     Invoke("WillPauseForDoor", DoorWait);
-                    GameObject go = WorldManager.Instance.DoorTileDict[NextTile];
-                    go.GetComponent<AnimationScriptDoor>().Open();
+                        GameObject go = WorldManager.Instance.DoorTileDict[NextTile];
+                        go.GetComponent<AnimationScriptDoor>().Open();
                     
-                  }
+
+                }
+               
+                    
+                 
 
                   
 
@@ -230,6 +241,11 @@ public class Character : MonoBehaviour
 
     void WillPauseForDoor()
     {
+        Islerping = true;
+    }
+    void WillPauseForRocks()
+    {
+        NextTile.type = "rocks";
         Islerping = true;
     }
 

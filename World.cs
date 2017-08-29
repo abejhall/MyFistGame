@@ -57,54 +57,51 @@ public class World
     {
         foreach (Tile t in WorldManager.Instance.TileToNameMap.Values)
         {
-           
+            int ran = Random.Range(1, 1000);
             Sprite tmpSprite;
 
             tmpSprite = SpriteManager.Instance.GS("grass");// WorldManager.Instance.grass;
-                 t.type = "grass";
-           
-/*
-            if(t.x > 44 && t.x < 54 && t.y == 51)
-            {
-                tmpSprite = WorldManager.Instance.Dirt;
-                t.MovementSpeedAdjustment = 1;
-                t.type = "dirt";
-                tileGraph = null;
-            }
-
-            if (t.x > 44 && t.x < 54 && t.y == 46)
-            {
-                tmpSprite = WorldManager.Instance.Dirt;
-                t.MovementSpeedAdjustment = 1;
-                t.type = "dirt";
-                tileGraph = null;
-            }
-                    
-                    if (t.y > 45 && t.y < 52 && t.x == 44)
-                    {
-                        tmpSprite = WorldManager.Instance.Dirt;
-                        t.MovementSpeedAdjustment = 1;
-                        t.type = "dirt";
-                        tileGraph = null;
-                    }
-
-
-            if (t.y > 45 && t.y < 52 && t.x == 47)
-            {
-                tmpSprite = WorldManager.Instance.Dirt;
-                t.MovementSpeedAdjustment = 1;
-                t.type = "dirt";
-                tileGraph = null;
-            }
-
-    */
-            //FIXME: removed cause not used yet.
 
             GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
-            go.GetComponent<SpriteRenderer>().sprite = tmpSprite;
-           // WorldManager.Instance.TileToSpriteMap.Add(t, tmpSprite);
+             go.GetComponent<SpriteRenderer>().sprite = tmpSprite;
+
+            t.type = "grass";
+
+                           
+            if (ran > 985)
+            {
+                Debug.Log("running initRocks");
+               if(BuildManager.Instance != null)
+               BuildManager.Instance.InitializeRocks(t);
+                continue;
+            }
+         
+
+            if(ran < 10)
+            {
+                Debug.Log("running initPlants");
+                if (BuildManager.Instance != null)
+                    BuildManager.Instance.InitializePlants(t);
+            }
+
+
+            if (ran > 10 && ran <60)
+            {
+                Debug.Log("running initPlants");
+                if (BuildManager.Instance != null)
+                    BuildManager.Instance.InitializeTrees(t);
+            }
         }
+
+
+
+
 
     }
 
 }
+     
+           
+      
+
+
