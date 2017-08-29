@@ -47,6 +47,7 @@ public class PlantObject : MonoBehaviour
 
             
                 sr.sprite = SpriteManager.Instance.GS("plant2");
+                sr.sortingLayerName = "plants";
                 t.MovementSpeedAdjustment = 1;
                 CheckingIfJobIsComplete = true;
 

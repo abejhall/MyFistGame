@@ -63,11 +63,13 @@ public class World
             tmpSprite = SpriteManager.Instance.GS("grass");// WorldManager.Instance.grass;
 
             GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
-             go.GetComponent<SpriteRenderer>().sprite = tmpSprite;
+            go.GetComponent<SpriteRenderer>().sprite = tmpSprite;
 
             t.type = "grass";
 
-                           
+            if (t.x == 0 || t.x == 99 || t.y == 0 || t.y == 99 )
+                continue;
+
             if (ran > 985)
             {
                 Debug.Log("running initRocks");

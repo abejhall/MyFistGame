@@ -33,7 +33,7 @@ public class RockObject : MonoBehaviour
         t = WorldManager.Instance.GetTileAT(go.transform.position.x, go.transform.position.y);
         go = this.gameObject;
         sr = go.AddComponent<SpriteRenderer>();
-        sr.sortingLayerName = "trees";
+        sr.sortingLayerName = "rocks";
         go = WorldManager.Instance.RockTileDict[t];
         t.type = "rock";
         t.MovementSpeedAdjustment = 0;

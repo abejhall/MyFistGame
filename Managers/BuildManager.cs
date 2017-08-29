@@ -39,29 +39,31 @@ public class BuildManager : MonoBehaviour {
         ToolTipManager.Instance.MouseOver("Cancel all yellow highlighted jobs", "Jobs already started will not be canceled!");
     }
 
+
+
+    #region BuildButtons
+
+
     public void BuildTilledLand()
     {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
         {
             if (t.type != "grass")
                 continue;
-            if (t.MovementSpeedAdjustment == 0f  )
+            if (t.MovementSpeedAdjustment == 0f)
                 continue;
-            // t.type = "dirt";
+           
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("Dirt"), "dirt", 1f, false, .5f, false);
 
-            //WorldManager.Instance.Dirt
-            JobManager.Instance.CreateJob(t,SpriteManager.Instance.GS("Dirt") ,"dirt", 1f, false, .5f,false);
-            
         }
         SelectionManager.Instance.DestroyHighlight();
 
     }
 
-            public void DisplayTillLandTT()
+    public void DisplayTillLandTT()
     {
         ToolTipManager.Instance.MouseOver("This will till the ground for planting.", "Can only be used on grass!");
     }
-
 
     public void PlantFlower()
     {
@@ -73,8 +75,8 @@ public class BuildManager : MonoBehaviour {
                 continue;
 
 
-           // t.type = "plant";
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("Plant_0"),"plant", 1f, false, .5f, false);
+            // t.type = "plant";
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("Plant_0"), "plant", 1f, false, .5f, false);
 
             GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
             gm = go.AddComponent<GrowthManager>();
@@ -85,17 +87,156 @@ public class BuildManager : MonoBehaviour {
             gm.stage2 = SpriteManager.Instance.GS("Plant_1");
             gm.stage3 = SpriteManager.Instance.GS("Plant_2");
             gm.finalStage = SpriteManager.Instance.GS("plant2");
-            gm.Go(10f,"plant");
+            gm.Go(10f, "plant");
 
         }
         SelectionManager.Instance.DestroyHighlight();
 
     }
 
-            public void DisplayPlantFlowerTT()
+    public void DisplayPlantFlowerTT()
     {
-        ToolTipManager.Instance.MouseOver("Plant a flower to be used for food.","Can only be planted on tilled land!");
+        ToolTipManager.Instance.MouseOver("Plant a flower to be used for food.", "Can only be planted on tilled land!");
     }
+
+    public void MineRocks()
+    {
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+            if (t.MovementSpeedAdjustment == 1f)
+                continue;
+            if (t.type != "rock")
+                continue;
+
+
+
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "rocks", 1f, false, .5f, true);
+
+        }
+        SelectionManager.Instance.DestroyHighlight();
+    }
+
+    public void DisplayMineRocksTT()
+    {
+        ToolTipManager.Instance.MouseOver("Mine Large rocks into smaller more managable rocks.", "Smaller rocks can be hauled or destroyed!");
+    }
+
+    public void BuildFloor()
+    {
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+            if (t.MovementSpeedAdjustment == 0f)
+                continue;
+            if (t.type != "grass")
+                continue;
+
+
+            // t.type = "floor";
+
+            //WorldManager.Instance.floor
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("floor"), "floor", 1f, false, .5f, false);
+
+        }
+        SelectionManager.Instance.DestroyHighlight();
+
+    }
+
+    public void DisplayBuildFloorTT()
+    {
+        ToolTipManager.Instance.MouseOver("Buid a floor that walls and furniture can be placed on.", "Can only be built on Dirt!");
+    }
+
+    public void BuildDoor()
+    {
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+            if (t.MovementSpeedAdjustment == 0f)
+                continue;
+
+            if (!CheckNeighborsBuildDoor(t))
+                continue;
+
+            if (t.type == "door")
+                continue;
+
+
+            //  t.type = "door";
+            // WorldManager.Instance.door
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("door"), "door", 1f, false, .5f, false);
+
+        }
+        SelectionManager.Instance.DestroyHighlight();
+
+    }
+
+    public void DisplayBuildDoorTT()
+    {
+        ToolTipManager.Instance.MouseOver("Build a door to protect your homes!", "Must have 2 walls to connect to!");
+    }
+
+    public void DestoryTile()
+    {
+        //  Debug.Log("Destroy tile");
+
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+            GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+            if (sr.sprite == SpriteManager.Instance.GS("grass"))//WorldManager.Instance.grass)
+                continue;
+
+
+            // WorldManager.Instance.grass
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "grass", 1f, true, .5f, true);
+            if (t.type == "door")
+            {
+                GameObject go2 = WorldManager.Instance.DoorTileDict[t];
+                Debug.Log("door gameobject" + go2);
+                WorldManager.Instance.DoorTileDict.Remove(t);
+                Destroy(go2);
+            }
+            // t.MovementSpeedAdjustment = 1f;
+            t.type = "NewGrass";
+        }
+        SelectionManager.Instance.DestroyHighlight();
+
+    }
+
+    public void DisplayDestroyTileTT()
+    {
+        ToolTipManager.Instance.MouseOver("Destroy anything you have built!", "Will return that area to grass!");
+    }
+
+    public void BuildWall()
+    {
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+            if (t.MovementSpeedAdjustment == 0f)
+                continue;
+
+            if (t.type != "floor")
+                continue;
+
+            Sprite wall = SpriteManager.Instance.GS("wall_");//walls[15];
+                                                             //  t.type = "wall";
+            JobManager.Instance.CreateJob(t, wall, "wall", 0f, true, .5f);
+            //  Debug.Log("created job for wall");
+
+        }
+        SelectionManager.Instance.DestroyHighlight();
+    }
+
+    public void DisplayBuildWallTT()
+    {
+        ToolTipManager.Instance.MouseOver("Build walls and create a home!", "Walls can only be placed on floors!");
+    }
+
+
+
+    #endregion
+
+
+#region Initialize Functions
 
 
     public void InitializeRocks(Tile t) 
@@ -160,30 +301,17 @@ public class BuildManager : MonoBehaviour {
 
         TreeObject po = go.AddComponent<TreeObject>();
 
+        GameObject goTreeTop = new GameObject();
+        SpriteRenderer srTreeTop = goTreeTop.AddComponent<SpriteRenderer>();
+        srTreeTop.sprite = SpriteManager.Instance.GS("treeTop");
+        goTreeTop.transform.position = new Vector3(t.x, t.y+1, 0);
+        srTreeTop.sortingLayerName = "trees";
+        
         go.GetComponent<TreeObject>().go = go;
     }
 
-    public void MineRocks()
-    {
-        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
-        {
-            if (t.MovementSpeedAdjustment == 1f)
-                continue;
-            if (t.type != "rock")
-                continue;
 
-
-           
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "rocks", 1f, false, .5f, true);
-
-        }
-        SelectionManager.Instance.DestroyHighlight();
-    }
-
-
-
-
-    public void BuildGrass(Tile t)
+    public void InitializeGrass(Tile t)
     {
         Sprite tmp;
         tmp = SpriteManager.Instance.GS("grass");
@@ -202,120 +330,8 @@ public class BuildManager : MonoBehaviour {
 
     }
 
-    public void BuildFloor()
-    {
-        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
-        {
-            if (t.MovementSpeedAdjustment == 0f)
-                continue;
-            if (t.type != "grass")
-                continue;
 
-
-            // t.type = "floor";
-
-            //WorldManager.Instance.floor
-            JobManager.Instance.CreateJob(t,SpriteManager.Instance.GS("floor") ,"floor", 1f, false, .5f, false);
-
-        }
-        SelectionManager.Instance.DestroyHighlight();
-
-    }
-
-            public void DisplayBuildFloorTT()
-                {
-                    ToolTipManager.Instance.MouseOver("Buid a floor that walls and furniture can be placed on.", "Can only be built on Dirt!");
-                }
-
-    public void BuildDoor()
-    {
-        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
-        {
-            if (t.MovementSpeedAdjustment == 0f)
-                continue;
-
-            if (!CheckNeighborsBuildDoor(t))
-                continue;
-
-            if (t.type == "door")
-                continue;
-
-
-            //  t.type = "door";
-           // WorldManager.Instance.door
-           JobManager.Instance.CreateJob(t,SpriteManager.Instance.GS("door") ,"door", 1f, false, .5f,false);
-
-        }
-        SelectionManager.Instance.DestroyHighlight();
-
-    }
-
-            public void DisplayBuildDoorTT()
-            {
-                ToolTipManager.Instance.MouseOver("Build a door to protect your homes!", "Must have 2 walls to connect to!");
-            }
-
-
-    public void DestoryTile()
-    {
-      //  Debug.Log("Destroy tile");
-
-        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
-        {
-            GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
-            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-            if (sr.sprite == SpriteManager.Instance.GS("grass") )//WorldManager.Instance.grass)
-                continue;
-          
-
-            // WorldManager.Instance.grass
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "grass", 1f, true, .5f,true);
-            if(t.type == "door")
-            {
-                GameObject go2 = WorldManager.Instance.DoorTileDict[t];
-                Debug.Log("door gameobject" + go2);
-                WorldManager.Instance.DoorTileDict.Remove(t);
-                Destroy(go2);
-            }
-           // t.MovementSpeedAdjustment = 1f;
-            t.type = "NewGrass";
-        }
-        SelectionManager.Instance.DestroyHighlight();
-
-    }
-
-
-            public void DisplayDestroyTileTT()
-            {
-                ToolTipManager.Instance.MouseOver("Destroy anything you have built!", "Will return that area to grass!");
-            }
-
-
-    public void BuildWall ()
-    {
-        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
-        {
-            if (t.MovementSpeedAdjustment == 0f)
-                continue;
-
-            if (t.type != "floor")
-                continue;
-
-            Sprite wall = SpriteManager.Instance.GS("wall_");//walls[15];
-          //  t.type = "wall";
-            JobManager.Instance.CreateJob(t, wall,"wall", 0f,true, .5f);
-          //  Debug.Log("created job for wall");
-
-        }
-        SelectionManager.Instance.DestroyHighlight();
-    }
-
-            public void DisplayBuildWallTT()
-            {
-                ToolTipManager.Instance.MouseOver("Build walls and create a home!", "Walls can only be placed on floors!");
-            }
-
-
+#endregion
 
     //.................................................................................
 
