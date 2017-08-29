@@ -121,6 +121,24 @@ public class BuildManager : MonoBehaviour {
         ToolTipManager.Instance.MouseOver("Mine Large rocks into smaller more managable rocks.", "Smaller rocks can be hauled or destroyed!");
     }
 
+    public void ChopTrees()
+    {
+
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+           // if (t.MovementSpeedAdjustment == 1f)
+            //    continue;
+            if (t.type != "tree")
+                continue;
+
+
+
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "logs", 1f, false, .5f, true);
+
+        }
+        SelectionManager.Instance.DestroyHighlight();
+    }
+
     public void BuildFloor()
     {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
@@ -302,6 +320,7 @@ public class BuildManager : MonoBehaviour {
         TreeObject po = go.AddComponent<TreeObject>();
 
         GameObject goTreeTop = new GameObject();
+        po.Treetop = goTreeTop;
         SpriteRenderer srTreeTop = goTreeTop.AddComponent<SpriteRenderer>();
         srTreeTop.sprite = SpriteManager.Instance.GS("treeTop");
         goTreeTop.transform.position = new Vector3(t.x, t.y+1, 0);
