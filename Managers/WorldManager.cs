@@ -67,7 +67,7 @@ public class WorldManager : MonoBehaviour {
         //initalize our tile to gameobject map for the Plants only
         PlantTileDict = new Dictionary<Tile, GameObject>();
 
-        //initalize our tile to gameobject map for the Plants only
+        //initalize our tile to gameobject map for the Trees only
         TreeTileDict = new Dictionary<Tile, GameObject>();
 
         //creates the tiles for the first time

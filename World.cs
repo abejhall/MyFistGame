@@ -72,7 +72,7 @@ public class World
 
             if (ran > 985)
             {
-                Debug.Log("running initRocks");
+               // Debug.Log("running initRocks");
                if(BuildManager.Instance != null)
                BuildManager.Instance.InitializeRocks(t);
                 continue;
@@ -81,7 +81,7 @@ public class World
 
             if(ran < 10)
             {
-                Debug.Log("running initPlants");
+             //   Debug.Log("running initPlants");
                 if (BuildManager.Instance != null)
                     BuildManager.Instance.InitializePlants(t);
             }
@@ -89,7 +89,7 @@ public class World
 
             if (ran > 10 && ran <60)
             {
-                Debug.Log("running initPlants");
+              //  Debug.Log("running initPlants");
                 if (BuildManager.Instance != null)
                     BuildManager.Instance.InitializeTrees(t);
             }

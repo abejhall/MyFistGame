@@ -8,6 +8,10 @@ public class BuildManager : MonoBehaviour {
 
     public GameObject RockParent;
     public GameObject PlantParent;
+    public GameObject TreeParent;
+
+    public GameObject ItemCounter;
+
 
     public GameObject Vdoor;
     public GameObject Hdoor;
@@ -313,17 +317,22 @@ public class BuildManager : MonoBehaviour {
         GameObject go = new GameObject();
         go.transform.position = new Vector3(t.x, t.y, 0);
         go.name = "tree_" + t.x + "_" + t.y;
-        go.transform.SetParent(PlantParent.transform);
+        go.transform.SetParent(TreeParent.transform);
 
         WorldManager.Instance.TreeTileDict.Add(t, go);
 
-        TreeObject po = go.AddComponent<TreeObject>();
+        TreeObject treeObject = go.AddComponent<TreeObject>();
 
+
+        //add another sprite to the tile above the tree for the tree top
         GameObject goTreeTop = new GameObject();
-        po.Treetop = goTreeTop;
+        goTreeTop.name = "TreeTop" + t.x + "_" + t.y;
+        
+        treeObject.Treetop = goTreeTop;
         SpriteRenderer srTreeTop = goTreeTop.AddComponent<SpriteRenderer>();
         srTreeTop.sprite = SpriteManager.Instance.GS("treeTop");
         goTreeTop.transform.position = new Vector3(t.x, t.y+1, 0);
+        goTreeTop.transform.SetParent(TreeParent.transform);
         srTreeTop.sortingLayerName = "trees";
         
         go.GetComponent<TreeObject>().go = go;

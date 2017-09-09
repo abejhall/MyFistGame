@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TreeObject : MonoBehaviour {
 
@@ -22,6 +23,8 @@ public class TreeObject : MonoBehaviour {
 
     public GameObject go;
 
+    Text CounterText = null;
+
     void Start()
     {
 
@@ -29,6 +32,8 @@ public class TreeObject : MonoBehaviour {
         t = WorldManager.Instance.GetTileAT(go.transform.position.x, go.transform.position.y);
         go = this.gameObject;
         sr = go.AddComponent<SpriteRenderer>();
+
+      
 
         sr.sortingLayerName = "Struture";
         go = WorldManager.Instance.TreeTileDict[t];
@@ -58,10 +63,21 @@ public class TreeObject : MonoBehaviour {
         if (t.type == "logs" && ChoppedTree == true)
         {
             sr.sprite = SpriteManager.Instance.GS("logs");
+            GameObject Counter = GameObject.Instantiate(BuildManager.Instance.ItemCounter, transform.position, Quaternion.identity);
+            Counter.transform.parent = this.transform;
+            CounterText = Counter.GetComponentInChildren<Text>();
+            
+            CounterText.text = QuanityOfWood.ToString();
             Destroy(Treetop);
             ChoppedTree = false;
         }
 
+
+        if(CounterText != null)
+        {
+           CounterText.text = QuanityOfWood.ToString();
+        }
+        
     }
 
 }

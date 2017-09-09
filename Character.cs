@@ -202,7 +202,7 @@ public class Character : MonoBehaviour
             {
                
                     NextTile = MyPathAStar.Dequeue();
-                Debug.Log(NextTile.type);
+               // Debug.Log(NextTile.type);
                     _tempCurTile = this.transform.position;
                 _startTime = Time.time;
 
