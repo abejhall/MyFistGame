@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RockObject : MonoBehaviour
 {
@@ -24,7 +25,8 @@ public class RockObject : MonoBehaviour
 
     public GameObject go;
 
-
+    Text CounterText = null;
+    
 
 
     // Use this for initialization
@@ -62,8 +64,33 @@ public class RockObject : MonoBehaviour
         if (t.type == "rocks" && MinedToRocks == true)
         {
             sr.sprite = SpriteManager.Instance.GS("Rocks");
+            GameObject Counter = GameObject.Instantiate(BuildManager.Instance.ItemCounter, transform.position, Quaternion.identity);
+            Counter.transform.parent = this.transform;
+            CounterText = Counter.GetComponentInChildren<Text>();
+            CounterText.text = QuanityOfRocks.ToString();
+
+
             MinedToRocks = false;
         }
+
+     
+        if (CounterText != null)
+        {
+            CounterText.text = QuanityOfRocks.ToString();
+
+            if (CounterText.text == "0")
+            {
+                Destroy(gameObject);
+            }
+        }
+
+
+
+
+
+
+
+
 
     }
 

@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TreeObject : MonoBehaviour {
+public class PlantObject : MonoBehaviour
+{
 
 
-
+   
     public bool CheckingIfJobIsComplete = false;
-    public bool ChoppedTree = true;
+    public bool PickedPlants = true;
 
-    public Sprite stage1;
+    Text CounterText = null;
 
-    public int QuanityOfWood = 5;
+    public int QuanityOfPlants = 5;
     public Tile t;
     public SpriteRenderer sr;
-    public GameObject Treetop;
+
     public string Type;
 
     float StartTime;
@@ -23,21 +24,19 @@ public class TreeObject : MonoBehaviour {
 
     public GameObject go;
 
-    Text CounterText = null;
-
     void Start()
     {
 
-
-        t = WorldManager.Instance.GetTileAT(go.transform.position.x, go.transform.position.y);
         go = this.gameObject;
+        t = WorldManager.Instance.GetTileAT(go.transform.position.x, go.transform.position.y);
+        
         sr = go.AddComponent<SpriteRenderer>();
 
-      
-
-        sr.sortingLayerName = "Struture";
-        go = WorldManager.Instance.TreeTileDict[t];
-        t.type = "tree";
+        sr.sortingLayerName = "HighLights";
+        
+           // go = WorldManager.Instance.PlantTileDict[t];
+       
+        t.type = "plant";
         t.MovementSpeedAdjustment = 0;
 
 
@@ -50,7 +49,8 @@ public class TreeObject : MonoBehaviour {
 
 
 
-            sr.sprite = SpriteManager.Instance.GS("STree");
+            sr.sprite = SpriteManager.Instance.GS("plant2");
+            sr.sortingLayerName = "plants";
             t.MovementSpeedAdjustment = 1;
             CheckingIfJobIsComplete = true;
 
@@ -60,29 +60,27 @@ public class TreeObject : MonoBehaviour {
 
         }
 
-        if (t.type == "logs" && ChoppedTree == true)
+        if (t.type == "plants" && PickedPlants == true)
         {
-            sr.sprite = SpriteManager.Instance.GS("logs");
+            sr.sprite = SpriteManager.Instance.GS("plants");
             GameObject Counter = GameObject.Instantiate(BuildManager.Instance.ItemCounter, transform.position, Quaternion.identity);
             Counter.transform.parent = this.transform;
             CounterText = Counter.GetComponentInChildren<Text>();
-            
-            CounterText.text = QuanityOfWood.ToString();
-            Destroy(Treetop);
-            ChoppedTree = false;
+            CounterText.text = QuanityOfPlants.ToString();
+
+            PickedPlants = false;
         }
 
-
-        if(CounterText != null)
+        
+        if (CounterText != null)
         {
-           CounterText.text = QuanityOfWood.ToString();
+            CounterText.text = QuanityOfPlants.ToString();
 
-            if(CounterText.text == "0")
+            if (CounterText.text == "0")
             {
                 Destroy(gameObject);
             }
         }
-        
     }
 
 }

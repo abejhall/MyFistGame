@@ -58,8 +58,19 @@ public class GrowthManager :MonoBehaviour
             if (Time.time > ((timer * 4) + StartTime))
             {
                 t.type = Type;
-                sr.sprite = finalStage;
+                sr.sprite = SpriteManager.Instance.GS("grass");
+                // sr.sprite = finalStage;
+                GameObject go2 = WorldManager.Instance.TileToGameObjectMap[t];
+                WorldManager.Instance.PlantTileDict.Add(t, go2);
+                GameObject plantObject = new GameObject();
+                PlantObject po = plantObject.AddComponent<PlantObject>();
+                po.name = "plantObject_" + t.x + "_" + t.y;
+                po.transform.parent = BuildManager.Instance.PlantParent.transform;
+                po.transform.position = this.transform.position;
+               
+                t.type = "plant";
                 timing = false;
+
                 Destroy(this);
             }
         }

@@ -38,13 +38,6 @@ public class BuildManager : MonoBehaviour {
     }
 
 
-    public void DisplayCancelJobsTT()
-    {
-        ToolTipManager.Instance.MouseOver("Cancel all yellow highlighted jobs", "Jobs already started will not be canceled!");
-    }
-
-
-
     #region BuildButtons
 
 
@@ -85,7 +78,7 @@ public class BuildManager : MonoBehaviour {
             GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
             gm = go.AddComponent<GrowthManager>();
             gm.t = t;
-            gm.timer = 50f;
+            gm.timer = 3f;
             gm.Type = "plant";
             gm.stage1 = SpriteManager.Instance.GS("Plant_0");
             gm.stage2 = SpriteManager.Instance.GS("Plant_1");
@@ -96,11 +89,6 @@ public class BuildManager : MonoBehaviour {
         }
         SelectionManager.Instance.DestroyHighlight();
 
-    }
-
-    public void DisplayPlantFlowerTT()
-    {
-        ToolTipManager.Instance.MouseOver("Plant a flower to be used for food.", "Can only be planted on tilled land!");
     }
 
     public void MineRocks()
@@ -120,19 +108,12 @@ public class BuildManager : MonoBehaviour {
         SelectionManager.Instance.DestroyHighlight();
     }
 
-    public void DisplayMineRocksTT()
-    {
-        ToolTipManager.Instance.MouseOver("Mine Large rocks into smaller more managable rocks.", "Smaller rocks can be hauled or destroyed!");
-    }
-
     public void ChopTrees()
     {
 
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
         {
-           // if (t.MovementSpeedAdjustment == 1f)
-            //    continue;
-            if (t.type != "tree")
+           if (t.type != "tree")
                 continue;
 
 
@@ -143,6 +124,21 @@ public class BuildManager : MonoBehaviour {
         SelectionManager.Instance.DestroyHighlight();
     }
 
+    public void PickFlowers()
+    {
+        foreach (Tile t in SelectionManager.Instance.SelectedTileList)
+        {
+            if (t.type != "plant")
+                continue;
+
+
+
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "plants", 1f, false, .5f, true);
+
+        }
+        SelectionManager.Instance.DestroyHighlight();
+    }
+       
     public void BuildFloor()
     {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
@@ -161,11 +157,6 @@ public class BuildManager : MonoBehaviour {
         }
         SelectionManager.Instance.DestroyHighlight();
 
-    }
-
-    public void DisplayBuildFloorTT()
-    {
-        ToolTipManager.Instance.MouseOver("Buid a floor that walls and furniture can be placed on.", "Can only be built on Dirt!");
     }
 
     public void BuildDoor()
@@ -189,11 +180,6 @@ public class BuildManager : MonoBehaviour {
         }
         SelectionManager.Instance.DestroyHighlight();
 
-    }
-
-    public void DisplayBuildDoorTT()
-    {
-        ToolTipManager.Instance.MouseOver("Build a door to protect your homes!", "Must have 2 walls to connect to!");
     }
 
     public void DestoryTile()
@@ -224,11 +210,6 @@ public class BuildManager : MonoBehaviour {
 
     }
 
-    public void DisplayDestroyTileTT()
-    {
-        ToolTipManager.Instance.MouseOver("Destroy anything you have built!", "Will return that area to grass!");
-    }
-
     public void BuildWall()
     {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
@@ -247,12 +228,6 @@ public class BuildManager : MonoBehaviour {
         }
         SelectionManager.Instance.DestroyHighlight();
     }
-
-    public void DisplayBuildWallTT()
-    {
-        ToolTipManager.Instance.MouseOver("Build walls and create a home!", "Walls can only be placed on floors!");
-    }
-
 
 
     #endregion
