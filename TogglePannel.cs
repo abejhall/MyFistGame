@@ -13,14 +13,18 @@ public class TogglePannel : MonoBehaviour {
     public GameObject SoundPanel;
     public GameObject BuildPanel;
 
-  
+    public Animator anim;
+    public Animator SPAnim;
+
+    public float fadeTime = .5f;
     
     
     // Use this for initialization
 	void Start ()
     {
-        SoundPanel.SetActive(false);
-        BuildPanel.SetActive(false);
+        
+
+     
        
 	}
 	
@@ -32,41 +36,65 @@ public class TogglePannel : MonoBehaviour {
 
     public void ToggleBuildButtons()
     {
-        CloseAllPanelsExcept(BuildPanel);
+        
+
+        toggleBuildButtons = !toggleBuildButtons;
+
+        if (toggleSoundButtons)
+        {
+            toggleBuildButtons = !toggleBuildButtons;
+            SPAnim.SetTrigger("Close");
+            toggleSoundButtons = false;
+            Invoke("ToggleBuildButtons", fadeTime);
+            return;
+            
+        }
+
+
+        if (toggleBuildButtons)
+        {
+            anim.SetTrigger("OpenPanel");
+            return;
+        }
+
+
+        if (!toggleBuildButtons)
+        {
+            anim.SetTrigger("ClosePanel");
+            return;
+        }
     }
+            
 
     public void ToggleSoundButtons()
     {
-       CloseAllPanelsExcept(SoundPanel); 
-    }
+        toggleSoundButtons = !toggleSoundButtons;
+       
 
-
-    public void CloseAllPanelsExcept(GameObject panel)
-    {
-      
-
-        if (panel.activeInHierarchy)
+        if (toggleBuildButtons)
         {
-           
-            CloseAllPanals();
+            toggleSoundButtons = !toggleSoundButtons;
+            anim.SetTrigger("ClosePanel");
+            toggleBuildButtons = false;
+            Invoke("ToggleSoundButtons",fadeTime);
+            return;
         }
-        else if(!panel.activeInHierarchy)
+
+        if (toggleSoundButtons)
         {
-
-            CloseAllPanals();
-           
-            panel.SetActive(true);
-           
-
-            
+            SPAnim.SetTrigger("Open");
+            return;
+        }
+        if (!toggleSoundButtons)
+        {
+            SPAnim.SetTrigger("Close");
+            return;
         }
     }
 
-     void CloseAllPanals()
-    {
-        BuildPanel.SetActive(false);
-        SoundPanel.SetActive(false);
-        ExamineManager.Instance.StopExam();
-    }
+
+   
+
+   
 
 }
