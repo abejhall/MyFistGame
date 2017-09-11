@@ -18,6 +18,10 @@ public  class SoundManager : MonoBehaviour {
     public AudioClip click;
     public AudioClip uhoh;
 
+    public AudioClip Mining;
+
+    public AudioClip Chopping;
+
 
 
 
@@ -80,6 +84,15 @@ public  class SoundManager : MonoBehaviour {
     public void PlayUhOhSound()
     {
         SoundEffects.PlayOneShot(uhoh);
+    }
+
+    public void PlayChoppingSound()
+    {
+        SoundEffects.PlayOneShot(Chopping);
+    }
+    public void PlayMiningSound()
+    {
+        SoundEffects.PlayOneShot(Mining);
     }
 
     void Update()

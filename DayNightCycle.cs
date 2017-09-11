@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public  enum TimeOfDay { Night, Dawn, Day, Dusk };
+public  enum TimeOfDay { Night, PreDawn, Dawn,PostDawn, Day,PreDusk, Dusk, PostDusk };
 
 public class DayNightCycle : MonoBehaviour {
 
@@ -24,15 +24,39 @@ public class DayNightCycle : MonoBehaviour {
 
 
     //set colors for the alpha for the color mask on daynight cycle
-    [Range(0, .8f)]
-    public float nightAlpha = .8f;
+   
+
+    public float preDawnAlpha = .6f;
+
+    public float dawmAlpha = .4f;
+
+    public float postDawnAlpha = .2f;
+
+    private float dayAlpha = 0f;
+
+    public float preDuskAlpha = .2f;
 
     public float duskAlpha = .4f;
 
-    float dayAlpha = 0f;
+    public float postDuskAlpha = .6f;
+
+    public float nightAlpha = .8f;
+
+
+
+    [Header("Debugging only")]
+    public float WhatMyAlphaIsNow;
+
+    Color preDawnColor;
+    Color dawnColor;
+    Color postDawnColor;
     Color dayColor;
+    Color preDuskColor;
+    Color duskColor;
+    Color postDuskColor;
     Color nightColor;
-    Color DuskColor;
+   
+    
 
    
 
@@ -55,18 +79,47 @@ public class DayNightCycle : MonoBehaviour {
 
 
         DarknessSprite = GetComponent<SpriteRenderer>();
+
+        preDawnColor = DarknessSprite.color;
+        preDawnColor.a = preDawnAlpha;
+
+        dawnColor = DarknessSprite.color;
+        dawnColor.a = dawmAlpha;
+
+        postDawnColor = DarknessSprite.color;
+        postDawnColor.a = postDawnAlpha;
+
         dayColor = DarknessSprite.color;
         dayColor.a = dayAlpha;
+
+        preDuskColor = DarknessSprite.color;
+        preDuskColor.a = preDuskAlpha;
+
+        duskColor = DarknessSprite.color;
+        duskColor.a = duskAlpha;
+
+        postDuskColor = DarknessSprite.color;
+        postDuskColor.a = postDuskAlpha;
+
         nightColor = DarknessSprite.color;
         nightColor.a = nightAlpha;
-        DuskColor = DarknessSprite.color;
-        DuskColor.a = duskAlpha;
+
+       
 
         
-	}
+
+       
+    }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
+
+       
+
+        WhatMyAlphaIsNow = DarknessSprite.color.a;
+       
+
 
       //  if (IsNightTime)
        //     DarknessSprite.color = nightColor;
@@ -77,18 +130,45 @@ public class DayNightCycle : MonoBehaviour {
 
         timer += Time.deltaTime;
 
-        
-        if(timer >(Daytime *.75f) && !IsNightTime)
+        //PreDuskSetting
+        if (timer > (Daytime * .66f) && !IsNightTime)
+        {
+            timeOfDay = TimeOfDay.PreDusk;
+        }
+        //Dusk Setting
+        if (timer >(Daytime *.75f) && !IsNightTime)
         {
             timeOfDay = TimeOfDay.Dusk;
         }
-
-        if(timer > Daytime && !IsNightTime)
+        //PostDusk Setting
+        if (timer > (Daytime * .88f) && !IsNightTime)
+        {
+            timeOfDay = TimeOfDay.PostDusk;
+        }
+        //Night Setting
+        if (timer > Daytime && !IsNightTime)
         {
             IsNightTime = true;
             timer = 0f;
             timeOfDay = TimeOfDay.Night;
         }
+        //PreDawn Setting
+        if (timer > (NightTime * .66f) && IsNightTime)
+        {
+            timeOfDay = TimeOfDay.PreDawn;
+        }
+        //Dawn Setting
+        if (timer > (NightTime * .75f) && IsNightTime)
+        {
+            timeOfDay = TimeOfDay.Dawn;
+        }
+        //PostDawm Setting
+        if (timer > (NightTime * .88f) && IsNightTime)
+        {
+            timeOfDay = TimeOfDay.PostDawn;
+        }
+
+
 
         if (timer > NightTime && IsNightTime)
         {
@@ -96,11 +176,6 @@ public class DayNightCycle : MonoBehaviour {
             timer = 0f;
             timeOfDay = TimeOfDay.Day;
 
-        }
-
-        if(timer > (NightTime * .75f)&& IsNightTime)
-        {
-            timeOfDay = TimeOfDay.Dawn;
         }
 
 
@@ -116,26 +191,42 @@ public class DayNightCycle : MonoBehaviour {
     {
         switch (timeOfDay)
         {
-            case TimeOfDay.Dusk:
-                DarknessSprite.color = Color.Lerp(nightColor,DuskColor,1f);
-                
-                    
 
-                    break;
-                
-                    
-                   
+            case TimeOfDay.PreDusk:
+                DarknessSprite.color = preDuskColor;
+                break;
+
+            case TimeOfDay.Dusk:
+                DarknessSprite.color = duskColor;
+                break;
+
+            case TimeOfDay.PostDusk:
+                DarknessSprite.color = postDuskColor;
+                break;
+
             case TimeOfDay.Night:
                 DarknessSprite.color = nightColor;
                 break;
 
+            case TimeOfDay.PreDawn:
+                DarknessSprite.color = preDawnColor;
+                break;
+
             case TimeOfDay.Dawn:
-                DarknessSprite.color = DuskColor;
+                DarknessSprite.color = dawnColor;
+                break;
+
+            case TimeOfDay.PostDawn:
+                DarknessSprite.color = postDawnColor;
                 break;
 
             case TimeOfDay.Day:
                 DarknessSprite.color = dayColor;
                 break;
+                            
+           
+
+           
         }
            
 

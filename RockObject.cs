@@ -63,17 +63,25 @@ public class RockObject : MonoBehaviour
 
         if (t.type == "rocks" && MinedToRocks == true)
         {
+            //we know the type is not rocks so we change the spirte to rocks
             sr.sprite = SpriteManager.Instance.GS("Rocks");
+
+            //now add a counter to visualy show how many rocks are stacked up here
             GameObject Counter = GameObject.Instantiate(BuildManager.Instance.ItemCounter, transform.position, Quaternion.identity);
             Counter.transform.parent = this.transform;
             CounterText = Counter.GetComponentInChildren<Text>();
+
+            //adjust the counter to show the appropriate amount of rocks
             CounterText.text = QuanityOfRocks.ToString();
+
+            //Add the loose material to the woldmanager dictionary to keep track of it
+            WorldManager.Instance.LooseMaterialsMap.Add(t, "rocks");
 
 
             MinedToRocks = false;
         }
 
-     
+        //keep counter up to date.
         if (CounterText != null)
         {
             CounterText.text = QuanityOfRocks.ToString();

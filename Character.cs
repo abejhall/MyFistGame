@@ -14,6 +14,7 @@ public class Character : MonoBehaviour
 
     //door Stuff will be moved eventually
     public float DoorWait = 0.5f;
+    public float jobwait = 5f;
     
    
 
@@ -75,9 +76,13 @@ public class Character : MonoBehaviour
 
         if (NextTile.type == "rock")
         {
+            if(Islerping)
+                SoundManager.Instance.PlayChoppingSound();
+
             Islerping = false;
             Debug.Log("waiting");
-            Invoke("WillPauseForRocks", DoorWait);
+            
+            Invoke("WillPauseForRocks", jobwait);
 
         }
 
@@ -90,8 +95,7 @@ public class Character : MonoBehaviour
 
             transform.position = Vector3.Lerp(_tempCurTile,NextTileV3,_step);
 
-            //Debug.Log("tc:" + _tempCurTile + "NT:" + NextTileV3 + "step:" + _step);
-           // Debug.Log("lerping between:" + CurrTileV3 + "and:" + NextTileV3);
+           
         }
             
     }
@@ -243,10 +247,13 @@ public class Character : MonoBehaviour
     {
         Islerping = true;
     }
+
     void WillPauseForRocks()
     {
         NextTile.type = "rocks";
         Islerping = true;
+
+        Debug.Log("ran will pause for rocks");
     }
 
 

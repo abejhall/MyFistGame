@@ -74,58 +74,18 @@ public class JobManager : MonoBehaviour {
 
 
 
-
-            //FIXME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-           // j.jobTile.type = type;
+            //assign type and movement speed and the add job to jobQuelist
             j.Type = type;
-           // j.jobTile.MovementSpeedAdjustment = movement;
             j.movementSpeedAdjustment = movement;
             JobQueList.Add(j);
 
 
-
+            //remove the left over yellow highlight
             DespawnYellowHighlight(t);
 
         }
     }
- /*
-    public void CreateJob(Tile t, Sprite s, string type)
-    {
-     
-
-        Job j = new Job(t, s, type);
-
-        
-        // if a job already exist at cords bail out
-        if(!CheckIfJobExist(j))
-        {
-            
-            return;
-        }
-
-
-        //create a temp var for the tile at specific job and spawn a green highlight over it
-        GameObject Go1 = WorldManager.Instance.TileToGameObjectMap[j.jobTile];
-        if(Go1.GetComponent<SpriteRenderer>().sprite != null)
-        {
-            GameObject go =(GameObject) SimplePool.Spawn(GreenSelectHighlight, new Vector3(t.x, t.y, 0),Quaternion.identity);
-            go.transform.SetParent(SelectionManager.Instance.PoolManager.transform);
-            GreenHighlightsList.Add(go);
-            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
-            sr.sortingLayerName = "HighLights";
-            j.jobTile.type = type;
-            JobQueList.Add(j);
-
-            
-            
-            DespawnYellowHighlight(t);
-
-        }
-     
-    }
-  
-    */
-
+ 
 
 
 

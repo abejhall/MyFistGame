@@ -62,17 +62,26 @@ public class TreeObject : MonoBehaviour {
 
         if (t.type == "logs" && ChoppedTree == true)
         {
+            //we know the type is not logs so we change the spirte to logs
             sr.sprite = SpriteManager.Instance.GS("logs");
+
+            //now add a counter to visualy show how many logs are stacked up here
             GameObject Counter = GameObject.Instantiate(BuildManager.Instance.ItemCounter, transform.position, Quaternion.identity);
             Counter.transform.parent = this.transform;
             CounterText = Counter.GetComponentInChildren<Text>();
             
+            //adjust the counter to show the appropriate amount of logs
             CounterText.text = QuanityOfWood.ToString();
+
+            //Add the loose material to the woldmanager dictionary to keep track of it
+            WorldManager.Instance.LooseMaterialsMap.Add(t, "logs");
+
+            //clean up old tree stuff
             Destroy(Treetop);
             ChoppedTree = false;
         }
 
-
+        //keep counter up to date.
         if(CounterText != null)
         {
            CounterText.text = QuanityOfWood.ToString();

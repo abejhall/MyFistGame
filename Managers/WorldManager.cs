@@ -17,9 +17,13 @@ public class WorldManager : MonoBehaviour {
     public World world;
 
     //used to keep track of the each room;
-   // public List<Room> Rooms;
+    // public List<Room> Rooms;
+    #region Dictionaries to keep track of the stuff in the world
 
-  // used to store a dictionary from tiles to the tile name
+    //this will keep track of all the lose materials in the world for construction
+    public Dictionary<Tile, string> LooseMaterialsMap;
+
+    // used to store a dictionary from tiles to the tile name
     public Dictionary<string, Tile> TileToNameMap;
 
     //used to store a dictionary give a tile and get the gameobject at that point in the game
@@ -38,7 +42,7 @@ public class WorldManager : MonoBehaviour {
     //this keeps track of plants on top of tiles
     public Dictionary<Tile, GameObject> TreeTileDict;
 
-
+#endregion
     // Use this for initialization
     void Start () {
 
@@ -50,7 +54,11 @@ public class WorldManager : MonoBehaviour {
         world = new World();
 
 
-       // Rooms = new List<Room>();
+        // Rooms = new List<Room>();
+
+#region Initalize Dictionaries
+        //Initalize our map of loose materials and the tiles they sit on
+        LooseMaterialsMap = new Dictionary<Tile, string>();
 
         //Initalize our map of tiles to tile names
         TileToNameMap = new Dictionary<string, Tile>();
@@ -70,6 +78,9 @@ public class WorldManager : MonoBehaviour {
         //initalize our tile to gameobject map for the Trees only
         TreeTileDict = new Dictionary<Tile, GameObject>();
 
+#endregion
+
+
         //creates the tiles for the first time
         CreateWorld();
 	}
@@ -78,8 +89,6 @@ public class WorldManager : MonoBehaviour {
     //creates the tiles for the first time 
     void CreateWorld()
     {
-        
-
         world.CreateWorld(100, 100);
     }
 

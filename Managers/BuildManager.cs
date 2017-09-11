@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class BuildManager : MonoBehaviour {
 
-    public static BuildManager Instance;
-
+   
+    // empty GameObjects just to keep hiarcy clean
     public GameObject RockParent;
     public GameObject PlantParent;
     public GameObject TreeParent;
 
+    //prefab of counter that is spawned on loose items on the ground
     public GameObject ItemCounter;
 
-
+    //prefabs for vert or horizontal doors
     public GameObject Vdoor;
     public GameObject Hdoor;
 
@@ -22,12 +23,17 @@ public class BuildManager : MonoBehaviour {
 
     GrowthManager gm;
 
-	// Use this for initialization
-	void Awake () {
+
+#region Singleton
+
+    public static BuildManager Instance;
+    // Use this for initialization
+    void Awake () {
         Instance = this;
 
 	}
-	
+    #endregion
+
     public void CancelJobsAtPoint()
     {
         foreach (Tile t in SelectionManager.Instance.SelectedTileList)
