@@ -11,10 +11,11 @@ public class Character : MonoBehaviour
     public Tile DestTile = null;
     public Tile NextTile;
 
+    AudioSource aud;
 
     //door Stuff will be moved eventually
-    public float DoorWait = 0.5f;
-    public float jobwait = 5f;
+    public float DoorWait = 3f;
+    public float jobwait = 70f;
     
    
 
@@ -45,6 +46,8 @@ public class Character : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        aud = GetComponent<AudioSource>();
+
         NextTile = new Tile(Mathf.FloorToInt(this.transform.position.x), Mathf.FloorToInt(this.transform.position.y));
         _jobQueList = JobManager.Instance.JobQueList;
         _greenHighlightsList = JobManager.Instance.GreenHighlightsList;
@@ -72,19 +75,6 @@ public class Character : MonoBehaviour
 
         // If job is all done,,  Clean up any extra highlights from being displayed
         CleanUpAfterMyself();
-
-
-        if (NextTile.type == "rock")
-        {
-            if(Islerping)
-                SoundManager.Instance.PlayChoppingSound();
-
-            Islerping = false;
-            Debug.Log("waiting");
-            
-            Invoke("WillPauseForRocks", jobwait);
-
-        }
 
 
         _step = (Time.time - _startTime) * MoveSpeed;
@@ -122,6 +112,8 @@ public class Character : MonoBehaviour
             WorldManager.Instance.world.tileGraph = null;
             Job j = JobManager.Instance.GetJob();//transform.position
             MyJob = j;
+
+            
            
             
             Tile t = j.jobTile;
@@ -153,15 +145,7 @@ public class Character : MonoBehaviour
        _step = Time.time - Time.deltaTime * MoveSpeed;
 
        
-
-        // I am at my destination and can complete job
-        if (_currentTile == DestTile)
-        {
-            Islerping = false;
-            CompleteJob();
-            return;
-        }
-
+     
         if (MyJob != null || _currentTile != DestTile )
         {
             //I do have a job and i am not at my destination and i a not at 0,0,0
@@ -211,7 +195,8 @@ public class Character : MonoBehaviour
                 _startTime = Time.time;
 
 
-
+                if (NextTile == DestTile)
+                    StartCoroutine(MyDelayMethod(MyJob.timeToWait));
 
                 if (NextTile.type != "door" || NextTile.type != "rock")
                     Islerping = true;
@@ -229,7 +214,7 @@ public class Character : MonoBehaviour
 
                 }
                
-                    
+               
                  
 
                   
@@ -248,14 +233,7 @@ public class Character : MonoBehaviour
         Islerping = true;
     }
 
-    void WillPauseForRocks()
-    {
-        NextTile.type = "rocks";
-        Islerping = true;
-
-        Debug.Log("ran will pause for rocks");
-    }
-
+ 
 
     void CleanUpAfterMyself()
     {
@@ -277,7 +255,7 @@ public class Character : MonoBehaviour
     void CompleteJob()
     {
 
-      
+        Debug.Log("called Complete Job");
         if (MyJob == null)
            return;
 
@@ -342,7 +320,15 @@ public class Character : MonoBehaviour
         }
     }
 
-   
+    IEnumerator MyDelayMethod(float delay)
+    {
+        SoundManager.Instance.PlaySound(MyJob.WorkSound, aud);
+
+        yield return new WaitForSeconds(delay);
+        
+        CompleteJob();
+    }
+
 
 
 }

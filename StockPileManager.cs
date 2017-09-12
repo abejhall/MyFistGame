@@ -42,6 +42,7 @@ public class StockPileManager : MonoBehaviour {
     {
         if (StockPileMenueActive)
         {
+            StockPileMenueActive = true;
             //TODO::::::::::::::::::::::::::::::::::::::::::::::::::::::
             //when stockpileMenueActive is true highlight all stockpiles in blue
         }
@@ -50,6 +51,7 @@ public class StockPileManager : MonoBehaviour {
 
    public void StopShowingStockPiles()
     {
+        StockPileMenueActive = false;
         //TODO:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
         //despawn blue highlights from view when stockpile menue is closed
     }

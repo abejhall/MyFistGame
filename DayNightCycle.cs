@@ -18,8 +18,8 @@ public class DayNightCycle : MonoBehaviour {
 
 
     public bool IsNightTime = false;
-    bool dusk = false;
-    bool dawn = false;
+   // bool dusk = false;
+    //bool dawn = false;
 
 
 

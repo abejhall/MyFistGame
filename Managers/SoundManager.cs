@@ -22,16 +22,19 @@ public  class SoundManager : MonoBehaviour {
 
     public AudioClip Chopping;
 
+    public List<AudioClip> clips;
+    Dictionary<string, AudioClip> AudioClipMap;
 
-
-
+    private void Awake()
+    {
+        Instance = this;
+    }
     private void Start()
     {
-       
-        Instance = this;
-
-        //Debug.Log(PlayerPrefs.GetFloat("soundFX") +"player prefs");
-        //Debug.Log(SoundEffects.volume+" sFX volume");
+        AudioClipMap = new Dictionary<string, AudioClip>();
+        
+        //clips = new List<AudioClip>();
+        PopulateAduioClipMap();
 
         if (!PlayerPrefs.HasKey("music"))
         {
@@ -65,7 +68,16 @@ public  class SoundManager : MonoBehaviour {
       
     }
 
+    void PopulateAduioClipMap()
+    {
+        for (int i = 0; i < clips.Count; i++)
+        {
+            AudioClipMap.Add(clips[i].name,clips[i]);
+          
+        }
 
+        //Debug.Log("check to see if map populates" + AudioClipMap["Chopping"]);
+    }
 
     void OnValueChange()
     {
@@ -74,7 +86,24 @@ public  class SoundManager : MonoBehaviour {
     }
 
    
+    public void PlaySound(string sound, AudioSource aud)
+    {
+   
+        AudioClip tmpclip;
+        if (AudioClipMap.ContainsKey(sound))
+        {
+            tmpclip = AudioClipMap[sound];
+        }
+            else
+        {
+             Debug.LogWarning("could not find a sound with the name: " + sound + " in the audioManager ");
+             return;
+        }
 
+        aud.PlayOneShot(tmpclip);
+       
+        
+    }
 
     public  void PlayPopSound()
     {

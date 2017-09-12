@@ -44,7 +44,7 @@ public class CharacterSpawner : MonoBehaviour {
 
         CharacterHasSpawned = true;
         countCharacters += 1;
-        Vector3 goPlus = new Vector3(go.transform.position.x + Xoffset, go.transform.position.y + Yoffset, 0);
+       // Vector3 goPlus = new Vector3(go.transform.position.x + Xoffset, go.transform.position.y + Yoffset, 0);
         GameObject torch = GameObject.Instantiate(Torch, go.transform.position, Quaternion.identity);
 
         torch.GetComponent<followcharacter>().character = go;

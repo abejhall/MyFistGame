@@ -9,30 +9,59 @@ public class TogglePannel : MonoBehaviour {
     RectTransform rec;
     public bool toggleBuildButtons;
     public bool toggleSoundButtons;
+    public bool toggleStockPileButton;
 
     public GameObject SoundPanel;
     public GameObject BuildPanel;
+    public GameObject StockPilePanel;
 
-    public Animator anim;
-    public Animator SPAnim;
+    public Animator BuildAnim;
+    public Animator SettingsAnim;
+    public Animator STOCKAnim;
 
     public float fadeTime = .5f;
     
-    
-    // Use this for initialization
-	void Start ()
+    public void ToggleStockPileButton ()
     {
-        
+        toggleStockPileButton = !toggleStockPileButton;
 
-     
-       
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-		
+
+        //if build Panel is still open close it before opening stockpile panel
+        if (toggleBuildButtons)
+        {
+            toggleStockPileButton = !toggleStockPileButton;
+            BuildAnim.SetTrigger("ClosePanel");
+            toggleBuildButtons = false;
+            Invoke("ToggleStockPileButton", fadeTime);
+            return;
+        }
+
+
+
+        //if Settings Panel is still open close it before opening stockpile panel
+        if (toggleSoundButtons)
+        {
+            toggleStockPileButton = !toggleStockPileButton;
+            SettingsAnim.SetTrigger("Close");
+            toggleSoundButtons = false;
+            Invoke("ToggleStockPileButton", fadeTime);
+            return;
+
+        }
+
+
+        if (toggleStockPileButton)
+        {
+            STOCKAnim.SetTrigger("open");
+            return;
+        }
+        if (!toggleStockPileButton)
+        {
+            STOCKAnim.SetTrigger("close");
+            return;
+        }
     }
+    
 
     public void ToggleBuildButtons()
     {
@@ -40,10 +69,24 @@ public class TogglePannel : MonoBehaviour {
 
         toggleBuildButtons = !toggleBuildButtons;
 
+        //if stockpile Panel is still open close it before opening stockpile panel
+        if (toggleStockPileButton)
+        {
+            toggleBuildButtons = !toggleBuildButtons;
+            STOCKAnim.SetTrigger("close");
+            toggleStockPileButton = false;
+            Invoke("ToggleBuildButtons", fadeTime);
+            return;
+        }
+
+
+
+
+        //if Settings Panel is still open close it before opening build panel
         if (toggleSoundButtons)
         {
             toggleBuildButtons = !toggleBuildButtons;
-            SPAnim.SetTrigger("Close");
+            SettingsAnim.SetTrigger("Close");
             toggleSoundButtons = false;
             Invoke("ToggleBuildButtons", fadeTime);
             return;
@@ -53,14 +96,14 @@ public class TogglePannel : MonoBehaviour {
 
         if (toggleBuildButtons)
         {
-            anim.SetTrigger("OpenPanel");
+            BuildAnim.SetTrigger("OpenPanel");
             return;
         }
 
 
         if (!toggleBuildButtons)
         {
-            anim.SetTrigger("ClosePanel");
+            BuildAnim.SetTrigger("ClosePanel");
             return;
         }
     }
@@ -69,12 +112,25 @@ public class TogglePannel : MonoBehaviour {
     public void ToggleSoundButtons()
     {
         toggleSoundButtons = !toggleSoundButtons;
-       
+
+
+        //if stockpile Panel is still open close it before opening settings panel
+        if (toggleStockPileButton)
+        {
+            toggleSoundButtons = !toggleSoundButtons;
+            STOCKAnim.SetTrigger("close");
+            toggleStockPileButton = false;
+            Invoke("ToggleSoundButtons", fadeTime);
+            return;
+        }
+
+
+
 
         if (toggleBuildButtons)
         {
             toggleSoundButtons = !toggleSoundButtons;
-            anim.SetTrigger("ClosePanel");
+            BuildAnim.SetTrigger("ClosePanel");
             toggleBuildButtons = false;
             Invoke("ToggleSoundButtons",fadeTime);
             return;
@@ -82,18 +138,17 @@ public class TogglePannel : MonoBehaviour {
 
         if (toggleSoundButtons)
         {
-            SPAnim.SetTrigger("Open");
+            SettingsAnim.SetTrigger("Open");
             return;
         }
         if (!toggleSoundButtons)
         {
-            SPAnim.SetTrigger("Close");
+            SettingsAnim.SetTrigger("Close");
             return;
         }
     }
 
-
-   
+    
 
    
 
