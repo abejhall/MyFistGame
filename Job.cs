@@ -11,6 +11,9 @@ public class Job {
     public bool attachToOthers;
     public string Type;
     public string WorkSound;
+    public string jobMaterial ="";
+    public int numberOfMats =0;
+    public bool IsHaulingJob = false;
 
     public Job(Tile t, Sprite s,string type, float time, string sound)
     {

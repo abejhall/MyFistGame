@@ -47,7 +47,7 @@ public class JobManager : MonoBehaviour {
 
     //FIXME:  TODO:
 
-    public void CreateJob(Tile t, Sprite s, string type, float movement, bool attachToOthers, float time, string sound, bool disableMovementblock = false )
+    public void CreateJob(Tile t, Sprite s, string type, float movement, bool attachToOthers, float time, string sound, string jobMat, int numberOfMats, bool disableMovementblock = false )
     {
         if (disableMovementblock)
             t.MovementSpeedAdjustment = 1;
@@ -77,6 +77,8 @@ public class JobManager : MonoBehaviour {
             //assign type and movement speed and the add job to jobQuelist
             j.Type = type;
             j.movementSpeedAdjustment = movement;
+            j.jobMaterial = jobMat;
+            j.numberOfMats = numberOfMats;
             JobQueList.Add(j);
 
 
@@ -106,7 +108,17 @@ public class JobManager : MonoBehaviour {
     }
 
 
+    public bool DoesJobExistOnTile(Tile t)
+    {
+        foreach(Job j in JobQueList)
+        {
+            if (j.jobTile == t)
+                return true;
+        }
 
+
+        return false;
+    }
 
 
 
@@ -186,7 +198,7 @@ public class JobManager : MonoBehaviour {
     {
         Vector3 tmpV = new Vector3(t.x, t.y, 0);
         SimplePool.Spawn(RedTileMarker, tmpV, Quaternion.identity);
-        SoundManager.Instance.PlayUhOhSound();
+        SoundManager.Instance.PlaySound("uhoh");
         WorldManager.Instance.world.tileGraph = null;
     }
 

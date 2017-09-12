@@ -10,6 +10,8 @@ public class BuildManager : MonoBehaviour {
     public GameObject PlantParent;
     public GameObject TreeParent;
 
+    public GameObject LooseMaterialPrefab;
+
     //prefab of counter that is spawned on loose items on the ground
     public GameObject ItemCounter;
 
@@ -56,7 +58,7 @@ public class BuildManager : MonoBehaviour {
             if (t.MovementSpeedAdjustment == 0f)
                 continue;
            
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("Dirt"), "dirt", 1f, false, 4f,"click", false);
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("Dirt"), "dirt", 1f, false, 7f,"dig","",0, false);
 
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -79,7 +81,7 @@ public class BuildManager : MonoBehaviour {
 
 
             // t.type = "plant";
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("Plant_0"), "plant", 1f, false, 4f,"click", false);
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("Plant_0"), "plant", 1f, false, 4f,"click","",0, false);
 
             GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
             gm = go.AddComponent<GrowthManager>();
@@ -108,7 +110,7 @@ public class BuildManager : MonoBehaviour {
 
 
 
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "rocks", 1f, false, 7f,"mining", true);
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "rocks", 1f, false, 7f,"mining","",0, true);
 
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -124,7 +126,7 @@ public class BuildManager : MonoBehaviour {
 
 
 
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "logs", 1f, false, 7f,"chopping", true);
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "logs", 1f, false, 7f,"chopping","",0, true);
 
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -139,7 +141,7 @@ public class BuildManager : MonoBehaviour {
 
 
 
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "plants", 1f, false, 5f,"pop", true);
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "plants", 1f, false, 5f,"sheers","",0, true);
 
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -158,7 +160,7 @@ public class BuildManager : MonoBehaviour {
             // t.type = "floor";
 
             //WorldManager.Instance.floor
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("floor"), "floor", 1f, false, 5f,"click", false);
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("floor"), "floor", 1f, false, 5f,"click","rocks",5, false);
 
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -181,7 +183,7 @@ public class BuildManager : MonoBehaviour {
 
             //  t.type = "door";
             // WorldManager.Instance.door
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("door"), "door", 1f, false, 5f,"click", false);
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("door"), "door", 1f, false, 5f,"click","logs",5, false);
 
         }
         SelectionManager.Instance.DestroyHighlight();
@@ -201,7 +203,7 @@ public class BuildManager : MonoBehaviour {
 
 
             // WorldManager.Instance.grass
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "grass", 1f, true, 5f,"pop", true);
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"), "grass", 1f, true, 5f,"pop", "", 0, true);
             if (t.type == "door")
             {
                 GameObject go2 = WorldManager.Instance.DoorTileDict[t];
@@ -228,7 +230,7 @@ public class BuildManager : MonoBehaviour {
 
             Sprite wall = SpriteManager.Instance.GS("wall_");//walls[15];
                                                              //  t.type = "wall";
-            JobManager.Instance.CreateJob(t, wall, "wall", 0f,  true, 5f, "pop");
+            JobManager.Instance.CreateJob(t, wall, "wall", 0f,  true, 5f, "pop","rocks",5);
             //  Debug.Log("created job for wall");
 
         }
@@ -295,6 +297,8 @@ public class BuildManager : MonoBehaviour {
 
     public void InitializeTrees(Tile t)
     {
+
+      
         GameObject go = new GameObject();
         go.transform.position = new Vector3(t.x, t.y, 0);
         go.name = "tree_" + t.x + "_" + t.y;
@@ -317,6 +321,7 @@ public class BuildManager : MonoBehaviour {
         srTreeTop.sortingLayerName = "trees";
         
         go.GetComponent<TreeObject>().go = go;
+       
     }
 
 
@@ -441,7 +446,7 @@ public class BuildManager : MonoBehaviour {
         {
             t.type = "door";
             //WorldManager.Instance.door
-            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("door"), "door", 1f, false, 5f,"pop");
+            JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("door"), "door", 1f, false, 5f,"pop","logs",5);
             Vector3 place = new Vector3(t.x, t.y, 0);
             GameObject go = Instantiate(Hdoor, place, Quaternion.identity);
              WorldManager.Instance.DoorTileDict.Add(t, go);
@@ -454,7 +459,7 @@ public class BuildManager : MonoBehaviour {
            
             t.type = "door";
           
-            JobManager.Instance.CreateJob(t,SpriteManager.Instance.GS("door1") ,"door", 1f, false, 5f, "pop");
+            JobManager.Instance.CreateJob(t,SpriteManager.Instance.GS("door1") ,"door", 1f, false, 5f, "pop","logs",5);
             Vector3 place = new Vector3(t.x, t.y, 0);
             GameObject go = Instantiate(Vdoor, place, Quaternion.identity);
             WorldManager.Instance.DoorTileDict.Add(t, go);

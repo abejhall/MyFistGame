@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class PlantObject : MonoBehaviour
 {
 
-
+    
    
     public bool CheckingIfJobIsComplete = false;
     public bool PickedPlants = true;
@@ -23,7 +23,7 @@ public class PlantObject : MonoBehaviour
     public float timer;
 
     public GameObject go;
-
+    GameObject loosemat;
     void Start()
     {
 
@@ -54,33 +54,38 @@ public class PlantObject : MonoBehaviour
 
         if (t.type == "plants" && PickedPlants == true)
         {
-            //we know the type is now plants so we change the spirte to plants
-            sr.sprite = SpriteManager.Instance.GS("plants");
-
-            //now add a counter to visualy show how many plants are stacked up here
-            GameObject Counter = GameObject.Instantiate(BuildManager.Instance.ItemCounter, transform.position, Quaternion.identity);
-            Counter.transform.parent = this.transform;
-            CounterText = Counter.GetComponentInChildren<Text>();
-
-            //adjust the counter to show the appropriate amount of plants
-            CounterText.text = QuanityOfPlants.ToString();
-
-            //Add the loose material to the woldmanager dictionary to keep track of it
-            WorldManager.Instance.LooseMaterialsMap.Add(t, "plants");
 
             PickedPlants = false;
+            //now add a counter to visualy show how many plants are stacked up here
+            loosemat = GameObject.Instantiate(BuildManager.Instance.LooseMaterialPrefab, transform.position, Quaternion.identity);
+            loosemat.name = "LoosePlants";
+            UpDateLooseMatSettings();
+            GameObject Counter = GameObject.Instantiate(BuildManager.Instance.ItemCounter, transform.position, Quaternion.identity);
+            Counter.transform.parent = loosemat.transform;
+           
+
+           
+            //Add the loose material to the woldmanager dictionary to keep track of it
+            WorldManager.Instance.LooseMaterialsMap.Add(t, loosemat);
+
+            PickedPlants = false;
+           
         }
 
-        //keep counter up to date.
-        if (CounterText != null)
-        {
-            CounterText.text = QuanityOfPlants.ToString();
-
-            if (CounterText.text == "0")
-            {
-                Destroy(gameObject);
-            }
-        }
     }
 
+    void UpDateLooseMatSettings()
+    {
+
+        //adjust the counter to show the appropriate amount of plants
+        string quanity = QuanityOfPlants.ToString();
+        loosemat.GetComponent<LooseMaterial>().CounterText = loosemat.GetComponentInChildren<Text>();
+        loosemat.GetComponent<LooseMaterial>().MyCounterTotal = QuanityOfPlants;
+        loosemat.GetComponent<LooseMaterial>().mySprite = SpriteManager.Instance.GS("plants");
+        loosemat.GetComponent<SpriteRenderer>().sprite = SpriteManager.Instance.GS("plants");
+        loosemat.GetComponent<LooseMaterial>().myType = "plants";
+        loosemat.GetComponent<LooseMaterial>().baseType = "grass";
+        loosemat.GetComponent<LooseMaterial>().MaxStackSize = 50;
+        Destroy(this.gameObject);
+    }
 }

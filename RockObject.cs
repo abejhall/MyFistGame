@@ -26,7 +26,7 @@ public class RockObject : MonoBehaviour
     public GameObject go;
 
     Text CounterText = null;
-    
+    GameObject loosemat;
 
 
     // Use this for initialization
@@ -63,33 +63,22 @@ public class RockObject : MonoBehaviour
 
         if (t.type == "rocks" && MinedToRocks == true)
         {
-            //we know the type is not rocks so we change the spirte to rocks
-            sr.sprite = SpriteManager.Instance.GS("Rocks");
+            MinedToRocks = false;
 
-            //now add a counter to visualy show how many rocks are stacked up here
+
+            loosemat = GameObject.Instantiate(BuildManager.Instance.LooseMaterialPrefab, transform.position, Quaternion.identity);
+            loosemat.name = "LooseRocks";
+            UpDateLooseMatSettings();
             GameObject Counter = GameObject.Instantiate(BuildManager.Instance.ItemCounter, transform.position, Quaternion.identity);
-            Counter.transform.parent = this.transform;
-            CounterText = Counter.GetComponentInChildren<Text>();
+            Counter.transform.parent = loosemat.transform;
 
-            //adjust the counter to show the appropriate amount of rocks
-            CounterText.text = QuanityOfRocks.ToString();
+            
 
             //Add the loose material to the woldmanager dictionary to keep track of it
-            WorldManager.Instance.LooseMaterialsMap.Add(t, "rocks");
+            WorldManager.Instance.LooseMaterialsMap.Add(t, loosemat);
 
 
-            MinedToRocks = false;
-        }
-
-        //keep counter up to date.
-        if (CounterText != null)
-        {
-            CounterText.text = QuanityOfRocks.ToString();
-
-            if (CounterText.text == "0")
-            {
-                Destroy(gameObject);
-            }
+            
         }
 
 
@@ -102,7 +91,20 @@ public class RockObject : MonoBehaviour
 
     }
 
-  
+    void UpDateLooseMatSettings()
+    {
+        Debug.Log("called UpdateSettings");
+        //adjust the counter to show the appropriate amount of plants
+        string quanity = QuanityOfRocks.ToString();
+        loosemat.GetComponent<LooseMaterial>().CounterText = loosemat.GetComponentInChildren<Text>();
+        loosemat.GetComponent<LooseMaterial>().MyCounterTotal = QuanityOfRocks;
+        loosemat.GetComponent<LooseMaterial>().mySprite = SpriteManager.Instance.GS("rocks");
+        loosemat.GetComponent<SpriteRenderer>().sprite = SpriteManager.Instance.GS("rocks");
+        loosemat.GetComponent<LooseMaterial>().myType = "rocks";
+        loosemat.GetComponent<LooseMaterial>().baseType = "grass";
+        loosemat.GetComponent<LooseMaterial>().MaxStackSize = 25;
+        Destroy(this.gameObject);
+    }
 
 
 }

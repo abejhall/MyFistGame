@@ -21,7 +21,7 @@ public class WorldManager : MonoBehaviour {
     #region Dictionaries to keep track of the stuff in the world
 
     //this will keep track of all the lose materials in the world for construction
-    public Dictionary<Tile, string> LooseMaterialsMap;
+    public Dictionary<Tile, GameObject> LooseMaterialsMap;
 
     // used to store a dictionary from tiles to the tile name
     public Dictionary<string, Tile> TileToNameMap;
@@ -58,7 +58,7 @@ public class WorldManager : MonoBehaviour {
 
 #region Initalize Dictionaries
         //Initalize our map of loose materials and the tiles they sit on
-        LooseMaterialsMap = new Dictionary<Tile, string>();
+        LooseMaterialsMap = new Dictionary<Tile, GameObject>();
 
         //Initalize our map of tiles to tile names
         TileToNameMap = new Dictionary<string, Tile>();

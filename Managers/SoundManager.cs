@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public  class SoundManager : MonoBehaviour {
 
-    public static SoundManager Instance;
+    
 
     public Slider SliderMusic;
     public Slider SliderSoundFX;
@@ -14,21 +14,22 @@ public  class SoundManager : MonoBehaviour {
     public AudioSource Music;
     public AudioSource SoundEffects;
 
-    public AudioClip pop;
-    public AudioClip click;
-    public AudioClip uhoh;
-
-    public AudioClip Mining;
-
-    public AudioClip Chopping;
-
+   
+    //this is the list of clips added in the inspector to be used in the game
     public List<AudioClip> clips;
+
+    //this private dic is to keep track of the string names so they can be called by the string from anywhere in the game.
     Dictionary<string, AudioClip> AudioClipMap;
 
+
+    #region singleton
+    public static SoundManager Instance;
     private void Awake()
     {
         Instance = this;
     }
+#endregion
+
     private void Start()
     {
         AudioClipMap = new Dictionary<string, AudioClip>();
@@ -46,22 +47,27 @@ public  class SoundManager : MonoBehaviour {
         }
 
        
-
+            //set the audio settings to what they were in last played game.
              SliderSoundFX.value = PlayerPrefs.GetFloat("sfx");
-               SliderMusic.value = PlayerPrefs.GetFloat("music");
+             SliderMusic.value = PlayerPrefs.GetFloat("music");
 
-               SliderMusic.onValueChanged.AddListener(delegate { ValueChangeCheck(); });
-        SliderSoundFX.onValueChanged.AddListener(delegate { ValueChangeCheck2(); });
+        //add callbacks for when the sliders change to update the playerprefs
+        SliderMusic.onValueChanged.AddListener(delegate { ValueChangeCheckMusic(); });
+        SliderSoundFX.onValueChanged.AddListener(delegate { ValueChangeCheckSFX(); });
 
     }
-    public void ValueChangeCheck()
+
+
+
+    public void ValueChangeCheckMusic()
     {
         PlayerPrefs.SetFloat("music", SliderMusic.value);
         PlayerPrefs.SetFloat("soundFx", SliderSoundFX.value);
      
     }
 
-    public void ValueChangeCheck2()
+    //check if the value of the slider has changed and save them in the playerprefs if they have
+    public void ValueChangeCheckSFX()
     {
         PlayerPrefs.SetFloat("music", SliderMusic.value);
         PlayerPrefs.SetFloat("sfx", SliderSoundFX.value);
@@ -79,13 +85,14 @@ public  class SoundManager : MonoBehaviour {
         //Debug.Log("check to see if map populates" + AudioClipMap["Chopping"]);
     }
 
-    void OnValueChange()
-    {
-        Debug.Log("oneDisable");
+  //  void OnValueChange()
+  //  {
+  //      Debug.Log("oneDisable");
        
-    }
+  //  }
 
    
+        //play a sound at a specific audio source
     public void PlaySound(string sound, AudioSource aud)
     {
    
@@ -96,8 +103,9 @@ public  class SoundManager : MonoBehaviour {
         }
             else
         {
-             Debug.LogWarning("could not find a sound with the name: " + sound + " in the audioManager ");
-             return;
+            Debug.LogError("A request to play a sound named:" + sound +
+                " was given but not found in the list of sound names.  Please check to see that this sound is spelled correctly!");
+            return;
         }
 
         aud.PlayOneShot(tmpclip);
@@ -105,24 +113,27 @@ public  class SoundManager : MonoBehaviour {
         
     }
 
-    public  void PlayPopSound()
+    //play a sound at the default sound effects audiosource
+    public void PlaySound(string sound)
     {
-        SoundEffects.PlayOneShot(pop);
+
+        AudioClip tmpclip;
+        if (AudioClipMap.ContainsKey(sound))
+        {
+            tmpclip = AudioClipMap[sound];
+        }
+        else
+        {
+            Debug.LogError("A request to play a sound named:"+sound+
+                " was given but not found in the list of sound names.  Please check to see that this sound is spelled correctly!");
+            return;
+        }
+
+        SoundEffects.PlayOneShot(tmpclip);
+
+
     }
 
-    public void PlayUhOhSound()
-    {
-        SoundEffects.PlayOneShot(uhoh);
-    }
-
-    public void PlayChoppingSound()
-    {
-        SoundEffects.PlayOneShot(Chopping);
-    }
-    public void PlayMiningSound()
-    {
-        SoundEffects.PlayOneShot(Mining);
-    }
 
     void Update()
     {

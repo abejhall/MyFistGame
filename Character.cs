@@ -16,9 +16,9 @@ public class Character : MonoBehaviour
     //door Stuff will be moved eventually
     public float DoorWait = 3f;
     public float jobwait = 70f;
-    
-   
 
+
+    LooseMaterial MaterialsIAmHolding =null;
 
 
     private List<Job> _jobQueList;
@@ -40,7 +40,8 @@ public class Character : MonoBehaviour
     //for debugging only 
     public bool MyJobIsNull;
 
-  
+    [Header("only public for debugging")]
+    public bool gettingMaterial = false;
 
     
     // Use this for initialization
@@ -153,79 +154,153 @@ public class Character : MonoBehaviour
             if(MyPathAStar == null)
             {
                 getPathFinding();
-
+                Debug.Log("got new path");
             }
 
-           
-           
-            if (NextTileV3 == CurrTileV3 && MyPathAStar != null && CurrTileV3 != Dest && MyPathAStar.Length() == 0)
-            {
-               // Debug.LogError("no path to destination");
-                Vector3 _JobTileV = new Vector3(MyJob.jobTile.x, MyJob.jobTile.y,0);
-                JobManager.Instance.CancelJob(MyJob);
-               
-                MyPathAStar = null;
-                Islerping = false;
-                MyJob = null;
 
-                
-                foreach(GameObject g in _greenHighlightsList)
+            //Check if there is no path to my destination if not then cancle my job and clean up
+            if( !CheckMyDestIsReachable() )
                 {
-                    if (g.transform.position == _JobTileV)
-                        SimplePool.Despawn(g);
+                Debug.Log("dest not reachable");
+                return;
                 }
 
+            //I now know i can reach my final destination
+            if(MyJob.numberOfMats != 0 && gettingMaterial == false)
+             {
+                    gettingMaterial = true;
 
-                return;
-            }
-             
+                    //find material for the job
+                   Tile MatT = StockPileManager.Instance.FindNeededMaterial(MyJob.jobMaterial);
+                    Debug.Log("i should be pathfinding to this loc: " + MatT.x + "_" + MatT.y);
 
-          
+                    //get pathfinding for new material
+                    DestTile = MatT;
+                    MyPathAStar = null;
+                   // getPathFinding();
+                    NextTileV3 = CurrTileV3;
+                    //make sure i can reach that material
+                    if (!CheckMyDestIsReachable())
+                    {
+                        Debug.LogError("Cant Reach Material for Job Canceling Job");
+                        JobManager.Instance.CancelJob(MyJob);
+                        MyJob = null;
+                        DestTile = _currentTile;
+                        return;
+                    }
 
-           
-           
-            
-            //set my nextTile if i dont have one.
-            if(NextTileV3 == CurrTileV3 && MyPathAStar != null && CurrTileV3 != Dest && MyPathAStar.Length() != 0)
-            {
-               
-                    NextTile = MyPathAStar.Dequeue();
-               // Debug.Log(NextTile.type);
-                    _tempCurTile = this.transform.position;
-                _startTime = Time.time;
-
-
-                if (NextTile == DestTile)
-                    StartCoroutine(MyDelayMethod(MyJob.timeToWait));
-
-                if (NextTile.type != "door" || NextTile.type != "rock")
+                    //then start walking to material/
                     Islerping = true;
+                    NextTileV3 = CurrTileV3;
+                    //pick up material
+                    //set dest to origonal job
+                    //walk to job
+                    //complete job
+             }
 
-                else if (NextTile.type == "door")
+           
+                //set my nextTile if i dont have one.
+                if (NextTileV3 == CurrTileV3 && MyPathAStar != null && CurrTileV3 != Dest && MyPathAStar.Length() != 0)
                 {
-                   
-                    Islerping = false;
+                Debug.Log("i am in the Set my next tile section");
 
 
-                    Invoke("WillPauseForDoor", DoorWait);
+                NextTile = MyPathAStar.Dequeue();
+
+               // Debug.Log("I dequed this tile loc"+NextTile.x +"_"+NextTile.y);
+               // Debug.Log("My Path shows this many steps left: " + MyPathAStar.Length());
+
+                    _tempCurTile = this.transform.position;
+                    _startTime = Time.time;
+
+                //I dont need any materials so just complete job;
+                    if (NextTile == DestTile && !gettingMaterial)
+                        StartCoroutine(MyDelayMethod(MyJob.timeToWait));
+
+                    //I need matterails and i walked to where they were pick them up and set new destination
+                    if(NextTile == DestTile && gettingMaterial)
+                {
+                    LooseMaterial tmpLooseMats = WorldManager.Instance.LooseMaterialsMap[NextTile].GetComponent<LooseMaterial>();
+                    Debug.Log("check to see what tile NExtTIle is "+NextTile.x + "_" + NextTile.y);
+                    //clone loose mats
+                    MaterialsIAmHolding.mySprite = tmpLooseMats.mySprite;
+                    MaterialsIAmHolding.myType = tmpLooseMats.myType;
+                    //MaterialsIAmHolding.MyCounterTotal = tmpLooseMats.MyCounterTotal;
+                    MaterialsIAmHolding.MaxStackSize = tmpLooseMats.MaxStackSize;
+                    MaterialsIAmHolding.CounterText = tmpLooseMats.CounterText;
+                    MaterialsIAmHolding.baseType = tmpLooseMats.baseType;
+
+                    if(MyJob.numberOfMats <= tmpLooseMats.MyCounterTotal)
+                    {
+                        tmpLooseMats.MyCounterTotal -= MyJob.numberOfMats;
+                        MaterialsIAmHolding.MyCounterTotal = MyJob.numberOfMats;
+                    }
+
+                    DestTile = MyJob.jobTile;
+                }
+
+                    if (NextTile.type != "door" )
+                        Islerping = true;
+
+                    else if (NextTile.type == "door")
+                    {
+
+                        Islerping = false;
+
+
+                        Invoke("WillPauseForDoor", DoorWait);
                         GameObject go = WorldManager.Instance.DoorTileDict[NextTile];
                         go.GetComponent<AnimationScriptDoor>().Open();
-                    
+
+
+                    }
+
+
+
+
+
 
                 }
-               
-               
-                 
+            
 
-                  
 
-            }
+            
 
 
         
         }
         return;
     }
+
+
+
+    bool CheckMyDestIsReachable()
+    {
+        if (NextTileV3 == CurrTileV3 && MyPathAStar != null && CurrTileV3 != Dest && MyPathAStar.Length() == 0)
+        {
+            // Debug.LogError("no path to destination");
+            Vector3 _JobTileV = new Vector3(MyJob.jobTile.x, MyJob.jobTile.y, 0);
+            JobManager.Instance.CancelJob(MyJob);
+
+            MyPathAStar = null;
+            Islerping = false;
+            MyJob = null;
+
+
+            foreach (GameObject g in _greenHighlightsList)
+            {
+                if (g.transform.position == _JobTileV)
+                    SimplePool.Despawn(g);
+            }
+
+
+            return false;
+        }
+        return true;
+    }
+
+
+
 
 
     void WillPauseForDoor()
@@ -285,7 +360,7 @@ public class Character : MonoBehaviour
         }
 
        
-        SoundManager.Instance.PlayPopSound();
+        SoundManager.Instance.PlaySound("pop",aud);
         RoomTypeSetter(t);
         MyJob = null;
         Dest = new Vector3(this.transform.position.x, this.transform.position.y, 0);
