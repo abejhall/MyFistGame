@@ -24,6 +24,8 @@ public class LooseMaterial : MonoBehaviour {
 
             if (MyCounterTotal <= 0)//(CounterText.text == "0")
             {
+                Tile t = WorldManager.Instance.GetTileAT(this.transform.position.x, this.transform.position.y);
+                WorldManager.Instance.LooseMaterialsMap.Remove(t);
                 Destroy(gameObject);
             }
         }

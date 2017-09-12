@@ -166,7 +166,7 @@ public class Character : MonoBehaviour
                 }
 
             //I now know i can reach my final destination
-            if(MyJob.numberOfMats != 0 && gettingMaterial == false)
+            if(MyJob.numberOfMats != 0 && gettingMaterial == false && MaterialsIAmHolding !=null)
              {
                     gettingMaterial = true;
 
@@ -223,6 +223,7 @@ public class Character : MonoBehaviour
                     LooseMaterial tmpLooseMats = WorldManager.Instance.LooseMaterialsMap[NextTile].GetComponent<LooseMaterial>();
                     Debug.Log("check to see what tile NExtTIle is "+NextTile.x + "_" + NextTile.y);
                     //clone loose mats
+                    MaterialsIAmHolding = this.gameObject.AddComponent<LooseMaterial>();
                     MaterialsIAmHolding.mySprite = tmpLooseMats.mySprite;
                     MaterialsIAmHolding.myType = tmpLooseMats.myType;
                     //MaterialsIAmHolding.MyCounterTotal = tmpLooseMats.MyCounterTotal;
@@ -230,13 +231,15 @@ public class Character : MonoBehaviour
                     MaterialsIAmHolding.CounterText = tmpLooseMats.CounterText;
                     MaterialsIAmHolding.baseType = tmpLooseMats.baseType;
 
-                    if(MyJob.numberOfMats <= tmpLooseMats.MyCounterTotal)
+                    if(MyJob.numberOfMats <= tmpLooseMats.MyCounterTotal )
                     {
                         tmpLooseMats.MyCounterTotal -= MyJob.numberOfMats;
                         MaterialsIAmHolding.MyCounterTotal = MyJob.numberOfMats;
                     }
 
+                    MyPathAStar = null;
                     DestTile = MyJob.jobTile;
+                    gettingMaterial = false;
                 }
 
                     if (NextTile.type != "door" )
