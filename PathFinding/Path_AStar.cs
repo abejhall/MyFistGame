@@ -66,7 +66,8 @@ public class Path_AStar {
 
 		while( OpenSet.Count > 0 ) {
 			Path_Node<Tile> current = OpenSet.Dequeue();
-            //Debug.Log("OpenSet Count: " + OpenSet.Count);
+
+           
             if (OpenSet.Count > tilesToAttemptBeforeBail)
             {
                 JobManager.Instance.JobToHard(tileEnd);
