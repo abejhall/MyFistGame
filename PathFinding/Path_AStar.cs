@@ -7,6 +7,8 @@ public class Path_AStar {
 
 	Queue<Tile> path;
 
+    int tilesToAttemptBeforeBail = 500;
+
 	public Path_AStar(World world, Tile tileStart, Tile tileEnd) {
 
       //  Debug.Log("TileStart:"+tileStart.x + tileStart.y);
@@ -65,7 +67,7 @@ public class Path_AStar {
 		while( OpenSet.Count > 0 ) {
 			Path_Node<Tile> current = OpenSet.Dequeue();
             //Debug.Log("OpenSet Count: " + OpenSet.Count);
-            if (OpenSet.Count > 150)
+            if (OpenSet.Count > tilesToAttemptBeforeBail)
             {
                 JobManager.Instance.JobToHard(tileEnd);
                Debug.LogError("searched too long");
