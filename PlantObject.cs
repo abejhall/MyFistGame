@@ -86,6 +86,7 @@ public class PlantObject : MonoBehaviour
         loosemat.GetComponent<LooseMaterial>().myType = "plants";
         loosemat.GetComponent<LooseMaterial>().baseType = "grass";
         loosemat.GetComponent<LooseMaterial>().MaxStackSize = 50;
+        loosemat.GetComponent<LooseMaterial>().MyTile = t;
         Destroy(this.gameObject);
     }
 }

@@ -14,22 +14,30 @@ public class LooseMaterial : MonoBehaviour {
 
     public string baseType;
 
-    
+    public Tile MyTile;
+
+    public bool SomeOneIsComingForMe = false;
+
+    public bool ShouldIShutDown = false;
 	
 	// Update is called once per frame
 	void Update () {
-        if (CounterText != null)
+
+        
+        if (CounterText != null && !ShouldIShutDown)
         {
             CounterText.text = MyCounterTotal.ToString();
 
             if (MyCounterTotal <= 0)//(CounterText.text == "0")
             {
-                Tile t = WorldManager.Instance.GetTileAT(this.transform.position.x, this.transform.position.y);
-                WorldManager.Instance.LooseMaterialsMap.Remove(t);
+                ShouldIShutDown = true;
+                if(WorldManager.Instance.LooseMaterialsMap.ContainsKey(MyTile))
+                WorldManager.Instance.LooseMaterialsMap.Remove(MyTile);
+
                 Destroy(gameObject);
             }
         }
-        if(CounterText == null)
+        if(CounterText == null && !ShouldIShutDown)
         {
             CounterText = GetComponentInChildren<Text>();
         }

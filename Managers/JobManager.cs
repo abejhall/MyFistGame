@@ -9,10 +9,13 @@ public class JobManager : MonoBehaviour {
     public static JobManager Instance;
 
     //these GameObjects are the prefabs of the 2 selection colors
+    public GameObject NoMaterialMarker;
     public GameObject GreenSelectHighlight;
     public GameObject RedSelectHighLight;
     public GameObject RedTileMarker;
     public GameObject DisplayPanel;
+    
+
 
     //these list will keep track of the red and green highlights to be removed later by a function
     public List<GameObject> GreenHighlightsList;
@@ -120,7 +123,15 @@ public class JobManager : MonoBehaviour {
         return false;
     }
 
-
+    public void RemoveAGreenHighLight(Tile t)
+    {
+        for (int i = 0; i < GreenHighlightsList.Count; i++)
+        {
+            Vector3 vec = new Vector3(t.x, t.y, 0);
+            if (GreenHighlightsList[i].transform.position == vec)
+                SimplePool.Despawn(GreenHighlightsList[i]);
+        }
+    }
 
 
     void DespawnYellowHighlight(Tile t)

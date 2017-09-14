@@ -23,6 +23,8 @@ public class Tile
 
     public GameObject door;
 
+    public GameObject LooseMat;
+
   //  public Room room = null;
 
     public World world;

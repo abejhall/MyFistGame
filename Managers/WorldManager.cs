@@ -124,6 +124,7 @@ public class WorldManager : MonoBehaviour {
             Tile t = TileToNameMap["tile_" + x + "_" + y];
             return t;
         }
+        Debug.LogError("I searched for a Tile with GetTileAT in WorldManager and that tile did not show up in my map:"+ "tile_" + x + "_" + y);
         return null;
     }
 

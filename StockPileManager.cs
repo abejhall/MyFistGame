@@ -185,13 +185,18 @@ public class StockPileManager : MonoBehaviour {
         {
             LooseMaterial lm = WorldManager.Instance.LooseMaterialsMap[t].GetComponent<LooseMaterial>();
            
-            if (lm.myType == mat)
+            if (lm.myType == mat && !lm.SomeOneIsComingForMe)
             {
-                return t;
+                    lm.SomeOneIsComingForMe = true;
+                    t.LooseMat = lm.gameObject;
+                   // WorldManager.Instance.LooseMaterialsMap.Remove(t);
+                    return t;
+                
             }
             
         }
 
+        Debug.LogError("material asked for was not found in looseMaterialsMap:" + mat);
         return null;
     }
 

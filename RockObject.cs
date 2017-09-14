@@ -103,6 +103,7 @@ public class RockObject : MonoBehaviour
         loosemat.GetComponent<LooseMaterial>().myType = "rocks";
         loosemat.GetComponent<LooseMaterial>().baseType = "grass";
         loosemat.GetComponent<LooseMaterial>().MaxStackSize = 25;
+        loosemat.GetComponent<LooseMaterial>().MyTile = t;
         Destroy(this.gameObject);
     }
 
