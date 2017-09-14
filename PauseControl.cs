@@ -15,8 +15,14 @@ public class PauseControl : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (PauseMenueOpen)
+            {
+                SelectionManager.Instance.mouseOverButton = false;
+            }
             PauseMenueOpen = !PauseMenueOpen;
         }
+
+      
 
         Time.timeScale = PauseMenueOpen ? 0 : 1;
 
@@ -30,12 +36,15 @@ public class PauseControl : MonoBehaviour
             PauseMenu.SetActive(false);
 
         }
+
+       
     }
 
 
     public void Resume()
     {
         PauseMenueOpen = false;
+        SelectionManager.Instance.mouseOverButton = false;
     }
 
    public void QuitGame()

@@ -10,20 +10,35 @@ public class TogglePannel : MonoBehaviour {
     public bool toggleBuildButtons;
     public bool toggleSoundButtons;
     public bool toggleStockPileButton;
+    public bool toggleCharacterMenueButtons;
 
     public GameObject SoundPanel;
     public GameObject BuildPanel;
     public GameObject StockPilePanel;
+    public GameObject CharacterMenue;
 
     public Animator BuildAnim;
     public Animator SettingsAnim;
     public Animator STOCKAnim;
+    public Animator CharterAnim;
 
     public float fadeTime = .5f;
     
     public void ToggleStockPileButton ()
     {
         toggleStockPileButton = !toggleStockPileButton;
+
+
+
+        //if build Panel is still open close it before opening stockpile panel
+        if (toggleCharacterMenueButtons)
+        {
+            toggleStockPileButton = !toggleStockPileButton;
+            CharterAnim.SetTrigger("close");
+            toggleCharacterMenueButtons = false;
+            Invoke("ToggleStockPileButton", fadeTime);
+            return;
+        }
 
 
         //if build Panel is still open close it before opening stockpile panel
@@ -65,7 +80,16 @@ public class TogglePannel : MonoBehaviour {
 
     public void ToggleBuildButtons()
     {
-        
+
+        if (toggleCharacterMenueButtons)
+        {
+            toggleBuildButtons = !toggleBuildButtons;
+            CharterAnim.SetTrigger("close");
+            toggleCharacterMenueButtons = false;
+            Invoke("ToggleBuildButtons", fadeTime);
+            return;
+        }
+
 
         toggleBuildButtons = !toggleBuildButtons;
 
@@ -113,6 +137,16 @@ public class TogglePannel : MonoBehaviour {
     {
         toggleSoundButtons = !toggleSoundButtons;
 
+        if (toggleCharacterMenueButtons)
+        {
+            toggleSoundButtons = !toggleSoundButtons;
+            CharterAnim.SetTrigger("close");
+            toggleCharacterMenueButtons = false;
+            Invoke("ToggleSoundButtons", fadeTime);
+            return;
+        }
+
+
 
         //if stockpile Panel is still open close it before opening settings panel
         if (toggleStockPileButton)
@@ -148,8 +182,55 @@ public class TogglePannel : MonoBehaviour {
         }
     }
 
-    
+    public void ToggleCharacterButtons()
+    {
 
+        toggleCharacterMenueButtons = !toggleCharacterMenueButtons;
+
+        if (toggleSoundButtons)
+        {
+            toggleCharacterMenueButtons = !toggleCharacterMenueButtons;
+            SettingsAnim.SetTrigger("Close");
+            toggleSoundButtons = false;
+            Invoke("ToggleCharacterButtons", fadeTime);
+            return;
+        }
+
+
+
+        //if stockpile Panel is still open close it before opening settings panel
+        if (toggleStockPileButton)
+        {
+            toggleCharacterMenueButtons = !toggleCharacterMenueButtons;
+            STOCKAnim.SetTrigger("close");
+            toggleStockPileButton = false;
+            Invoke("ToggleCharacterButtons", fadeTime);
+            return;
+        }
+
+
+
+
+        if (toggleBuildButtons)
+        {
+            toggleCharacterMenueButtons = !toggleCharacterMenueButtons;
+            BuildAnim.SetTrigger("ClosePanel");
+            toggleBuildButtons = false;
+            Invoke("ToggleCharacterButtons", fadeTime);
+            return;
+        }
+
+        if (toggleCharacterMenueButtons)
+        {
+            CharterAnim.SetTrigger("open");
+            return;
+        }
+        if (!toggleCharacterMenueButtons)
+        {
+            CharterAnim.SetTrigger("close");
+            return;
+        }
+    }
    
 
 }

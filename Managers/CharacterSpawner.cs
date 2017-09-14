@@ -38,6 +38,7 @@ public class CharacterSpawner : MonoBehaviour {
     {
         
         GameObject go = GameObject.Instantiate(CharacterToSpawn, center, Quaternion.identity);
+        WorldManager.Instance.PlayerCharacters.Add(go);
         GameObject mask = GameObject.Instantiate(CharacterMask, go.transform.position, Quaternion.identity);
         
         mask.GetComponent<followcharacter>().character = go;

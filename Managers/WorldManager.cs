@@ -18,7 +18,7 @@ public class WorldManager : MonoBehaviour {
 
     //used to keep track of the each room;
     // public List<Room> Rooms;
-    #region Dictionaries to keep track of the stuff in the world
+    #region Dictionaries & lists to keep track of the stuff in the world
 
     //this will keep track of all the lose materials in the world for construction
     public Dictionary<Tile, GameObject> LooseMaterialsMap;
@@ -42,6 +42,8 @@ public class WorldManager : MonoBehaviour {
     //this keeps track of plants on top of tiles
     public Dictionary<Tile, GameObject> TreeTileDict;
 
+    public List<GameObject> PlayerCharacters;
+
 #endregion
     // Use this for initialization
     void Start () {
@@ -56,7 +58,11 @@ public class WorldManager : MonoBehaviour {
 
         // Rooms = new List<Room>();
 
-#region Initalize Dictionaries
+        #region Initalize Dictionaries & lists
+        
+        //Initalize our list of Player Characters.
+        PlayerCharacters = new List<GameObject>();
+
         //Initalize our map of loose materials and the tiles they sit on
         LooseMaterialsMap = new Dictionary<Tile, GameObject>();
 
