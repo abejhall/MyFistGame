@@ -87,6 +87,7 @@ public class CharacterStateMachine : MonoBehaviour {
             #region Idle State
             case StateMachine.Idle:
 
+                
                 if (JobManager.Instance.JobQueList.Count != 0)
                     SetCurrentState(StateMachine.GetJob);
 
@@ -146,13 +147,19 @@ public class CharacterStateMachine : MonoBehaviour {
                 StockTile = StockPileManager.Instance.FindNeededMaterial(MyJob.jobMaterial);
                 if(StockTile == null)
                 {
-                    NoMaterialForJob();
+                   
                     JobManager.Instance.RemoveAGreenHighLight(MyJob.jobTile);
+                    NoMaterialForJob();
+                    Debug.Log("No StockTile bailing out and back to idle");
+                    SetCurrentState(StateMachine.Idle);
+                    break;
                 }
 
                 //check to see if i can reach the materials tile and then set my destination to that tile
                 DestTile = StockTile;
                 _currentTile = WorldManager.Instance.GetTileAT(transform.position.x, transform.position.y);
+                Debug.Log("DestTile shows:" + DestTile.x + "_" + DestTile.y);
+                Debug.Log("_currentTile shows:" + _currentTile.x + "_" + _currentTile.y);
                 getPathFinding();
 
                 if (!CheckMyDestIsReachable())
@@ -515,11 +522,12 @@ public class CharacterStateMachine : MonoBehaviour {
 
     void NoMaterialForJob()
     {
+       
         GameObject NoMat = JobManager.Instance.NoMaterialMarker;
 
         SimplePool.Spawn(NoMat, new Vector3(MyJob.jobTile.x,MyJob.jobTile.y, 0),Quaternion.identity);
         MyJob = null;
-        SetCurrentState(StateMachine.Idle);
+        
     }
 
     void GetTempCurVect3()

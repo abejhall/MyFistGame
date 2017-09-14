@@ -230,7 +230,7 @@ public class BuildManager : MonoBehaviour {
 
             Sprite wall = SpriteManager.Instance.GS("wall_");//walls[15];
                                                              //  t.type = "wall";
-            JobManager.Instance.CreateJob(t, wall, "wall", 0f,  true, 5f, "pop","rocks",5);
+            JobManager.Instance.CreateJob(t, wall, "wall", 0f,  true, 5f, "pop","logs",5);
             //  Debug.Log("created job for wall");
 
         }

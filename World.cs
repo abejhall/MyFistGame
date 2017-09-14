@@ -14,7 +14,7 @@ public class World
         public int Width{ get; protected set; }
             public int Height { get; protected set; }
 
-        public World(int width = 100, int height = 100)
+        public World(int width = 200, int height = 200)
         {
 
             Width = width;
@@ -25,7 +25,7 @@ public class World
         }
 
           
-    public void CreateWorld(int WorldHeight = 100, int WorldWidth= 100)
+    public void CreateWorld(int WorldHeight = 200, int WorldWidth= 200)
     {
 
         for (int x = 0; x < WorldHeight; x++)

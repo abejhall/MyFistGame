@@ -89,7 +89,7 @@ public class WorldManager : MonoBehaviour {
     //creates the tiles for the first time 
     void CreateWorld()
     {
-        world.CreateWorld(100, 100);
+        world.CreateWorld(WorldWidth, WorldHeight);
     }
 
     public Tile GetTileAT(int x, int y)
