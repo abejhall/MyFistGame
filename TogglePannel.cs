@@ -80,7 +80,7 @@ public class TogglePannel : MonoBehaviour {
 
     public void ToggleBuildButtons()
     {
-
+        toggleBuildButtons = !toggleBuildButtons;
         if (toggleCharacterMenueButtons)
         {
             toggleBuildButtons = !toggleBuildButtons;
@@ -91,7 +91,7 @@ public class TogglePannel : MonoBehaviour {
         }
 
 
-        toggleBuildButtons = !toggleBuildButtons;
+        
 
         //if stockpile Panel is still open close it before opening stockpile panel
         if (toggleStockPileButton)
@@ -184,8 +184,12 @@ public class TogglePannel : MonoBehaviour {
 
     public void ToggleCharacterButtons()
     {
-
         toggleCharacterMenueButtons = !toggleCharacterMenueButtons;
+
+        if (toggleCharacterMenueButtons)
+        DisplayCharacterUI.Instance.GetCharacterUIs();
+
+       
 
         if (toggleSoundButtons)
         {

@@ -150,7 +150,7 @@ public class CharacterStateMachine : MonoBehaviour {
                    
                     JobManager.Instance.RemoveAGreenHighLight(MyJob.jobTile);
                     NoMaterialForJob();
-                    Debug.Log("No StockTile bailing out and back to idle");
+                   // Debug.Log("No StockTile bailing out and back to idle");
                     SetCurrentState(StateMachine.Idle);
                     break;
                 }
@@ -158,8 +158,8 @@ public class CharacterStateMachine : MonoBehaviour {
                 //check to see if i can reach the materials tile and then set my destination to that tile
                 DestTile = StockTile;
                 _currentTile = WorldManager.Instance.GetTileAT(transform.position.x, transform.position.y);
-                Debug.Log("DestTile shows:" + DestTile.x + "_" + DestTile.y);
-                Debug.Log("_currentTile shows:" + _currentTile.x + "_" + _currentTile.y);
+               // Debug.Log("DestTile shows:" + DestTile.x + "_" + DestTile.y);
+               // Debug.Log("_currentTile shows:" + _currentTile.x + "_" + _currentTile.y);
                 getPathFinding();
 
                 if (!CheckMyDestIsReachable())
@@ -296,7 +296,7 @@ public class CharacterStateMachine : MonoBehaviour {
 
                 if (RunCompleteJob)
                 {
-                    Debug.Log("I was call to run complete job coroutine");
+                   // Debug.Log("I was call to run complete job coroutine");
                     RunCompleteJob = false;
                    StartCoroutine(MyDelayMethod(MyJob.timeToWait));
 
@@ -374,7 +374,7 @@ public class CharacterStateMachine : MonoBehaviour {
     void CompleteJob()
     {
 
-        Debug.Log("called Complete Job");
+      //  Debug.Log("called Complete Job");
         if (MyJob == null)
             return;
 
