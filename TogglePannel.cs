@@ -8,7 +8,7 @@ public class TogglePannel : MonoBehaviour {
     public GameObject pannel;
     RectTransform rec;
     public bool toggleBuildButtons;
-    public bool toggleSoundButtons;
+    public bool toggleSettingsButtons;
     public bool toggleStockPileButton;
     public bool toggleCharacterMenueButtons;
 
@@ -23,7 +23,67 @@ public class TogglePannel : MonoBehaviour {
     public Animator CharterAnim;
 
     public float fadeTime = .5f;
+
+
+
+
+
+
+
+    //Hot Keys allows for a remapping later by the user in
+    // a furture settings menue
+
+    public KeyCode BuildMenueHK = KeyCode.B;
+    public KeyCode CharacterMenueHK = KeyCode.C;
+    public KeyCode StockPileHK = KeyCode.N;
+    public KeyCode SettingsHK = KeyCode.V;
+    public KeyCode ExamineHK = KeyCode.M;
+
+
+
+
     
+    private void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            //ToggleBuildButtons();
+        }
+
+        HotKeys();
+    }
+
+
+    void HotKeys()
+    {
+        if (Input.GetKeyDown(BuildMenueHK))
+        {
+            ToggleBuildButtons();
+        }
+
+        if (Input.GetKeyDown(CharacterMenueHK))
+        {
+            ToggleCharacterButtons();
+        }
+
+        if (Input.GetKeyDown(StockPileHK))
+        {
+            ToggleStockPileButton();
+        }
+
+        if (Input.GetKeyDown(SettingsHK))
+        {
+            ToggleSettingsButtons();
+        }
+
+        if (Input.GetKeyDown(ExamineHK))
+        {
+            ExamineManager.Instance.IsExamining();
+        }
+        
+    }
+
     public void ToggleStockPileButton ()
     {
         toggleStockPileButton = !toggleStockPileButton;
@@ -45,7 +105,7 @@ public class TogglePannel : MonoBehaviour {
         if (toggleBuildButtons)
         {
             toggleStockPileButton = !toggleStockPileButton;
-            BuildAnim.SetTrigger("ClosePanel");
+            BuildAnim.SetTrigger("close");
             toggleBuildButtons = false;
             Invoke("ToggleStockPileButton", fadeTime);
             return;
@@ -54,11 +114,11 @@ public class TogglePannel : MonoBehaviour {
 
 
         //if Settings Panel is still open close it before opening stockpile panel
-        if (toggleSoundButtons)
+        if (toggleSettingsButtons)
         {
             toggleStockPileButton = !toggleStockPileButton;
             SettingsAnim.SetTrigger("Close");
-            toggleSoundButtons = false;
+            toggleSettingsButtons = false;
             Invoke("ToggleStockPileButton", fadeTime);
             return;
 
@@ -107,11 +167,11 @@ public class TogglePannel : MonoBehaviour {
 
 
         //if Settings Panel is still open close it before opening build panel
-        if (toggleSoundButtons)
+        if (toggleSettingsButtons)
         {
             toggleBuildButtons = !toggleBuildButtons;
             SettingsAnim.SetTrigger("Close");
-            toggleSoundButtons = false;
+            toggleSettingsButtons = false;
             Invoke("ToggleBuildButtons", fadeTime);
             return;
             
@@ -120,29 +180,29 @@ public class TogglePannel : MonoBehaviour {
 
         if (toggleBuildButtons)
         {
-            BuildAnim.SetTrigger("OpenPanel");
+            BuildAnim.SetTrigger("open");
             return;
         }
 
 
         if (!toggleBuildButtons)
         {
-            BuildAnim.SetTrigger("ClosePanel");
+            BuildAnim.SetTrigger("close");
             return;
         }
     }
             
 
-    public void ToggleSoundButtons()
+    public void ToggleSettingsButtons()
     {
-        toggleSoundButtons = !toggleSoundButtons;
+        toggleSettingsButtons = !toggleSettingsButtons;
 
         if (toggleCharacterMenueButtons)
         {
-            toggleSoundButtons = !toggleSoundButtons;
+            toggleSettingsButtons = !toggleSettingsButtons;
             CharterAnim.SetTrigger("close");
             toggleCharacterMenueButtons = false;
-            Invoke("ToggleSoundButtons", fadeTime);
+            Invoke("ToggleSettingsButtons", fadeTime);
             return;
         }
 
@@ -151,10 +211,10 @@ public class TogglePannel : MonoBehaviour {
         //if stockpile Panel is still open close it before opening settings panel
         if (toggleStockPileButton)
         {
-            toggleSoundButtons = !toggleSoundButtons;
+            toggleSettingsButtons = !toggleSettingsButtons;
             STOCKAnim.SetTrigger("close");
             toggleStockPileButton = false;
-            Invoke("ToggleSoundButtons", fadeTime);
+            Invoke("ToggleSettingsButtons", fadeTime);
             return;
         }
 
@@ -163,19 +223,19 @@ public class TogglePannel : MonoBehaviour {
 
         if (toggleBuildButtons)
         {
-            toggleSoundButtons = !toggleSoundButtons;
-            BuildAnim.SetTrigger("ClosePanel");
+            toggleSettingsButtons = !toggleSettingsButtons;
+            BuildAnim.SetTrigger("close");
             toggleBuildButtons = false;
-            Invoke("ToggleSoundButtons",fadeTime);
+            Invoke("ToggleSettingsButtons", fadeTime);
             return;
         }
 
-        if (toggleSoundButtons)
+        if (toggleSettingsButtons)
         {
             SettingsAnim.SetTrigger("Open");
             return;
         }
-        if (!toggleSoundButtons)
+        if (!toggleSettingsButtons)
         {
             SettingsAnim.SetTrigger("Close");
             return;
@@ -191,11 +251,11 @@ public class TogglePannel : MonoBehaviour {
 
        
 
-        if (toggleSoundButtons)
+        if (toggleSettingsButtons)
         {
             toggleCharacterMenueButtons = !toggleCharacterMenueButtons;
             SettingsAnim.SetTrigger("Close");
-            toggleSoundButtons = false;
+            toggleSettingsButtons = false;
             Invoke("ToggleCharacterButtons", fadeTime);
             return;
         }
@@ -218,7 +278,7 @@ public class TogglePannel : MonoBehaviour {
         if (toggleBuildButtons)
         {
             toggleCharacterMenueButtons = !toggleCharacterMenueButtons;
-            BuildAnim.SetTrigger("ClosePanel");
+            BuildAnim.SetTrigger("close");
             toggleBuildButtons = false;
             Invoke("ToggleCharacterButtons", fadeTime);
             return;
