@@ -21,6 +21,8 @@ public class Tile
 
     public string type;
 
+    public string BaseType = "grass";
+
     public GameObject door;
 
     public GameObject LooseMat;
@@ -31,7 +33,7 @@ public class Tile
 
     public Tile(int x, int y,  bool iswalkable = true )
     {
-       // GameObject go = new GameObject();
+      
         this.x = x;
         this.y = y;
        
@@ -39,7 +41,7 @@ public class Tile
         this.IsWalkable = iswalkable;
        
         
-      //  this.transform.position = new Vector3(x, y, 0);
+      
 
         if (!IsWalkable)
         {

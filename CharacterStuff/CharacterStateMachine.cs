@@ -384,6 +384,21 @@ public class CharacterStateMachine : MonoBehaviour {
         t.MovementSpeedAdjustment = MyJob.movementSpeedAdjustment;
         go.GetComponent<SpriteRenderer>().sprite = MyJob.jobSprite;
         t.type = MyJob.Type;
+        if (t.type == "floor")
+        {
+            t.BaseType = "floor";
+        }
+        if(t.type == "grass")
+        {
+            t.BaseType = "grass";
+        }
+        LooseMaterial lm = GetComponent<LooseMaterial>();
+
+        if(MyJob.Type == "stockpile")
+        {
+            DropStockPile(t);
+        }
+
 
         BuildManager.Instance.CheckNeighbors(t, true);
         
@@ -404,7 +419,7 @@ public class CharacterStateMachine : MonoBehaviour {
        
         MyJob = null;
         Dest = new Vector3(this.transform.position.x, this.transform.position.y, 0);
-        LooseMaterial lm = GetComponent<LooseMaterial>();
+       
         if (lm != null)
             Destroy(lm);
 
@@ -440,6 +455,38 @@ public class CharacterStateMachine : MonoBehaviour {
             }
         }
     }
+
+
+    public void DropStockPile(Tile t)
+    {
+        if (!WorldManager.Instance.LooseMaterialsMap.ContainsKey(t))
+        {
+            GameObject go = new GameObject();
+            go.transform.position = new Vector3(t.x, t.y, 0);
+            LooseMaterial lm = go.AddComponent<LooseMaterial>();
+
+            lm.MyCounterTotal = MaterialsIAmHolding.MyCounterTotal;
+                  lm.mySprite = MaterialsIAmHolding.mySprite;
+                    lm.MyTile = t;
+                    lm.myType = MaterialsIAmHolding.myType;
+              lm.MaxStackSize = MaterialsIAmHolding.MaxStackSize;
+                  lm.baseType = t.BaseType;
+
+            MaterialsIAmHolding = null;
+
+
+            WorldManager.Instance.LooseMaterialsMap.Add(t,go);
+        }
+        else //this tile has a stockpile on it already
+        {
+          LooseMaterial  lm = WorldManager.Instance.LooseMaterialsMap[t].GetComponent<LooseMaterial>();
+            lm.MyCounterTotal += MaterialsIAmHolding.MyCounterTotal;
+            MaterialsIAmHolding = null;
+        }
+
+    }
+
+
 
     void SetLooseMatStats(LooseMaterial tmpLooseMats)
     {

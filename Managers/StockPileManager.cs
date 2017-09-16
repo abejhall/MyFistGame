@@ -1,12 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class StockPileManager : MonoBehaviour {
 
+
+
+    public Toggle stone;
+    public Toggle wood;
+    public Toggle food;
+    public Toggle weapons;
+    public Toggle medicine;
+
+
+
+
     public GameObject BlueHighlight;
 
-    public Dictionary<Tile, string> StockPileMap;
+    public Dictionary<Tile, GameObject> StockPileMap;
 
     public bool StockPileMenueActive;
 
@@ -40,7 +52,7 @@ public class StockPileManager : MonoBehaviour {
 
     void Start () {
         StockPileMenueActive = tp.toggleStockPileButton;
-        StockPileMap = new Dictionary<Tile, string>();
+        StockPileMap = new Dictionary<Tile, GameObject>();
         ActiveBlueHighlights = new List<GameObject>();
 	}
 	
@@ -83,14 +95,50 @@ public class StockPileManager : MonoBehaviour {
             
             if (t.MovementSpeedAdjustment == 0)
                 continue;
-            StockPileMap.Add(t, "");
 
+            //if there is already a stockpie here remove it
+            if (StockPileMap.ContainsKey(t))
+            {
+                StockPile OldStockpile = WorldManager.Instance.TileToGameObjectMap[t].GetComponent<StockPile>();
+                if(OldStockpile != null)
+                {
+                    Destroy(OldStockpile);
+                    StockPileMap.Remove(t);
+                }
+                
+            }
+            //Add tile to Stockpile map
+            StockPileMap.Add(t, null);
+            t.type = "stockpile";
+            Debug.Log(t.type);
+
+            //create the blue highlight above tile
          GameObject go = SimplePool.Spawn(BlueHighlight, new Vector3(t.x, t.y, 0), Quaternion.identity);
             ActiveBlueHighlights.Add(go);
+
+            //add stockpile component to tile's gameobject and assign values
+          StockPile sp =  WorldManager.Instance.TileToGameObjectMap[t].AddComponent<StockPile>();
+            sp.stone = stone.isOn;
+            sp.wood = wood.isOn;
+            sp.weapons = weapons.isOn;
+            sp.medicine = medicine.isOn;
+            sp.food = food.isOn;
 
         }
 
         SelectionManager.Instance.DestroyHighlight();
+
+        //check to see if i have a loose material on me if so assign it to my stockpile map
+        foreach (Tile stockPileTile in StockPileMap.Keys)
+        {
+            if (WorldManager.Instance.LooseMaterialsMap.ContainsKey(stockPileTile))
+            {
+                if(StockPileMap[stockPileTile] != null)
+                StockPileMap.Add(stockPileTile, WorldManager.Instance.LooseMaterialsMap[stockPileTile]);
+            }
+        }
+
+
     }
 
     public void ShowAllStockPiles()
@@ -131,6 +179,7 @@ public class StockPileManager : MonoBehaviour {
         {
             if (StockPileMap.ContainsKey(t))
                 StockPileMap.Remove(t);
+            t.type = t.BaseType;
 
             for (int i = 0; i < ActiveBlueHighlights.Count; i++)
             {
@@ -152,11 +201,25 @@ public class StockPileManager : MonoBehaviour {
 
         foreach(Tile t in StockPileMap.Keys)
         {
-            if (t.type == "stockpile")
+            //if stockpile was changed since last we looked bail out.
+            if (t.type != "stockpile")
+            {
+                Debug.LogWarning("Someone removed this stockpile in the middle of me checking!");
                 continue;
-           // Debug.Log("created job for this tile: Tile" + t.x + "_" + t.y);
-            if(!JobManager.Instance.DoesJobExistOnTile(t))
-            AssignJob(t);
+            }
+
+
+            // check to see if i have already assigned a job for this tile
+            //if i have bail move to the next tile
+            if (JobManager.Instance.DoesJobExistOnTile(t))
+            {
+                continue;
+            }
+            else //there is no job for this tile so assign one
+            {
+                AssignJob(t);
+            }
+           
             //TODO:::::::::::::::::::::::::::::::::::::::::::::::::::
             //loop through all the stockpile map and check to see if it has an item on it
             //check to see if that item can hold more on it
@@ -176,6 +239,52 @@ public class StockPileManager : MonoBehaviour {
 
     void AssignJob(Tile t)
     {
+        int _stackToFil;
+
+        //is there a loose item on this tile?
+        if(WorldManager.Instance.LooseMaterialsMap.ContainsKey(t))
+        {
+            //there is a loose item on the tile so let us see if there is any room 
+            //left to add more of the same item
+            LooseMaterial lm = WorldManager.Instance.LooseMaterialsMap[t].GetComponent<LooseMaterial>();
+            if(lm == null)
+            {
+                Debug.LogError("Loose Material Map says there is a loose item here but not showing up.");
+            }
+            else
+            {   //checking if the stack is full if so bail
+                if (lm.MyCounterTotal >= lm.MaxStackSize)
+                    return;
+                else //save how much we can still use.
+                    _stackToFil = lm.MaxStackSize - lm.MyCounterTotal;
+
+                //loop through all the loose materials to see if there is one of that type available
+                foreach(Tile LooseMaterialTile in WorldManager.Instance.LooseMaterialsMap.Keys)
+                {
+                    if (LooseMaterialTile == t)
+                        continue;
+                    if (t.type == "stockpile")
+                        continue;
+                    LooseMaterial lm2 = WorldManager.Instance.LooseMaterialsMap[LooseMaterialTile].GetComponent<LooseMaterial>();
+                    if (lm2.myType != lm.myType) //check to see if the mats we are looking at are the same as what we are looking for 
+                        continue;// they are not so we bail
+                    else//they are what we are looking for assign job
+                    {//FIXME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! number of mats hardcoded for testing
+                        JobManager.Instance.CreateJob(t,SpriteManager.Instance.GS(lm.baseType), "stockpile", 1f, false, 1f, "click", lm.myType,5);
+                    }
+                }
+
+            }
+
+
+
+        }
+        else
+        {
+
+        }
+
+
       //  JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"),"stockpile",1f,false,0f,"pop");
     }
 
