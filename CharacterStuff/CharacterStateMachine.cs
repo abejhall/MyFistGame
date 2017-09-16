@@ -144,7 +144,7 @@ public class CharacterStateMachine : MonoBehaviour {
 
                 //check to see what materials i need and see if they are available
 
-                StockTile = StockPileManager.Instance.FindNeededMaterial(MyJob.jobMaterial);
+                StockTile = StockPileManager.Instance.FindNeededMaterial(MyJob);
                 if(StockTile == null)
                 {
                    
@@ -393,8 +393,8 @@ public class CharacterStateMachine : MonoBehaviour {
             t.BaseType = "grass";
         }
         LooseMaterial lm = GetComponent<LooseMaterial>();
-
-        if(MyJob.Type == "stockpile")
+       // Debug.Log("Myjob shows this for isstockpile:"+MyJob.jobTile.IsStockPile);
+        if(MyJob.jobTile.IsStockPile)
         {
             DropStockPile(t);
         }
@@ -459,8 +459,10 @@ public class CharacterStateMachine : MonoBehaviour {
 
     public void DropStockPile(Tile t)
     {
+        Debug.Log("I dropped my load ");
         if (!WorldManager.Instance.LooseMaterialsMap.ContainsKey(t))
         {
+            
             GameObject go = new GameObject();
             go.transform.position = new Vector3(t.x, t.y, 0);
             LooseMaterial lm = go.AddComponent<LooseMaterial>();
@@ -481,7 +483,15 @@ public class CharacterStateMachine : MonoBehaviour {
         {
           LooseMaterial  lm = WorldManager.Instance.LooseMaterialsMap[t].GetComponent<LooseMaterial>();
             lm.MyCounterTotal += MaterialsIAmHolding.MyCounterTotal;
+            lm.SomeOneIsComingForMe = false;
             MaterialsIAmHolding = null;
+
+            GameObject go = WorldManager.Instance.LooseMaterialsMap[t];
+
+            WorldManager.Instance.LooseMaterialsMap.Remove(t);
+            WorldManager.Instance.LooseMaterialsMap.Add(t, go);
+
+
         }
 
     }

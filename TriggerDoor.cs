@@ -12,7 +12,7 @@ public class TriggerDoor : MonoBehaviour {
     bool startedTimer = false;
     GameObject DoorGoPointer;
     public float q1 = 1;
-    Character thischar;
+   // Character thischar;
 
 
     // Use this for initialization
@@ -28,7 +28,7 @@ public class TriggerDoor : MonoBehaviour {
     public void Waiting(Character c, GameObject go)
     {
         DoorGoPointer = go;
-        thischar = c;
+        //thischar = c;
         float doorslider;
 
 
@@ -70,7 +70,7 @@ public class TriggerDoor : MonoBehaviour {
             Debug.Log("start q3");
             SpriteRenderer sr = DoorGoPointer.GetComponent<SpriteRenderer>();
             sr.sprite = BuildManager.Instance.doors[1];
-            thischar.Islerping = true;
+            //thischar.Islerping = true;
         }
         doorslider = waitingTime;
         if (doorslider <= Time.time)

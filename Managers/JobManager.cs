@@ -91,8 +91,17 @@ public class JobManager : MonoBehaviour {
         }
     }
  
-
-
+    public void CreateStockPileJob(Tile t, Sprite s, string type, float movement, bool attachToOthers, float time, string sound, string jobMat, int numberOfMats, bool disableMovementblock = false)
+    {
+        CreateJob(t, s, type, movement, attachToOthers, time, sound, jobMat, numberOfMats, disableMovementblock);
+        for (int i = 0; i < JobQueList.Count; i++)
+        {
+            if(JobQueList[i].jobTile == t)
+            {
+                JobQueList[i].IsHaulingJob = true;
+            }
+        }
+    }
 
     bool CheckIfJobExist(Job j)
     {

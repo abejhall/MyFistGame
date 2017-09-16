@@ -50,7 +50,7 @@ public class ExamineManager : MonoBehaviour {
 
     public void StockpileInfo(Tile t)
     {
-        if (t.type == "stockpile")
+        if (t.IsStockPile)
         {
             string wood;
             string food;

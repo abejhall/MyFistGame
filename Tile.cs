@@ -17,6 +17,8 @@ public class Tile
 
     public bool RoomFloor = false;
 
+    public bool IsStockPile = false;
+
     public float MovementSpeedAdjustment;
 
     public string type;

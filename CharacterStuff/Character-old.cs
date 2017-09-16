@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Threading;
 
 public class Character : MonoBehaviour
-{
+{/*
     #region vars.....................................
     public float MoveSpeed = 3f;
     public Job MyJob = null;
@@ -469,6 +469,6 @@ public class Character : MonoBehaviour
         CompleteJob();
     }
 
-
+    */
 
 }

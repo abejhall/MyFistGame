@@ -109,7 +109,7 @@ public class StockPileManager : MonoBehaviour {
             }
             //Add tile to Stockpile map
             StockPileMap.Add(t, null);
-            t.type = "stockpile";
+            t.IsStockPile = true;
             Debug.Log(t.type);
 
             //create the blue highlight above tile
@@ -179,7 +179,7 @@ public class StockPileManager : MonoBehaviour {
         {
             if (StockPileMap.ContainsKey(t))
                 StockPileMap.Remove(t);
-            t.type = t.BaseType;
+                 t.IsStockPile = false;
 
             for (int i = 0; i < ActiveBlueHighlights.Count; i++)
             {
@@ -202,7 +202,7 @@ public class StockPileManager : MonoBehaviour {
         foreach(Tile t in StockPileMap.Keys)
         {
             //if stockpile was changed since last we looked bail out.
-            if (t.type != "stockpile")
+            if (!t.IsStockPile)
             {
                 Debug.LogWarning("Someone removed this stockpile in the middle of me checking!");
                 continue;
@@ -213,6 +213,7 @@ public class StockPileManager : MonoBehaviour {
             //if i have bail move to the next tile
             if (JobManager.Instance.DoesJobExistOnTile(t))
             {
+                Debug.LogWarning("this stockpile job already exist");
                 continue;
             }
             else //there is no job for this tile so assign one
@@ -263,14 +264,14 @@ public class StockPileManager : MonoBehaviour {
                 {
                     if (LooseMaterialTile == t)
                         continue;
-                    if (t.type == "stockpile")
+                    if (LooseMaterialTile.IsStockPile)
                         continue;
                     LooseMaterial lm2 = WorldManager.Instance.LooseMaterialsMap[LooseMaterialTile].GetComponent<LooseMaterial>();
                     if (lm2.myType != lm.myType) //check to see if the mats we are looking at are the same as what we are looking for 
                         continue;// they are not so we bail
                     else//they are what we are looking for assign job
-                    {//FIXME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! number of mats hardcoded for testing
-                        JobManager.Instance.CreateJob(t,SpriteManager.Instance.GS(lm.baseType), "stockpile", 1f, false, 1f, "click", lm.myType,5);
+                    {
+                        JobManager.Instance.CreateStockPileJob(t, SpriteManager.Instance.GS(lm.baseType), lm.myType, 1f, false, 1f, "click", lm.myType, 5);//_stackToFil);
                     }
                 }
 
@@ -281,17 +282,20 @@ public class StockPileManager : MonoBehaviour {
         }
         else
         {
-
+           // JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS(lm.baseType), "stockpile", 1f, false, 1f, "click", lm.myType, 5);
         }
 
 
       //  JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"),"stockpile",1f,false,0f,"pop");
     }
 
-    public Tile FindNeededMaterial(string mat)
-    {
+    public Tile FindNeededMaterial(Job currentJob)
+    {   
+        string mat = currentJob.jobMaterial;
         foreach(Tile t in WorldManager.Instance.LooseMaterialsMap.Keys)
-        {
+        {  if (t.IsStockPile && currentJob.IsHaulingJob)
+                continue;
+
             LooseMaterial lm = WorldManager.Instance.LooseMaterialsMap[t].GetComponent<LooseMaterial>();
            
             if (lm.myType == mat && !lm.SomeOneIsComingForMe)
