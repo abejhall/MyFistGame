@@ -462,10 +462,19 @@ public class CharacterStateMachine : MonoBehaviour {
         Debug.Log("I dropped my load ");
         if (!WorldManager.Instance.LooseMaterialsMap.ContainsKey(t))
         {
+            Vector3 locV3 = new Vector3(t.x, t.y, 0);
+
+            GameObject loosemat = GameObject.Instantiate(BuildManager.Instance.LooseMaterialPrefab, locV3, Quaternion.identity);
+            loosemat.name = "LooseMat";
+            GameObject Counter = GameObject.Instantiate(BuildManager.Instance.ItemCounter, locV3, Quaternion.identity);
+            Counter.transform.parent = loosemat.transform;
+            SpriteRenderer sr = loosemat.GetComponent<SpriteRenderer>();
+            LooseMaterial lm = loosemat.GetComponent<LooseMaterial>();
+            sr.sprite = SpriteManager.Instance.GS(MaterialsIAmHolding.myType);
+
+
+           
             
-            GameObject go = new GameObject();
-            go.transform.position = new Vector3(t.x, t.y, 0);
-            LooseMaterial lm = go.AddComponent<LooseMaterial>();
 
             lm.MyCounterTotal = MaterialsIAmHolding.MyCounterTotal;
                   lm.mySprite = MaterialsIAmHolding.mySprite;
@@ -477,7 +486,7 @@ public class CharacterStateMachine : MonoBehaviour {
             MaterialsIAmHolding = null;
 
 
-            WorldManager.Instance.LooseMaterialsMap.Add(t,go);
+            WorldManager.Instance.LooseMaterialsMap.Add(t,loosemat);
         }
         else //this tile has a stockpile on it already
         {

@@ -266,6 +266,8 @@ public class StockPileManager : MonoBehaviour {
                         continue;
                     if (LooseMaterialTile.IsStockPile)
                         continue;
+                    if (WorldManager.Instance.LooseMaterialsMap[LooseMaterialTile].GetComponentInChildren<LooseMaterial>().SomeOneIsComingForMe)
+                        continue;
                     LooseMaterial lm2 = WorldManager.Instance.LooseMaterialsMap[LooseMaterialTile].GetComponent<LooseMaterial>();
                     if (lm2.myType != lm.myType) //check to see if the mats we are looking at are the same as what we are looking for 
                         continue;// they are not so we bail
@@ -282,11 +284,77 @@ public class StockPileManager : MonoBehaviour {
         }
         else
         {
-           // JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS(lm.baseType), "stockpile", 1f, false, 1f, "click", lm.myType, 5);
+            //there is no material on this tile so see if there is some loose material not currently on a stockpile
+            GameObject SPgo = WorldManager.Instance.TileToGameObjectMap[t];
+            Debug.Log("the tile i am looking at:"+t.x + t.y);
+            StockPile sp = SPgo.GetComponent<StockPile>();
+            if (sp == null)
+                Debug.LogError("I cant find the stockpile component on tile"+t.x+"_"+t.y);
+            
+                foreach (Tile LMt in WorldManager.Instance.LooseMaterialsMap.Keys)
+                {
+                        LooseMaterial CurrentLM = WorldManager.Instance.LooseMaterialsMap[LMt].GetComponent<LooseMaterial>();
+
+                    // check to see if the mat is one of the accepted types
+                    if (CurrentLM.myType == "rocks")
+                    {
+                        if (sp.stone == true)
+                        {
+                            JobManager.Instance.CreateStockPileJob(t, SpriteManager.Instance.GS(t.BaseType), t.BaseType, 1f, false, 1f, "click", "rocks", 5);
+                            return;
+                        }
+                    }
+
+                    if (CurrentLM.myType == "logs")
+                    {
+                        if (sp.wood == true)
+                        {
+                           JobManager.Instance.CreateStockPileJob(t, SpriteManager.Instance.GS(t.BaseType), t.BaseType, 1f, false, 1f, "click", "logs", 5);
+                            return;
+                        }
+                    }
+
+                    if (CurrentLM.myType == "food")
+                    {
+                        if (sp.food == true)
+                        {
+                            JobManager.Instance.CreateStockPileJob(t, SpriteManager.Instance.GS(t.BaseType), t.BaseType, 1f, false, 1f, "click", "food", 5);
+                            return;
+                        }
+                       
+                   
+                    }
+
+                    if (CurrentLM.myType == "meds")
+                    {
+                        if (sp.medicine == true)
+                        {
+                            JobManager.Instance.CreateStockPileJob(t, SpriteManager.Instance.GS(t.BaseType), t.BaseType, 1f, false, 1f, "click", "meds", 5);
+                            return;
+                        }
+                
+                    }
+                    if (CurrentLM.myType == "weapon")
+                    {
+                        if (sp.weapons == true)
+                        {
+                            JobManager.Instance.CreateStockPileJob(t, SpriteManager.Instance.GS(t.BaseType), t.BaseType, 1f, false, 1f, "click", "weapon", 5);
+                            return;
+                        }
+                    }
+                
+               
+                }
+            
+                
+
+
+
+           
         }
 
 
-      //  JobManager.Instance.CreateJob(t, SpriteManager.Instance.GS("grass"),"stockpile",1f,false,0f,"pop");
+      
     }
 
     public Tile FindNeededMaterial(Job currentJob)
