@@ -150,20 +150,20 @@ public class World
             {
                 sr.sprite = SpriteManager.Instance.GS("waterTR");
                 t.MovementSpeedAdjustment = 0;
-                Debug.Log("changed sprite on :" + t.x + "-" + t.y);
+              //  Debug.Log("changed sprite on :" + t.x + "-" + t.y);
             }
             if (t.x == 199 && t.y == 0)
             {
                 sr.sprite = SpriteManager.Instance.GS("waterBR");
                 t.MovementSpeedAdjustment = 0;
-                Debug.Log("changed sprite on :" + t.x + "-" + t.y);
+             //   Debug.Log("changed sprite on :" + t.x + "-" + t.y);
             }
 
             if (t.x == 0 && t.y == 199)
             {
                 sr.sprite = SpriteManager.Instance.GS("waterTL");
                 t.MovementSpeedAdjustment = 0;
-                Debug.Log("changed sprite on :" + t.x + "-" + t.y);
+             //   Debug.Log("changed sprite on :" + t.x + "-" + t.y);
             }
 
 

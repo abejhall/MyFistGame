@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
 
 public class CharacterStateMachine : MonoBehaviour {
 
@@ -54,14 +55,22 @@ public class CharacterStateMachine : MonoBehaviour {
         Tile StockTile = null;
         Tile MatT;
         float lastStateChage = 0f;
-
+     public   float jobTimer;
+        bool jobstart = true;
+    public float ranJobWait;
+    #endregion
 
     #endregion
 
-#endregion
+
+    Thread thread;
+
 
 
     void Start () {
+
+        ranJobWait = Random.Range(1f, 25f);
+
         SetCurrentState(StateMachine.Idle);
 
         _currentTile = WorldManager.Instance.GetTileAT(this.transform.position.x, this.transform.position.y);
@@ -79,6 +88,7 @@ public class CharacterStateMachine : MonoBehaviour {
 
         DebuggingHelpers();
 
+       
 
 #endregion
         //Character's State Machine......
@@ -99,12 +109,26 @@ public class CharacterStateMachine : MonoBehaviour {
 
                 if (MyJob == null && JobManager.Instance.JobQueList.Count != 0)
                 {
-                    WorldManager.Instance.world.tileGraph = null;
-                    Job j = JobManager.Instance.GetJob();
-                    MyJob = j;
-                    Tile t = j.jobTile;
-                    DestTile = j.jobTile;
-                    Dest = new Vector3(t.x, t.y, 0);
+                   
+                    if(jobstart)
+                    {
+                        jobTimer = Time.time;
+                        jobstart = false;
+                       
+
+                    }
+
+                    if(Time.time - jobTimer  >= ranJobWait)
+                    {
+                        WorldManager.Instance.world.tileGraph = null;
+                        Job j = JobManager.Instance.GetJob();
+                        MyJob = j;
+                        Tile t = j.jobTile;
+                        DestTile = j.jobTile;
+                        Dest = new Vector3(t.x, t.y, 0);
+                        jobstart = true;
+                    }
+                   
                 }
                  //   MyJob = JobManager.Instance.GetJob();
 
@@ -119,7 +143,11 @@ public class CharacterStateMachine : MonoBehaviour {
 
                     if (MyJob.numberOfMats == 0)
                     {
-                        getPathFinding();
+                       // Debug.Log("testing multithread");
+                       // thread = new Thread(getPathFinding);
+                      // thread.Start();
+
+                      getPathFinding();
                        SetCurrentState(StateMachine.MoveToJob);
                     }
                         
@@ -189,7 +217,7 @@ public class CharacterStateMachine : MonoBehaviour {
                 }
 
 
-                if (_currentTile == NextTile || transform.position == NextTileV3)
+                if (_currentTile == NextTile && !thread.IsAlive|| transform.position == NextTileV3 && !thread.IsAlive)
                 {
                     if (MyPathAStar.Length() != 0)
                         NextTile = MyPathAStar.Dequeue();
@@ -269,7 +297,7 @@ public class CharacterStateMachine : MonoBehaviour {
                 }
                     
 
-                if (_currentTile == NextTile || transform.position == NextTileV3)
+                if (_currentTile == NextTile && !thread.IsAlive || transform.position == NextTileV3 && !thread.IsAlive)
                 {
                     if(MyPathAStar.Length() != 0)
                     NextTile = MyPathAStar.Dequeue();
@@ -571,8 +599,22 @@ public class CharacterStateMachine : MonoBehaviour {
 
     void getPathFinding()
     {
-       // Debug.Log("Called GetPathFinding With these 2 tiles" + "_currentTile"
-       //     + _currentTile.y + "_" + _currentTile.y + "   " + DestTile.x + "_" + DestTile.y);
+        // Debug.Log("testing multithread");
+         thread = new Thread(getPathFinding2);
+         thread.Start();
+
+        // Debug.Log("Called GetPathFinding With these 2 tiles" + "_currentTile"
+        //     + _currentTile.y + "_" + _currentTile.y + "   " + DestTile.x + "_" + DestTile.y);
+
+        // MyPathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
+        //                                    _currentTile,  //Start tile
+        //                                    DestTile); //Destination tile
+    }
+
+    void getPathFinding2()
+    {
+        // Debug.Log("Called GetPathFinding With these 2 tiles" + "_currentTile"
+        //     + _currentTile.y + "_" + _currentTile.y + "   " + DestTile.x + "_" + DestTile.y);
 
         MyPathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
                                            _currentTile,  //Start tile
