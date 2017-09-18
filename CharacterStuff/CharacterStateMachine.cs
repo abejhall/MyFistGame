@@ -51,7 +51,7 @@ public class CharacterStateMachine : MonoBehaviour {
         private Tile _currentTile;
         private List<Job> _jobQueList;
         private List<GameObject> _greenHighlightsList;
-        private List<GameObject> _redHighlightsList;
+        private List<GameObject> _redHighlightsList; 
         Tile StockTile = null;
         Tile MatT;
         float lastStateChage = 0f;
@@ -385,16 +385,16 @@ public class CharacterStateMachine : MonoBehaviour {
             MyJobIsNull = false;
 
         //for debugging
-        if (MatT == null)
-            IHaveAMatT = true;
+        //if (MatT == null)
+          //  IHaveAMatT = true;
         //for debugging
-        if (MatT != null)
-            IHaveAMatT = false;
+       // if (MatT != null)              //warning says it is never used
+        //    IHaveAMatT = false;
 
-        if (MatT != null)
-        {
-            Matt = "TileAt" + MatT.x + "_" + MatT.y;
-        }
+      //  if (MatT != null)
+       // {
+      //      Matt = "TileAt" + MatT.x + "_" + MatT.y;  // warning says it is never used
+      //  }
 
     }
 
@@ -587,6 +587,12 @@ public class CharacterStateMachine : MonoBehaviour {
 
             foreach (GameObject g in _greenHighlightsList)
             {
+                if(MyJob.jobTile == null)
+                {
+                    Debug.LogWarning("my job is not there anymore");
+                    break;
+                }
+
                 if (g.transform.position == _JobTileV)
                     SimplePool.Despawn(g);
             }

@@ -15,13 +15,13 @@ public class TorchLit : MonoBehaviour {
     public float tHalf = .14f;
     public float tQuart = .07f;
     float to = 0f;
-    bool isNightTime;
+    //bool isNightTime; warning says never used
 
     
 
 	// Use this for initialization
 	void Start () {
-        isNightTime = DayNightCycle.Instance.IsNightTime;
+       // isNightTime = DayNightCycle.Instance.IsNightTime; // warning says it is never used
         sr = GetComponent<SpriteRenderer>();
 
         tourchLitColor = sr.color;
@@ -38,7 +38,7 @@ public class TorchLit : MonoBehaviour {
     // Update is called once per frame
     void Update() {
 
-        isNightTime = DayNightCycle.Instance.IsNightTime;
+        //isNightTime = DayNightCycle.Instance.IsNightTime; //warning says it is never used
 
         if (DayNightCycle.Instance.timeOfDay == TimeOfDay.Night)
         {

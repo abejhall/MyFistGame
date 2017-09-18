@@ -22,7 +22,7 @@ public class Job {
         this.jobSprite = s;
         this.timeToWait = time;
         WorkSound = sound;
-       // Debug.Log("Job Created:" + t+"_" + s+"_" + f);
+      
     }
 
 
@@ -33,7 +33,7 @@ public class Job {
         this.jobSprite = s;
         this.timeToWait = time;
         this.WorkSound = sound;
-        // Debug.Log("Job Created:" + t+"_" + s+"_" + f);
+        
     }
 
 

@@ -113,19 +113,21 @@ public class World
             GameObject go = WorldManager.Instance.TileToGameObjectMap[t];
             SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
 
+            //create water tiles along the bottom
             if (t.x == 0)
             {
                 sr.sprite = SpriteManager.Instance.GS("grasswaterL");
                 t.MovementSpeedAdjustment = 0;
             }
 
-
+            //create water tiles along the left side
             if (t.y == 0)
             {
                 sr.sprite = SpriteManager.Instance.GS("grasswaterS");
                 t.MovementSpeedAdjustment = 0;
             }
 
+            //create a water tile for the bottom left corner
             if (t.x == 0 && t.y == 0)
             {
                 sr.sprite = SpriteManager.Instance.GS("waterBL");
@@ -133,37 +135,42 @@ public class World
                 Debug.Log("i make it this far");
             }
 
-
+            //createj water tiles for the right side
             if (t.x == 199)
             {
                 sr.sprite = SpriteManager.Instance.GS("grasswaterR");
                 t.MovementSpeedAdjustment = 0;
             }
+
+            //create water tiles for the top
             if (t.y == 199)
             {
                 sr.sprite = SpriteManager.Instance.GS("grasswaterN");
                 t.MovementSpeedAdjustment = 0;
             }
 
-
+            //create water tile for the top right corner
             if (t.x == 199 && t.y == 199)
             {
                 sr.sprite = SpriteManager.Instance.GS("waterTR");
                 t.MovementSpeedAdjustment = 0;
-              //  Debug.Log("changed sprite on :" + t.x + "-" + t.y);
+             
             }
+
+            //create water tile for the bottom right corner
             if (t.x == 199 && t.y == 0)
             {
                 sr.sprite = SpriteManager.Instance.GS("waterBR");
                 t.MovementSpeedAdjustment = 0;
-             //   Debug.Log("changed sprite on :" + t.x + "-" + t.y);
+            
             }
 
+            //create water tile for the top left cornere
             if (t.x == 0 && t.y == 199)
             {
                 sr.sprite = SpriteManager.Instance.GS("waterTL");
                 t.MovementSpeedAdjustment = 0;
-             //   Debug.Log("changed sprite on :" + t.x + "-" + t.y);
+             
             }
 
 
