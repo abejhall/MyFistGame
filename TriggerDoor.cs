@@ -8,7 +8,7 @@ public class TriggerDoor : MonoBehaviour {
 
     public float DoorWait = 4f;
     float waitingTime;
-    bool waitingForDoor = false;
+    //bool waitingForDoor = false;
     bool startedTimer = false;
     GameObject DoorGoPointer;
     public float q1 = 1;
@@ -43,7 +43,7 @@ public class TriggerDoor : MonoBehaviour {
         if (waitingTime + (q1 * 3) <= Time.time)
         {
 
-            waitingForDoor = false;
+           // waitingForDoor = false;
             startedTimer = false;
         }
 

@@ -93,14 +93,57 @@ public class JobManager : MonoBehaviour {
  
     public void CreateStockPileJob(Tile t, Sprite s, string type, float movement, bool attachToOthers, float time, string sound, string jobMat, int numberOfMats, bool disableMovementblock = false)
     {
-        CreateJob(t, s, type, movement, attachToOthers, time, sound, jobMat, numberOfMats, disableMovementblock);
-        for (int i = 0; i < JobQueList.Count; i++)
+        // CreateJob(t, s, type, movement, attachToOthers, time, sound, jobMat, numberOfMats, disableMovementblock);
+        //
+        // for (int i = 0; i < JobQueList.Count; i++)
+        // {
+        //       if(JobQueList[i].jobTile == t)
+        //      {
+        //         JobQueList[i].IsHaulingJob = true;
+        //    }
+        //}
+
+        if (disableMovementblock)
+            t.MovementSpeedAdjustment = 1;
+        Job j = new Job(t, s,type,time, sound,jobMat,numberOfMats);
+
+
+        // if a job already exist at cords bail out
+        if (!CheckIfJobExist(j))
         {
-            if(JobQueList[i].jobTile == t)
-            {
-                JobQueList[i].IsHaulingJob = true;
-            }
+
+            return;
         }
+
+
+        //create a temp var for the tile at specific job and spawn a green highlight over it
+        GameObject Go1 = WorldManager.Instance.TileToGameObjectMap[j.jobTile];
+        if (Go1.GetComponent<SpriteRenderer>().sprite != null)
+        {
+            GameObject go = (GameObject)SimplePool.Spawn(GreenSelectHighlight, new Vector3(t.x, t.y, 0), Quaternion.identity);
+            go.transform.SetParent(SelectionManager.Instance.PoolManager.transform);
+            GreenHighlightsList.Add(go);
+            SpriteRenderer sr = go.GetComponent<SpriteRenderer>();
+            sr.sortingLayerName = "HighLights";
+
+
+
+            //assign type and movement speed and the add job to jobQuelist
+            j.Type = type;
+            j.movementSpeedAdjustment = movement;
+            j.jobMaterial = jobMat;
+            j.numberOfMats = numberOfMats;
+            JobQueList.Add(j);
+
+
+            //remove the left over yellow highlight
+            DespawnYellowHighlight(t);
+
+        }
+
+
+
+
     }
 
     bool CheckIfJobExist(Job j)

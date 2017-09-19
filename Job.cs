@@ -26,6 +26,20 @@ public class Job {
     }
 
 
+    //only for hauling jobs
+    public Job(Tile t, Sprite s, string type, float time, string sound, string matType, int numberOfMats)
+    {
+        this.Type = type;
+        this.jobTile = t;
+        this.jobSprite = s;
+        this.timeToWait = time;
+        this.WorkSound = sound;
+        this.jobMaterial = matType;
+        this.numberOfMats = numberOfMats;
+        this.IsHaulingJob = true;
+
+    }
+
     public Job(Tile t, Sprite s, float movement, bool _attachToOthers, float time, string sound)
     {
         this.movementSpeedAdjustment = movement;

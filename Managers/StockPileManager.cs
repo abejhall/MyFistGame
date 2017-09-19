@@ -358,7 +358,9 @@ public class StockPileManager : MonoBehaviour {
     }
 
     public Tile FindNeededMaterial(Job currentJob)
-    {   
+    {
+        Debug.Log("looking for material of type" + currentJob.jobMaterial);
+
         string mat = currentJob.jobMaterial;
         foreach(Tile t in WorldManager.Instance.LooseMaterialsMap.Keys)
         {  if (t.IsStockPile && currentJob.IsHaulingJob)

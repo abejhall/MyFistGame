@@ -31,7 +31,7 @@ public class SpiderClass : MonoBehaviour {
 
         MyTransform = new Vector3(MyTile.x, MyTile.y, 0);
 
-        if (NextTransform != null && NextTile != null) 
+        if ( NextTile != null) 
         NextTransform = new Vector3(NextTile.x,NextTile.y,0);
 
         if (NextTile != null)

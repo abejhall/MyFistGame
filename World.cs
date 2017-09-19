@@ -132,7 +132,7 @@ public class World
             {
                 sr.sprite = SpriteManager.Instance.GS("waterBL");
                 t.MovementSpeedAdjustment = 0;
-                Debug.Log("i make it this far");
+               // Debug.Log("i make it this far");
             }
 
             //createj water tiles for the right side

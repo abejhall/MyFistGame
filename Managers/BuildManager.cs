@@ -289,7 +289,8 @@ public class BuildManager : MonoBehaviour {
 
         WorldManager.Instance.PlantTileDict.Add(t, go);
        
-        PlantObject po = go.AddComponent<PlantObject>();
+       // PlantObject po = 
+            go.AddComponent<PlantObject>();
        
         go.GetComponent<PlantObject>().go = go;
     }

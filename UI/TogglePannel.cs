@@ -27,7 +27,7 @@ public class TogglePannel : MonoBehaviour {
 
 
 
-
+  
 
 
     //Hot Keys allows for a remapping later by the user in
@@ -39,10 +39,14 @@ public class TogglePannel : MonoBehaviour {
     public KeyCode SettingsHK = KeyCode.V;
     public KeyCode ExamineHK = KeyCode.M;
 
+#region singleton
+    public static TogglePannel Instance;
+    private void Awake()
+    {
+        Instance = this;
+    }
+#endregion
 
-
-
-    
     private void Update()
     {
 

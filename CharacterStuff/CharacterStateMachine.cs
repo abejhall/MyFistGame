@@ -23,10 +23,10 @@ public class CharacterStateMachine : MonoBehaviour {
 
     [Header("For Debugging")]
     public bool MyJobIsNull;
-    public bool IHaveAMatT;
-   
+    // public bool IHaveAMatT;
+    public bool IHaveAPathAStar = false;
     public string Matt;
-
+    public Vector2 StockTileLoc;
 
 
     [Header("State Machine Current State!")]
@@ -49,7 +49,7 @@ public class CharacterStateMachine : MonoBehaviour {
         private float _startTime;
         private Vector3 _tempCurTile;
         private Tile _currentTile;
-        private List<Job> _jobQueList;
+       // private List<Job> _jobQueList;
         private List<GameObject> _greenHighlightsList;
         private List<GameObject> _redHighlightsList; 
         Tile StockTile = null;
@@ -69,7 +69,7 @@ public class CharacterStateMachine : MonoBehaviour {
 
     void Start () {
 
-        ranJobWait = Random.Range(1f, 25f);
+        ranJobWait = Random.Range(.5f, 5f);
 
         SetCurrentState(StateMachine.Idle);
 
@@ -196,6 +196,7 @@ public class CharacterStateMachine : MonoBehaviour {
                 }
 
                 //I now know i can reach everything so change my State to move to material and get material for job.
+                if(!thread.IsAlive)
                 SetCurrentState(StateMachine.MoveToMaterial);
 
 
@@ -210,12 +211,13 @@ public class CharacterStateMachine : MonoBehaviour {
                 _step = (Time.time - _startTime) * MoveSpeed;
 
                 //move to 1 tile away from that tile.
-                if (NextTile == DestTile)
+                if (NextTile == DestTile|| _currentTile == DestTile )
                 {
                     RunCompleteJob = true;
                     SetCurrentState(StateMachine.PickUpMaterial);
                 }
 
+                
 
                 if (_currentTile == NextTile && !thread.IsAlive|| transform.position == NextTileV3 && !thread.IsAlive)
                 {
@@ -229,6 +231,7 @@ public class CharacterStateMachine : MonoBehaviour {
                     NextTileV3 = new Vector3(NextTile.x, NextTile.y, 0);
 
                 }
+                if(!thread.IsAlive)
                 transform.position = Vector3.Lerp(_tempCurTile, NextTileV3, _step);
 
                 break;
@@ -377,25 +380,15 @@ public class CharacterStateMachine : MonoBehaviour {
 
     void DebuggingHelpers()
     {
-        //for debugging
-        if (MyJob == null)
-            MyJobIsNull = true;
-        //for debugging
-        if (MyJob != null)
-            MyJobIsNull = false;
+       //for debugging
+        MyJobIsNull = (MyJob == null) ? true : false;
+       //for debugging
+       MyJobIsNull = (MyJob != null) ? false : true;
+       //for debugging
+       IHaveAPathAStar = (MyPathAStar == null) ? !IHaveAPathAStar : IHaveAPathAStar;
 
-        //for debugging
-        //if (MatT == null)
-          //  IHaveAMatT = true;
-        //for debugging
-       // if (MatT != null)              //warning says it is never used
-        //    IHaveAMatT = false;
-
-      //  if (MatT != null)
-       // {
-      //      Matt = "TileAt" + MatT.x + "_" + MatT.y;  // warning says it is never used
-      //  }
-
+        if(StockTile != null)
+        StockTileLoc = new Vector2(StockTile.x, StockTile.y);
     }
 
 
@@ -431,6 +424,7 @@ public class CharacterStateMachine : MonoBehaviour {
         BuildManager.Instance.CheckNeighbors(t, true);
         
         WorldManager.Instance.world.tileGraph = null;
+        MyPathAStar = null;//////////////////////////////////////////////////////////////////Test!!!!!!!!!!!!!!!
 
         //look up and remove Green Highlight
         for (int i = 0; i < JobManager.Instance.GreenHighlightsList.Count; i++)
@@ -471,7 +465,7 @@ public class CharacterStateMachine : MonoBehaviour {
 
     void CleanUpAfterMyself()
     {
-        if (_jobQueList != null && _jobQueList.Count == 0)
+        if (JobManager.Instance.JobQueList != null && JobManager.Instance.JobQueList.Count == 0)
         {
             _greenHighlightsList.Clear();
 
