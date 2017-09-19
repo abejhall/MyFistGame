@@ -11,7 +11,7 @@ public class PlantObject : MonoBehaviour
     public bool CheckingIfJobIsComplete = false;
     public bool PickedPlants = true;
 
-   // Text CounterText = null; //warning says never used
+    Text CounterText = null;
 
     public int QuanityOfPlants = 5;
     public Tile t;
@@ -78,7 +78,7 @@ public class PlantObject : MonoBehaviour
     {
 
         //adjust the counter to show the appropriate amount of plants
-        //string quanity = QuanityOfPlants.ToString();
+        string quanity = QuanityOfPlants.ToString();
         loosemat.GetComponent<LooseMaterial>().CounterText = loosemat.GetComponentInChildren<Text>();
         loosemat.GetComponent<LooseMaterial>().MyCounterTotal = QuanityOfPlants;
         loosemat.GetComponent<LooseMaterial>().mySprite = SpriteManager.Instance.GS("plants");

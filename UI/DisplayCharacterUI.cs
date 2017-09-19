@@ -16,7 +16,7 @@ public class DisplayCharacterUI : MonoBehaviour {
     Slider HungerUISlider;
     List<GameObject> PlayerPaners;
 
-   // CharacterStats characterStats; //removing cause it says i dont use
+    CharacterStats characterStats;
 #region Singleton
     public static DisplayCharacterUI Instance;
     private void Awake()
@@ -62,9 +62,9 @@ public class DisplayCharacterUI : MonoBehaviour {
             PGO.transform.SetParent(ParentPanel.transform);
             PGO.name = "Character:" +go.GetComponent<CharacterStats>().Name;
             PGO.GetComponent<PanelComponents>().MyCharacter = go;
-            //   characterStats = go.GetComponent<CharacterStats>(); //removing cause it says i dont use
-            // PGO.GetComponent<PanelComponents>().ThisCharactersStats = characterStats;
-            // PGO.GetComponent<PanelComponents>().ThisCharactersStats.name = characterStats.name;
+            characterStats = go.GetComponent<CharacterStats>();
+           // PGO.GetComponent<PanelComponents>().ThisCharactersStats = characterStats;
+           // PGO.GetComponent<PanelComponents>().ThisCharactersStats.name = characterStats.name;
         }
     }
    
