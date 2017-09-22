@@ -97,7 +97,7 @@ public class RockObject : MonoBehaviour
         //adjust the counter to show the appropriate amount of plants
         string quanity = QuanityOfRocks.ToString();
         loosemat.GetComponent<LooseMaterial>().CounterText = loosemat.GetComponentInChildren<Text>();
-        loosemat.GetComponent<LooseMaterial>().MyCounterTotal = QuanityOfRocks;
+        loosemat.GetComponent<LooseMaterial>().NumberOfMaterialsStaying = QuanityOfRocks;
         loosemat.GetComponent<LooseMaterial>().mySprite = SpriteManager.Instance.GS("rocks");
         loosemat.GetComponent<SpriteRenderer>().sprite = SpriteManager.Instance.GS("rocks");
         loosemat.GetComponent<LooseMaterial>().myType = "rocks";

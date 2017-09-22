@@ -9,8 +9,20 @@ public class WorldManager : MonoBehaviour {
     
     public static WorldManager Instance { get; protected set; }
 
+
+    private int maxNumberOfThreads = 4;
+    public int MaxNumberOfThreads
+    { get { return maxNumberOfThreads;} protected set {  maxNumberOfThreads = value;} }
+
+    public int CurrentNumberOfThreads;
+
+
+
+
     public int WorldHeight = 100;
     public int WorldWidth = 100;
+
+   
 
 
 

@@ -90,7 +90,7 @@ public class World
             }
 
 
-            if (ran > 10 && ran < 60)
+            if (ran > 30 && ran < 60)
             {
                 //  Debug.Log("running initPlants");
                 if (BuildManager.Instance != null)

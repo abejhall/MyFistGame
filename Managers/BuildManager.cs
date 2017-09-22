@@ -25,6 +25,9 @@ public class BuildManager : MonoBehaviour {
 
     GrowthManager gm;
 
+    public GameObject FinishedTree;
+
+
 
 #region Singleton
 
@@ -299,27 +302,29 @@ public class BuildManager : MonoBehaviour {
     public void InitializeTrees(Tile t)
     {
 
-      
-        GameObject go = new GameObject();
-        go.transform.position = new Vector3(t.x, t.y, 0);
+
+        // GameObject go = new GameObject();
+        GameObject go = Instantiate(FinishedTree, new Vector3(t.x, t.y, 0), Quaternion.identity);
+       // go.transform.position = new Vector3(t.x, t.y, 0);
         go.name = "tree_" + t.x + "_" + t.y;
         go.transform.SetParent(TreeParent.transform);
 
         WorldManager.Instance.TreeTileDict.Add(t, go);
 
-        TreeObject treeObject = go.AddComponent<TreeObject>();
+       // TreeObject treeObject = go.AddComponent<TreeObject>();
 
 
         //add another sprite to the tile above the tree for the tree top
-        GameObject goTreeTop = new GameObject();
-        goTreeTop.name = "TreeTop" + t.x + "_" + t.y;
+        //GameObject goTreeTop = new GameObject();
+       // goTreeTop.name = "TreeTop" + t.x + "_" + t.y;
         
-        treeObject.Treetop = goTreeTop;
-        SpriteRenderer srTreeTop = goTreeTop.AddComponent<SpriteRenderer>();
-        srTreeTop.sprite = SpriteManager.Instance.GS("treeTop");
-        goTreeTop.transform.position = new Vector3(t.x, t.y+1, 0);
-        goTreeTop.transform.SetParent(TreeParent.transform);
-        srTreeTop.sortingLayerName = "trees";
+        //treeObject.Treetop = goTreeTop;
+       // SpriteRenderer srTreeTop = goTreeTop.AddComponent<SpriteRenderer>();
+       // srTreeTop.sprite = SpriteManager.Instance.GS("Treetopblossem");
+        //srTreeTop.sprite = SpriteManager.Instance.GS("treeTop");
+      //  goTreeTop.transform.position = new Vector3(t.x, t.y+1, 0);
+       // goTreeTop.transform.SetParent(TreeParent.transform);
+      //  srTreeTop.sortingLayerName = "trees";
         
         go.GetComponent<TreeObject>().go = go;
        

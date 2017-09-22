@@ -25,12 +25,13 @@ public class Path_AStar {
 		// Make sure our start/end tiles are in the list of nodes!
 		if(nodes.ContainsKey(tileStart) == false) {
 			Debug.LogError("Path_AStar: The starting tile isn't in the list of nodes!");
-
-			return;
+            WorldManager.Instance.CurrentNumberOfThreads -= 1;
+            return;
 		}
 		if(nodes.ContainsKey(tileEnd) == false) {
 			Debug.LogError("Path_AStar: The ending tile isn't in the list of nodes!");
-			return;
+            WorldManager.Instance.CurrentNumberOfThreads -= 1;
+            return;
 		}
 
 
@@ -71,7 +72,8 @@ public class Path_AStar {
             if (OpenSet.Count > tilesToAttemptBeforeBail)
             {
                 JobManager.Instance.JobToHard(tileEnd);
-               Debug.LogError("searched too long");
+                WorldManager.Instance.CurrentNumberOfThreads -= 1;
+                Debug.LogError("searched too long");
                 return;
             }
 			if(current == goal) {
@@ -176,6 +178,7 @@ public class Path_AStar {
 		// backwards from the END tile to the START tile, so let's reverse it.
 
 		path = new Queue<Tile>( total_path.Reverse() );
+       
 
 	}
 

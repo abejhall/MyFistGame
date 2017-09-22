@@ -6,7 +6,9 @@ using UnityEngine.UI;
 public class LooseMaterial : MonoBehaviour {
 
     public Sprite mySprite;
-    public int MyCounterTotal;
+    public int NumberOfMaterialsStaying;
+    public int NumberOfMaterialsLeaving;
+    private int combinedMats;
     public string myType;
 
     public int MaxStackSize;
@@ -22,13 +24,13 @@ public class LooseMaterial : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
+        combinedMats = NumberOfMaterialsLeaving + NumberOfMaterialsStaying;
         
         if (CounterText != null && !ShouldIShutDown)
         {
-            CounterText.text = MyCounterTotal.ToString();
+            CounterText.text = combinedMats.ToString();
 
-            if (MyCounterTotal <= 0)//(CounterText.text == "0")
+            if (NumberOfMaterialsStaying <= 0 && NumberOfMaterialsLeaving <= 0)//(CounterText.text == "0")
             {
                 ShouldIShutDown = true;
                 if(WorldManager.Instance.LooseMaterialsMap.ContainsKey(MyTile))

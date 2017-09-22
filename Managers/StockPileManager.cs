@@ -42,6 +42,10 @@ public class StockPileManager : MonoBehaviour {
     public GameObject[] toggles;
 
 
+
+
+
+
 #region Singleton
     public static StockPileManager Instance;
     private void Awake()
@@ -83,7 +87,7 @@ public class StockPileManager : MonoBehaviour {
         else
             StopShowingStockPiles();
 
-        //StopShowingStockPiles();
+       
 
     }
 
@@ -194,7 +198,9 @@ public class StockPileManager : MonoBehaviour {
 
         }
     }
-
+    /// <summary>
+    /// ///////////Everything above here works fine/////////////////////////////////////////////////
+    /// </summary>
     void CreateStockPileJobs()
     {
         
@@ -221,17 +227,7 @@ public class StockPileManager : MonoBehaviour {
                 AssignJob(t);
             }
            
-            //TODO:::::::::::::::::::::::::::::::::::::::::::::::::::
-            //loop through all the stockpile map and check to see if it has an item on it
-            //check to see if that item can hold more on it
-
-            //check to make sure there is NOT already a job for this tile!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-            
-            //if there is room left either empty or stack not full loop through the worldmanagers loose materials map
-            //and see if there is a free item to add to stack or place down if the tile is empty
-            //create job to pick up item. then create job to move item to stockpile
-            //may need to change the way character looks at jobs for this
+           
         }
         counter = 0f;
         PauseCreatingJobs = false;
@@ -250,23 +246,23 @@ public class StockPileManager : MonoBehaviour {
             LooseMaterial lm = WorldManager.Instance.LooseMaterialsMap[t].GetComponent<LooseMaterial>();
             if(lm == null)
             {
-                Debug.LogError("Loose Material Map says there is a loose item here but not showing up.");
+                Debug.LogError("Loose Material Map says there is a loose item here but not showing up on : Tile_"+t.x+"_"+t.y);
             }
             else
             {   //checking if the stack is full if so bail
-                if (lm.MyCounterTotal >= lm.MaxStackSize)
+                if (lm.NumberOfMaterialsStaying >= lm.MaxStackSize)
                     return;
                 else //save how much we can still use.
-                    _stackToFil = lm.MaxStackSize - lm.MyCounterTotal;
+                    _stackToFil = lm.MaxStackSize - lm.NumberOfMaterialsStaying;
 
                 //loop through all the loose materials to see if there is one of that type available
                 foreach(Tile LooseMaterialTile in WorldManager.Instance.LooseMaterialsMap.Keys)
                 {
-                    if (LooseMaterialTile == t)
+                    if (LooseMaterialTile == t) // if the tile we are looking at is our stockpile tile bail
                         continue;
-                    if (LooseMaterialTile.IsStockPile)
+                    if (LooseMaterialTile.IsStockPile) // if the Tile is another stockpile bail out
                         continue;
-                    if (WorldManager.Instance.LooseMaterialsMap[LooseMaterialTile].GetComponentInChildren<LooseMaterial>().SomeOneIsComingForMe)
+                    if (WorldManager.Instance.LooseMaterialsMap[LooseMaterialTile].GetComponentInChildren<LooseMaterial>().SomeOneIsComingForMe)// if someone else is coming for this pile
                         continue;
                     LooseMaterial lm2 = WorldManager.Instance.LooseMaterialsMap[LooseMaterialTile].GetComponent<LooseMaterial>();
                     if (lm2.myType != lm.myType) //check to see if the mats we are looking at are the same as what we are looking for 
@@ -359,28 +355,64 @@ public class StockPileManager : MonoBehaviour {
 
     public Tile FindNeededMaterial(Job currentJob)
     {
-        Debug.Log("looking for material of type" + currentJob.jobMaterial);
+        Debug.Log("looking for material of type: " + currentJob.jobMaterial);
 
         string mat = currentJob.jobMaterial;
         foreach(Tile t in WorldManager.Instance.LooseMaterialsMap.Keys)
         {  if (t.IsStockPile && currentJob.IsHaulingJob)
-                continue;
-
-            LooseMaterial lm = WorldManager.Instance.LooseMaterialsMap[t].GetComponent<LooseMaterial>();
-           
-            if (lm.myType == mat && !lm.SomeOneIsComingForMe)
             {
-                    lm.SomeOneIsComingForMe = true;
+                Debug.Log("bailed because either the material showed as stockpile or current job was showing as haulingjob");
+                continue;
+            }
+                
+            
+            LooseMaterial lm = WorldManager.Instance.LooseMaterialsMap[t].GetComponent<LooseMaterial>();
+            Debug.Log("loop through loosematerial map : ");
+            Debug.Log("compairing these 2:" +lm.myType+" "+mat+" and i need this many to coplete:"+ currentJob.numberOfMats + " "+lm.NumberOfMaterialsStaying);
+
+            if (lm.myType == mat && lm.NumberOfMaterialsStaying >= currentJob.numberOfMats)
+            {
+                //lm.SomeOneIsComingForMe = true;
+                lm.NumberOfMaterialsLeaving += currentJob.numberOfMats;
+                lm.NumberOfMaterialsStaying -= currentJob.numberOfMats;
+
                     t.LooseMat = lm.gameObject;
-                   // WorldManager.Instance.LooseMaterialsMap.Remove(t);
-                    return t;
+
+                Debug.Log("i returned a material tile");
+                return t;
+                
                 
             }
             
         }
 
-        Debug.LogError("material asked for was not found in looseMaterialsMap:" + mat);
+        Debug.Log("I show this much in looseMaterialsMap:" + WorldManager.Instance.LooseMaterialsMap.Count);
+        Debug.LogError("material asked for was not found in looseMaterialsMap after looping all: " + mat);
         return null;
     }
+
+
+
+
+
+    enum ManagerState {CheckForAvailiableSPSlots,LookForLooseMaterial, CreateTheJob }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

@@ -18,7 +18,7 @@ public class CharacterSpawner : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        center = new Vector3(50, 50, 0);
+        center = new Vector3(WorldManager.Instance.WorldHeight/2, WorldManager.Instance.WorldWidth/2, 0);
 	}
 	
 	// Update is called once per frame

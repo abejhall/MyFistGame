@@ -23,20 +23,27 @@ public class TreeObject : MonoBehaviour {
 
     public GameObject go;
 
+    public SpriteRenderer RedTree;
+    public SpriteRenderer GreenTree;
+    public SpriteRenderer PinkTree;
+
+
+
+
     Text CounterText = null;
     GameObject loosemat;
     void Start()
     {
 
-
+        ChooseTree();
         t = WorldManager.Instance.GetTileAT(go.transform.position.x, go.transform.position.y);
         go = this.gameObject;
-        sr = go.AddComponent<SpriteRenderer>();
-
+        //sr = go.AddComponent<SpriteRenderer>();
+        sr = GetComponent<SpriteRenderer>();
       
 
         sr.sortingLayerName = "Struture";
-        go = WorldManager.Instance.TreeTileDict[t];
+       // go = WorldManager.Instance.TreeTileDict[t];
         t.type = "tree";
         t.MovementSpeedAdjustment = 0;
 
@@ -45,20 +52,20 @@ public class TreeObject : MonoBehaviour {
 
     public void Update()
     {
-        if (sr != null && !CheckingIfJobIsComplete)
-        {
+       // if (sr != null && !CheckingIfJobIsComplete)
+       // {
+
+
+           // sr.sprite = SpriteManager.Instance.GS("trunkBlossem");
+            // sr.sprite = SpriteManager.Instance.GS("STree");
+            // t.MovementSpeedAdjustment = 1;
+          //  CheckingIfJobIsComplete = true;
 
 
 
-            sr.sprite = SpriteManager.Instance.GS("STree");
-           // t.MovementSpeedAdjustment = 1;
-            CheckingIfJobIsComplete = true;
 
 
-
-
-
-        }
+       // }
 
         if (t.type == "logs" && ChoppedTree == true)
         {
@@ -91,7 +98,7 @@ public class TreeObject : MonoBehaviour {
         //adjust the counter to show the appropriate amount of plants
         string quanity = QuanityOfWood.ToString();
         loosemat.GetComponent<LooseMaterial>().CounterText = loosemat.GetComponentInChildren<Text>();
-        loosemat.GetComponent<LooseMaterial>().MyCounterTotal = QuanityOfWood;
+        loosemat.GetComponent<LooseMaterial>().NumberOfMaterialsStaying = QuanityOfWood;
         loosemat.GetComponent<LooseMaterial>().mySprite = SpriteManager.Instance.GS("logs");
         loosemat.GetComponent<SpriteRenderer>().sprite = SpriteManager.Instance.GS("logs");
         loosemat.GetComponent<LooseMaterial>().myType = "logs";
@@ -100,5 +107,32 @@ public class TreeObject : MonoBehaviour {
         loosemat.GetComponent<LooseMaterial>().MyTile =t;
         Destroy(this.gameObject);
     }
+
+
+
+    void ChooseTree()
+    {
+        int ran = Random.Range(0, 3);
+
+        if(ran == 0)
+        {
+            RedTree.enabled = true;
+            GreenTree.enabled = false;
+            PinkTree.enabled = false;
+        }
+        if (ran == 1)
+        {
+            RedTree.enabled = false;
+            GreenTree.enabled = true;
+            PinkTree.enabled = false;
+        }
+        if (ran == 2)
+        {
+            RedTree.enabled = false;
+            GreenTree.enabled = false;
+            PinkTree.enabled = true;
+        }
+    }
+
 
 }

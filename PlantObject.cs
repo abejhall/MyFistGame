@@ -80,7 +80,7 @@ public class PlantObject : MonoBehaviour
         //adjust the counter to show the appropriate amount of plants
         string quanity = QuanityOfPlants.ToString();
         loosemat.GetComponent<LooseMaterial>().CounterText = loosemat.GetComponentInChildren<Text>();
-        loosemat.GetComponent<LooseMaterial>().MyCounterTotal = QuanityOfPlants;
+        loosemat.GetComponent<LooseMaterial>().NumberOfMaterialsStaying = QuanityOfPlants;
         loosemat.GetComponent<LooseMaterial>().mySprite = SpriteManager.Instance.GS("plants");
         loosemat.GetComponent<SpriteRenderer>().sprite = SpriteManager.Instance.GS("plants");
         loosemat.GetComponent<LooseMaterial>().myType = "plants";

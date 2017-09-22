@@ -6,7 +6,7 @@ using System.Threading;
 public class CharacterStateMachine : MonoBehaviour {
 
 
-    public enum StateMachine { Idle, GetJob, CanIReachJobAndMaterial, MoveToMaterial,PickUpMaterial, MoveToJob, CompleteJob,Working, DefendMyself, FindFood, sleep }
+    public enum StateMachine { Idle, GetJob, CanIReachJobAndMaterial,WaitForPathFinding, waitforStockTile, MoveToMaterial,PickUpMaterial, MoveToJob, CompleteJob,Working, DefendMyself, FindFood, sleep }
 #region Vars.................
     AudioSource aud;
 
@@ -31,7 +31,7 @@ public class CharacterStateMachine : MonoBehaviour {
 
     [Header("State Machine Current State!")]
     public StateMachine CurrentState;
-
+    public bool ThreadsAreFull = false;
 
     // public vars not shown in inspector
     public LooseMaterial MaterialsIAmHolding = null;
@@ -76,6 +76,11 @@ public class CharacterStateMachine : MonoBehaviour {
         _currentTile = WorldManager.Instance.GetTileAT(this.transform.position.x, this.transform.position.y);
          NextTile = _currentTile;
 
+        _tempCurTile = this.transform.position;
+        CurrTileV3 = this.transform.position;
+        NextTileV3 = this.transform.position;
+
+
         aud = GetComponent<AudioSource>();
     }
 	
@@ -88,7 +93,7 @@ public class CharacterStateMachine : MonoBehaviour {
 
         DebuggingHelpers();
 
-       
+        CheckIfThreadAreFull();
 
 #endregion
         //Character's State Machine......
@@ -171,34 +176,63 @@ public class CharacterStateMachine : MonoBehaviour {
                 }
 
                 //check to see what materials i need and see if they are available
-
-                StockTile = StockPileManager.Instance.FindNeededMaterial(MyJob);
+                Debug.Log("calling FindNeededMaterial looking for: " + MyJob.jobMaterial);
+                if(StockTile == null)
+                {
+                    StockTile = StockPileManager.Instance.FindNeededMaterial(MyJob);
+                    Debug.Log("Stocktile is: tile_" + StockTile.x + "_" + StockTile.y);
+                }
+                
                 if(StockTile == null)
                 {
                    
                     JobManager.Instance.RemoveAGreenHighLight(MyJob.jobTile);
                     NoMaterialForJob();
-                   // Debug.Log("No StockTile bailing out and back to idle");
+                
                     SetCurrentState(StateMachine.Idle);
                     break;
                 }
 
                 //check to see if i can reach the materials tile and then set my destination to that tile
-                DestTile = StockTile;
+               
                 _currentTile = WorldManager.Instance.GetTileAT(transform.position.x, transform.position.y);
-               // Debug.Log("DestTile shows:" + DestTile.x + "_" + DestTile.y);
-               // Debug.Log("_currentTile shows:" + _currentTile.x + "_" + _currentTile.y);
-                getPathFinding();
 
-                if (!CheckMyDestIsReachable())
+                SetCurrentState(StateMachine.waitforStockTile);
+
+                break;
+            #endregion
+
+            /////////////////////////////////////////////////////////////////////
+            #region waitforStockTile:
+            case StateMachine.waitforStockTile:
+
+                if(StockTile != null)
                 {
-                    ThisJobIsToHard();
+                    DestTile = StockTile;
+                    
+                    Debug.Log("called pathfinding");
+                    getPathFinding();
+
+                    if (!CheckMyDestIsReachable())
+                    {
+                        ThisJobIsToHard();
+                    }
+                    
+                    //I now know i can reach everything so change my State to move to material and get material for job.
+                    SetCurrentState(StateMachine.WaitForPathFinding);
+
                 }
 
-                //I now know i can reach everything so change my State to move to material and get material for job.
-                if(!thread.IsAlive)
-                SetCurrentState(StateMachine.MoveToMaterial);
 
+                break;
+            #endregion
+            /////////////////////////////////////////////////////////////////////
+            #region waitforpathfinding
+            case StateMachine.WaitForPathFinding:
+                
+
+                if (MyPathAStar != null)
+                    SetCurrentState(StateMachine.MoveToMaterial);
 
                 break;
             #endregion
@@ -249,9 +283,10 @@ public class CharacterStateMachine : MonoBehaviour {
                 {
                     GameObject StockGo = WorldManager.Instance.LooseMaterialsMap[StockTile];
                     LooseMaterial tmpLooseMats = StockGo.GetComponent<LooseMaterial>();
-                    tmpLooseMats.SomeOneIsComingForMe = false;
+                    // tmpLooseMats.SomeOneIsComingForMe = false;
+                    tmpLooseMats.NumberOfMaterialsLeaving -= MyJob.numberOfMats;
                     SetLooseMatStats(tmpLooseMats);
-
+                    StockTile = null;
                 }
                 else
                 {
@@ -268,7 +303,7 @@ public class CharacterStateMachine : MonoBehaviour {
                     DestTile =MyJob.jobTile;
                     _currentTile = WorldManager.Instance.GetTileAT(transform.position.x, transform.position.y);
                     getPathFinding();
-
+                    StockTile = null;
                     SetCurrentState(StateMachine.MoveToJob);
                 }
                 
@@ -380,7 +415,7 @@ public class CharacterStateMachine : MonoBehaviour {
 
     void DebuggingHelpers()
     {
-<<<<<<< HEAD
+//<<<<<<< HEAD
        //for debugging
         MyJobIsNull = (MyJob == null) ? true : false;
        //for debugging
@@ -390,7 +425,7 @@ public class CharacterStateMachine : MonoBehaviour {
 
         if(StockTile != null)
         StockTileLoc = new Vector2(StockTile.x, StockTile.y);
-=======
+//=======
         //for debugging
         if (MyJob == null)
             MyJobIsNull = true;
@@ -399,18 +434,14 @@ public class CharacterStateMachine : MonoBehaviour {
             MyJobIsNull = false;
 
         //for debugging
-        if (MatT == null)
-            IHaveAMatT = true;
-        //for debugging
-        if (MatT != null)
-            IHaveAMatT = false;
+        
 
         if (MatT != null)
         {
             Matt = "TileAt" + MatT.x + "_" + MatT.y;
         }
 
->>>>>>> parent of 08477f2... cleaning up warnings
+//>>>>>>> parent of 08477f2... cleaning up warnings
     }
 
 
@@ -520,7 +551,7 @@ public class CharacterStateMachine : MonoBehaviour {
            
             
 
-            lm.MyCounterTotal = MaterialsIAmHolding.MyCounterTotal;
+            lm.NumberOfMaterialsStaying = MaterialsIAmHolding.NumberOfMaterialsStaying;
                   lm.mySprite = MaterialsIAmHolding.mySprite;
                     lm.MyTile = t;
                     lm.myType = MaterialsIAmHolding.myType;
@@ -535,7 +566,7 @@ public class CharacterStateMachine : MonoBehaviour {
         else //this tile has a stockpile on it already
         {
           LooseMaterial  lm = WorldManager.Instance.LooseMaterialsMap[t].GetComponent<LooseMaterial>();
-            lm.MyCounterTotal += MaterialsIAmHolding.MyCounterTotal;
+            lm.NumberOfMaterialsStaying += MaterialsIAmHolding.NumberOfMaterialsStaying;
             lm.SomeOneIsComingForMe = false;
             MaterialsIAmHolding = null;
 
@@ -551,6 +582,17 @@ public class CharacterStateMachine : MonoBehaviour {
 
 
 
+
+    void CheckIfThreadAreFull()
+    {
+        if (WorldManager.Instance.CurrentNumberOfThreads >= +WorldManager.Instance.MaxNumberOfThreads)
+        {
+            ThreadsAreFull = true;
+        }
+        else
+            ThreadsAreFull = false;
+    }
+
     void SetLooseMatStats(LooseMaterial tmpLooseMats)
     {
         Debug.Log("assigned stats to materialIAmHolding");
@@ -559,13 +601,13 @@ public class CharacterStateMachine : MonoBehaviour {
         MaterialsIAmHolding.mySprite = tmpLooseMats.mySprite;
         MaterialsIAmHolding.myType = tmpLooseMats.myType;
         MaterialsIAmHolding.MaxStackSize = tmpLooseMats.MaxStackSize;
-        MaterialsIAmHolding.CounterText = tmpLooseMats.CounterText;
+        MaterialsIAmHolding.NumberOfMaterialsStaying = MyJob.numberOfMats;
         MaterialsIAmHolding.baseType = tmpLooseMats.baseType;
 
-        if (MyJob.numberOfMats <= tmpLooseMats.MyCounterTotal)
+        if (MyJob.numberOfMats <= tmpLooseMats.NumberOfMaterialsLeaving)
         {
-            tmpLooseMats.MyCounterTotal -= MyJob.numberOfMats;
-            MaterialsIAmHolding.MyCounterTotal = MyJob.numberOfMats;
+            tmpLooseMats.NumberOfMaterialsLeaving -= MyJob.numberOfMats;
+            MaterialsIAmHolding.NumberOfMaterialsStaying += MyJob.numberOfMats;
         }
     }
 
@@ -615,23 +657,24 @@ public class CharacterStateMachine : MonoBehaviour {
 
     void getPathFinding()
     {
+
+        //FIXME NEED a way to limit the number of threads being used at one time for late game;
+       // while (ThreadsAreFull)
+       // {
+       //     Debug.Log("waiting for open thread");
+       // }
+
         // Debug.Log("testing multithread");
+       // WorldManager.Instance.CurrentNumberOfThreads += 1;
          thread = new Thread(getPathFinding2);
          thread.Start();
 
-        // Debug.Log("Called GetPathFinding With these 2 tiles" + "_currentTile"
-        //     + _currentTile.y + "_" + _currentTile.y + "   " + DestTile.x + "_" + DestTile.y);
-
-        // MyPathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
-        //                                    _currentTile,  //Start tile
-        //                                    DestTile); //Destination tile
+        
     }
 
     void getPathFinding2()
     {
-        // Debug.Log("Called GetPathFinding With these 2 tiles" + "_currentTile"
-        //     + _currentTile.y + "_" + _currentTile.y + "   " + DestTile.x + "_" + DestTile.y);
-
+        
         MyPathAStar = new Path_AStar(WorldManager.Instance.world, //Copy of World
                                            _currentTile,  //Start tile
                                            DestTile); //Destination tile
