@@ -102,7 +102,7 @@ public class CharacterStateMachine : MonoBehaviour {
             #region Idle State
             case StateMachine.Idle:
 
-                
+                StockTile = null;
                 if (JobManager.Instance.JobQueList.Count != 0)
                     SetCurrentState(StateMachine.GetJob);
 
@@ -179,8 +179,10 @@ public class CharacterStateMachine : MonoBehaviour {
                 Debug.Log("calling FindNeededMaterial looking for: " + MyJob.jobMaterial);
                 if(StockTile == null)
                 {
+                    StockTile = null;
                     StockTile = StockPileManager.Instance.FindNeededMaterial(MyJob);
                     Debug.Log("Stocktile is: tile_" + StockTile.x + "_" + StockTile.y);
+                    
                 }
                 
                 if(StockTile == null)
@@ -205,12 +207,12 @@ public class CharacterStateMachine : MonoBehaviour {
             /////////////////////////////////////////////////////////////////////
             #region waitforStockTile:
             case StateMachine.waitforStockTile:
-
+                Debug.Log("waiting For Stock Tile");
                 if(StockTile != null)
                 {
                     DestTile = StockTile;
                     
-                    Debug.Log("called pathfinding");
+                    Debug.Log("called pathfinding for StockTile");
                     getPathFinding();
 
                     if (!CheckMyDestIsReachable())
@@ -229,8 +231,8 @@ public class CharacterStateMachine : MonoBehaviour {
             /////////////////////////////////////////////////////////////////////
             #region waitforpathfinding
             case StateMachine.WaitForPathFinding:
-                
 
+                Debug.Log("waiting For pathfinding");
                 if (MyPathAStar != null)
                     SetCurrentState(StateMachine.MoveToMaterial);
 
@@ -241,7 +243,9 @@ public class CharacterStateMachine : MonoBehaviour {
             case StateMachine.MoveToMaterial:
                 //lerp to material
                 //move to 1 tile away from that tile.
-                
+
+                Debug.Log("is my job a hauling job?: " + MyJob.IsHaulingJob);
+
                 _step = (Time.time - _startTime) * MoveSpeed;
 
                 //move to 1 tile away from that tile.
@@ -286,7 +290,7 @@ public class CharacterStateMachine : MonoBehaviour {
                     // tmpLooseMats.SomeOneIsComingForMe = false;
                     tmpLooseMats.NumberOfMaterialsLeaving -= MyJob.numberOfMats;
                     SetLooseMatStats(tmpLooseMats);
-                    StockTile = null;
+                    
                 }
                 else
                 {
@@ -562,6 +566,8 @@ public class CharacterStateMachine : MonoBehaviour {
 
 
             WorldManager.Instance.LooseMaterialsMap.Add(t,loosemat);
+
+            StockTile = null;
         }
         else //this tile has a stockpile on it already
         {
@@ -575,6 +581,7 @@ public class CharacterStateMachine : MonoBehaviour {
             WorldManager.Instance.LooseMaterialsMap.Remove(t);
             WorldManager.Instance.LooseMaterialsMap.Add(t, go);
 
+            StockTile = null;
 
         }
 
@@ -658,14 +665,10 @@ public class CharacterStateMachine : MonoBehaviour {
     void getPathFinding()
     {
 
-        //FIXME NEED a way to limit the number of threads being used at one time for late game;
-       // while (ThreadsAreFull)
-       // {
-       //     Debug.Log("waiting for open thread");
-       // }
+        if (MyJob.IsHaulingJob && MaterialsIAmHolding == null)
+            DestTile = StockTile;
 
-        // Debug.Log("testing multithread");
-       // WorldManager.Instance.CurrentNumberOfThreads += 1;
+
          thread = new Thread(getPathFinding2);
          thread.Start();
 
