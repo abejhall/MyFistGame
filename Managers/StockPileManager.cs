@@ -353,13 +353,13 @@ public class StockPileManager : MonoBehaviour {
       
     }
 
-    public Tile FindNeededMaterial(Job currentJob)
+    public Tile FindNeededMaterial(Job currentJob, CharacterStateMachine charstate)
     {
         Debug.Log("looking for material of type: " + currentJob.jobMaterial);
 
         string mat = currentJob.jobMaterial;
         foreach(Tile t in WorldManager.Instance.LooseMaterialsMap.Keys)
-        {  if (t.IsStockPile && currentJob.IsHaulingJob)
+        {  if (t.IsStockPile && currentJob.IsHaulingJob || currentJob.jobTile == t)
             {
                 Debug.Log("bailed because either the material showed as stockpile or current job was showing as haulingjob");
                 continue;
@@ -386,8 +386,26 @@ public class StockPileManager : MonoBehaviour {
             
         }
 
+        if (currentJob.IsHaulingJob)
+        {
+            Debug.Log("canceling job and returning hull from find needed mats");
+            charstate.MyJob = null;
+            return null;
+        }
+
         Debug.Log("I show this much in looseMaterialsMap:" + WorldManager.Instance.LooseMaterialsMap.Count);
         Debug.LogError("material asked for was not found in looseMaterialsMap after looping all: " + mat);
+
+
+
+        GameObject NoMat = JobManager.Instance.NoMaterialMarker;
+        SimplePool.Spawn(NoMat, new Vector3(charstate.MyJob.jobTile.x, charstate.MyJob.jobTile.y, 0), Quaternion.identity);
+
+
+        JobManager.Instance.RemoveAGreenHighLight(charstate.MyJob.jobTile);
+        Debug.Log("canceling job after removing greeen highlight");
+        charstate.MyJob = null;
+        charstate.SetCurrentState(CharacterStateMachine.StateMachine.Idle);
         return null;
     }
 
